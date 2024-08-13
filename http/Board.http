@@ -6,3 +6,6 @@ Content-Type: application/json
   "title": "제목",
   "content": "내용"
 }
+
+###
+GET http://localhost:8080/api/articles
