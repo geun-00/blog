@@ -1,0 +1,20 @@
+<!-- src/main/resources/templates/fragments/header.html -->
+<!DOCTYPE html>
+<html th:fragment="common_header" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Blog</title>
+    <style>
+        .clickable {
+            cursor: pointer; /* 클릭 가능한 요소를 표시 */
+        }
+    </style>
+</head>
+<body>
+<div class="p-5 mb-5 text-center bg-light clickable" th:onclick="|window.location.href='@{/articles}'|">
+    <h1 class="mb-3">My Blog</h1>
+    <h4 class="mb-3">블로그에 오신 것을 환영합니다.</h4>
+</div>
+</body>
+</html>
