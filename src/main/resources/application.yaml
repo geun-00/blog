@@ -1,4 +1,14 @@
 spring:
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: ENC(uTmUe3/W8In1+WmDVIAiQ/5+5Y7Oy6pRm43pytRe8p/8TfxHFP53G9EJHr9QXOvXF0nydbr56ahnvg+wShMFOMqSKtcMJ6eUzmrsBZSE9aSTRW7x7BXNnw==)
+            client-secret: ENC(vKSRL4Hllw5KpnS5EmrgcRsGweaSIHVwLQUHEceCcq7wFMAW9GIjmKEL9tZ/3YUI)
+            scope:
+              - openid
+              - email
 
   datasource:
     url: jdbc:h2:mem:testdb
@@ -16,5 +26,10 @@ spring:
     defer-datasource-initialization: true
 
 jwt:
-  issuer: issuer@gmail.com
-  secret_key: b9b0549aad66f77d06ce40326c64b983f47999ef8c2372317c4835262dc930f3f96be45822a331bcf4fbf7f01b93eba881964056560feee4c7665c8b8d403267
+  issuer: ENC(XD3KNuRKbcq1POQl4lo2f98SxP4HylXrUDTNeBR1G7U=)
+  secret_key: ENC(s8+oCX5whHJv6Xozto5BaHJVHM6EmHy4IEfnqCNyzqC+co8RA+thrQha+aE2/u+kw8tarCvg/JNv824g+YxUUJpOHGIhiYWHccGLZtrJjqoyEh7Kj6431HD/Lx+OqNzuLcI9x7AtQH7h1zpVce2gyjHQBdvwnYbafhy/eCSycomxj0zeTn8FOSu/8FMo2PKI)
+
+jasypt:
+  encryptor:
+    bean: jasyptEncryptor
+    password: ${ENCRYPT_KEY}
