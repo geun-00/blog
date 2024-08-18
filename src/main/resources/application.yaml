@@ -14,3 +14,7 @@ spring:
         format_sql: true
     # 테이블 생성 후 sql 파일 실행
     defer-datasource-initialization: true
+
+jwt:
+  issuer: issuer@gmail.com
+  secret_key: b9b0549aad66f77d06ce40326c64b983f47999ef8c2372317c4835262dc930f3f96be45822a331bcf4fbf7f01b93eba881964056560feee4c7665c8b8d403267
