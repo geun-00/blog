@@ -1,16 +1,14 @@
-package com.spring.blog.config;
+package com.spring.blog.common.config;
 
-import com.spring.blog.config.jwt.TokenProvider;
-import com.spring.blog.config.oauth.OAuth2AuthorizationRequestBasedOnCookieRepository;
-import com.spring.blog.config.oauth.OAuth2FailureHandler;
-import com.spring.blog.config.oauth.OAuth2SuccessHandler;
+import com.spring.blog.common.config.filter.TokenAuthenticationFilter;
+import com.spring.blog.common.config.jwt.TokenProvider;
+import com.spring.blog.common.config.oauth.OAuth2AuthorizationRequestBasedOnCookieRepository;
+import com.spring.blog.common.config.oauth.OAuth2FailureHandler;
+import com.spring.blog.common.config.oauth.OAuth2SuccessHandler;
 import com.spring.blog.repository.RefreshTokenRepository;
 import com.spring.blog.service.UserService;
 import com.spring.blog.service.oauth.CustomOAuth2UserService;
 import com.spring.blog.service.oauth.CustomOidcUserService;
-import jakarta.servlet.ServletException;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -19,15 +17,10 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.HttpStatusEntryPoint;
-import org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
-
-import java.io.IOException;
 
 @Configuration
 @EnableWebSecurity

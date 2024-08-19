@@ -1,12 +1,11 @@
-package com.spring.blog.config.oauth;
+package com.spring.blog.common.config.oauth;
 
-import com.spring.blog.config.jwt.TokenProvider;
+import com.spring.blog.common.config.jwt.TokenProvider;
 import com.spring.blog.domain.RefreshToken;
 import com.spring.blog.domain.User;
-import com.spring.blog.dto.AddUserRequest;
 import com.spring.blog.repository.RefreshTokenRepository;
 import com.spring.blog.service.UserService;
-import com.spring.blog.util.CookieUtil;
+import com.spring.blog.common.converters.utils.CookieUtil;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -15,11 +14,9 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
-import org.springframework.web.util.UriComponentsBuilder;
 
 import java.io.IOException;
 import java.time.Duration;
-import java.util.UUID;
 
 @Component
 @RequiredArgsConstructor

@@ -1,4 +1,4 @@
-package com.spring.blog.util;
+package com.spring.blog.common.converters.utils;
 
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;

@@ -1,6 +1,6 @@
-package com.spring.blog.config.oauth;
+package com.spring.blog.common.config.oauth;
 
-import com.spring.blog.util.CookieUtil;
+import com.spring.blog.common.converters.utils.CookieUtil;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;

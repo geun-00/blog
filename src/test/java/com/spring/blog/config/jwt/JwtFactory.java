@@ -1,5 +1,6 @@
 package com.spring.blog.config.jwt;
 
+import com.spring.blog.common.config.jwt.JwtProperties;
 import io.jsonwebtoken.Header;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;

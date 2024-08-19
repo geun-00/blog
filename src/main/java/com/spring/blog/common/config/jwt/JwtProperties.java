@@ -1,4 +1,4 @@
-package com.spring.blog.config.jwt;
+package com.spring.blog.common.config.jwt;
 
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;

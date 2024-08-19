@@ -1,4 +1,4 @@
-package com.spring.blog.config.oauth;
+package com.spring.blog.common.config.oauth;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

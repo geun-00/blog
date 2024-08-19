@@ -1,6 +1,6 @@
-package com.spring.blog.config;
+package com.spring.blog.common.config.filter;
 
-import com.spring.blog.config.jwt.TokenProvider;
+import com.spring.blog.common.config.jwt.TokenProvider;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

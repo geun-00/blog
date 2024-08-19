@@ -1,4 +1,4 @@
-package com.spring.blog.config.jwt;
+package com.spring.blog.common.config.jwt;
 
 import com.spring.blog.domain.User;
 import io.jsonwebtoken.Claims;

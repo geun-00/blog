@@ -1,6 +1,6 @@
 package com.spring.blog.service;
 
-import com.spring.blog.config.jwt.TokenProvider;
+import com.spring.blog.common.config.jwt.TokenProvider;
 import com.spring.blog.domain.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
