@@ -9,7 +9,9 @@ public enum SocialType {
 
     GOOGLE("google"),
     NAVER("naver"),
-    KAKAO("kakao");
+    KAKAO("kakao"),
+
+    NONE("none");
 
     private final String socialName;
 }

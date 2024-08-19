@@ -3,7 +3,6 @@ package com.spring.blog.common.converters;
 import com.spring.blog.model.ProviderUser;
 import org.springframework.stereotype.Component;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.function.Function;
 

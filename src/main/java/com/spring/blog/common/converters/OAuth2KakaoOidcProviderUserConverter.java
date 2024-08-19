@@ -3,6 +3,7 @@ package com.spring.blog.common.converters;
 import com.spring.blog.common.converters.enums.SocialType;
 import com.spring.blog.common.converters.utils.OAuthAttributesUtils;
 import com.spring.blog.model.ProviderUser;
+import com.spring.blog.model.social.KakaoOidcUser;
 import com.spring.blog.model.social.KakaoUser;
 import org.springframework.security.oauth2.core.oidc.user.OidcUser;
 
@@ -19,7 +20,7 @@ public class OAuth2KakaoOidcProviderUserConverter implements Function<ProviderUs
             return null;
         }
 
-        return new KakaoUser(
+        return new KakaoOidcUser(
                 OAuthAttributesUtils.getMainAttributes(providerUserRequest.oAuth2User()),
                 providerUserRequest.oAuth2User(),
                 providerUserRequest.clientRegistration()

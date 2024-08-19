@@ -1,6 +1,5 @@
 package com.spring.blog.model;
 
-import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.oauth2.client.registration.ClientRegistration;
@@ -34,7 +33,7 @@ public abstract class OAuth2ProviderUser implements ProviderUser {
 
     @Override
     public String getEmail() {
-        return (String) attributes.get("email");
+        return (String) getAttributes().get("email");
     }
 
     @Override
