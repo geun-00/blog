@@ -41,6 +41,10 @@
 
                 <h2 class="text-white">LOGIN</h2>
 
+                <div th:if="${param.error}" class="form-group">
+                    <span th:text="${exception}?: '잘못된 아이디나 암호입니다'" class="alert alert-danger"></span>
+                </div>
+
                 <form th:action="@{/loginProc}" method="post">
                     <div class="form-group">
                         <label for="email">Email</label>

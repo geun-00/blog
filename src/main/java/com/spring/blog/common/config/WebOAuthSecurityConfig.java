@@ -4,7 +4,7 @@ import com.spring.blog.common.config.authority.CustomAuthorityMapper;
 import com.spring.blog.common.config.filter.TokenAuthenticationFilter;
 import com.spring.blog.common.config.jwt.TokenProvider;
 import com.spring.blog.common.config.oauth.OAuth2AuthorizationRequestBasedOnCookieRepository;
-import com.spring.blog.common.config.oauth.OAuth2FailureHandler;
+import com.spring.blog.common.config.oauth.LoginFailureHandler;
 import com.spring.blog.common.config.oauth.LoginSuccessHandler;
 import com.spring.blog.repository.RefreshTokenRepository;
 import com.spring.blog.service.CustomUserDetailsService;
@@ -55,7 +55,8 @@ public class WebOAuthSecurityConfig {
                         .loginPage("/login")
                         .loginProcessingUrl("/loginProc")
                         .usernameParameter("email")
-                        .successHandler(oAuthSuccessHandler())
+                        .successHandler(loginSuccessHandler())
+                        .failureHandler(new LoginFailureHandler())
                 )
 
                 .authenticationManager(authenticationManager)
@@ -67,7 +68,7 @@ public class WebOAuthSecurityConfig {
 
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/css/**", "/js/**", "/images/**", "/webjars/**", "/favicon.*", "/*/icon-*", "/h2-console/**").permitAll()
-                        .requestMatchers("/api/token").permitAll()
+                        .requestMatchers("/api/token", "/signup", "/login*").permitAll()
                         .requestMatchers("/api/**").authenticated()
                         .anyRequest().permitAll())
 
@@ -76,8 +77,8 @@ public class WebOAuthSecurityConfig {
                         .authorizationEndpoint(auth -> auth
                                 .authorizationRequestRepository(oAuth2AuthorizationRequestBasedOnCookieRepository())
                         )
-                        .failureHandler(new OAuth2FailureHandler())
-                        .successHandler(oAuthSuccessHandler())
+                        .successHandler(loginSuccessHandler())
+                        .failureHandler(new LoginFailureHandler())
                         .userInfoEndpoint(userInfo -> userInfo
                                 .userService(customOAuth2UserService)
                                 .oidcUserService(customOidcUserService)
@@ -118,7 +119,7 @@ public class WebOAuthSecurityConfig {
     }
 
     @Bean
-    public LoginSuccessHandler oAuthSuccessHandler() {
+    public LoginSuccessHandler loginSuccessHandler() {
         return new LoginSuccessHandler(
                 tokenProvider,
                 refreshTokenRepository,

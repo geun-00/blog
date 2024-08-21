@@ -30,7 +30,7 @@
                             <label class="form-label text-white">Email address</label>
                             <input type="email" class="form-control" name="email"
                                    th:value="*{email}"
-                                   required placeholder="이메일 형식에 맞춰주세요">
+                                   required placeholder="이메일 형식에 맞춰주세요.">
                             <div th:errors="*{email}" class="text-danger"></div>
                         </div>
                         <div class="mb-3">
@@ -39,14 +39,14 @@
                                    pattern="^(?=.*[A-Za-z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,16}$"
                                    title="비밀번호 형식에 맞지 않습니다."
                                    th:value="*{password}"
-                                   required placeholder="8~16글자, 특수문자를 포함해주세요">
+                                   required placeholder="8 ~ 16글자, 특수문자를 포함해주세요.">
                         </div>
                         <div class="mb-3">
                             <label class="form-label text-white">Nickname</label>
                             <input type="text" class="form-control"
                                    minlength="2" maxlength="10" name="nickname"
                                    th:value="*{nickname}"
-                                   required placeholder="블로그에서 사용하실 이름을 정해주세요">
+                                   required placeholder="블로그에서 사용하실 이름을 정해주세요.(2 ~ 10자 이내)">
                             <div th:errors="*{nickname}" class="text-danger"></div>
                         </div>
 

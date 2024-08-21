@@ -30,7 +30,6 @@ public abstract class AbstractOAuth2UserService {
         return providerUserConverter.apply(providerUserRequest);
     }
 
-    //OAuth 사용자
     protected void save(ProviderUser providerUser, OAuth2UserRequest oAuth2UserRequest) {
 
         Optional<User> user = userRepository.findByEmail(providerUser.getEmail());
@@ -42,17 +41,8 @@ public abstract class AbstractOAuth2UserService {
             return;
         }
 
-        throw new OAuth2AuthenticationException("Duplicate User");
-    }
-
-    //폼(일반) 사용자
-    protected void save(ProviderUser providerUser) {
-
-        Optional<User> user = userRepository.findByEmail(providerUser.getEmail());
-
-        if (user.isEmpty()) {
-            SocialType socialType = SocialType.valueOf("none");
-            userService.save(providerUser, socialType);
+        if (!user.get().getRegistrationId().getSocialName().toUpperCase().equals(registrationId)) {
+            throw new OAuth2AuthenticationException("Duplicate User");
         }
     }
 }
