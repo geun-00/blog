@@ -5,7 +5,7 @@ import com.spring.blog.common.config.filter.TokenAuthenticationFilter;
 import com.spring.blog.common.config.jwt.TokenProvider;
 import com.spring.blog.common.config.oauth.OAuth2AuthorizationRequestBasedOnCookieRepository;
 import com.spring.blog.common.config.oauth.OAuth2FailureHandler;
-import com.spring.blog.common.config.oauth.OAuth2SuccessHandler;
+import com.spring.blog.common.config.oauth.LoginSuccessHandler;
 import com.spring.blog.repository.RefreshTokenRepository;
 import com.spring.blog.service.CustomUserDetailsService;
 import com.spring.blog.service.UserService;
@@ -55,7 +55,7 @@ public class WebOAuthSecurityConfig {
                         .loginPage("/login")
                         .loginProcessingUrl("/loginProc")
                         .usernameParameter("email")
-                        .defaultSuccessUrl("/articles")
+                        .successHandler(oAuthSuccessHandler())
                 )
 
                 .authenticationManager(authenticationManager)
@@ -87,7 +87,7 @@ public class WebOAuthSecurityConfig {
                 .logout(logout -> logout
                         .logoutUrl("/logout")
                         .logoutSuccessUrl("/login")
-                        .deleteCookies("refresh_token", "JSESSIONID")
+                        .deleteCookies("access_token", "refresh_token", "JSESSIONID")
                         .invalidateHttpSession(true)
                         .clearAuthentication(true)
                 )
@@ -118,8 +118,8 @@ public class WebOAuthSecurityConfig {
     }
 
     @Bean
-    public OAuth2SuccessHandler oAuthSuccessHandler() {
-        return new OAuth2SuccessHandler(
+    public LoginSuccessHandler oAuthSuccessHandler() {
+        return new LoginSuccessHandler(
                 tokenProvider,
                 refreshTokenRepository,
                 oAuth2AuthorizationRequestBasedOnCookieRepository(),
