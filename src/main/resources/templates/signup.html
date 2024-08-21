@@ -9,27 +9,45 @@
         .gradient-custom {
             background: linear-gradient(to right, rgba(254, 238, 229, 1), rgba(229, 193, 197, 1))
         }
+
+        .card-custom {
+            width: 100%;
+            max-width: 600px;
+            margin: auto;
+        }
     </style>
 </head>
 <body class="gradient-custom">
 <section class="d-flex vh-100">
     <div class="container-fluid row justify-content-center align-content-center">
-        <div class="card bg-dark" style="border-radius: 1rem;">
-            <div class="card-body p-5 text-center">
-                <h2 class="text-white">SIGN UP</h2>
-                <p class="text-white-50 mt-2 mb-5">서비스 사용을 위한 회원 가입</p>
+        <div class="card bg-dark card-custom" style="border-radius: 1rem;">
+            <div class="card-body p-5 text-center" >
+                <h2 class="text-white">회원가입</h2>
 
                 <div class = "mb-2">
-                    <form th:action="@{/user}" method="POST">
-                        <!-- 토큰을 추가하여 CSRF 공격 방지 -->
-                        <input type="hidden" th:name="${_csrf?.parameterName}" th:value="${_csrf?.token}" />
+                    <form th:action="@{/user}" method="POST" th:object="${addUserRequest}">
                         <div class="mb-3">
                             <label class="form-label text-white">Email address</label>
-                            <input type="email" class="form-control" name="email">
+                            <input type="email" class="form-control" name="email"
+                                   th:value="*{email}"
+                                   required placeholder="이메일 형식에 맞춰주세요">
+                            <div th:errors="*{email}" class="text-danger"></div>
                         </div>
                         <div class="mb-3">
                             <label class="form-label text-white">Password</label>
-                            <input type="password" class="form-control" name="password">
+                            <input type="password" class="form-control" name="password"
+                                   pattern="^(?=.*[A-Za-z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,16}$"
+                                   title="비밀번호 형식에 맞지 않습니다."
+                                   th:value="*{password}"
+                                   required placeholder="8~16글자, 특수문자를 포함해주세요">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label text-white">Nickname</label>
+                            <input type="text" class="form-control"
+                                   minlength="2" maxlength="10" name="nickname"
+                                   th:value="*{nickname}"
+                                   required placeholder="블로그에서 사용하실 이름을 정해주세요">
+                            <div th:errors="*{nickname}" class="text-danger"></div>
                         </div>
 
                         <button type="submit" class="btn btn-primary">Submit</button>

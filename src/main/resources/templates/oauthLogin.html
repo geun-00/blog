@@ -11,6 +11,26 @@
             background: -webkit-linear-gradient(to right, rgba(106, 17, 203, 1), rgba(37, 117, 252, 1));
             background: linear-gradient(to right, rgba(106, 17, 203, 1), rgba(37, 117, 252, 1))
         }
+
+        .social-icon {
+            display: flex;
+            width: 200px;
+            height: auto;
+        }
+
+        .social-icons {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 20px;
+        }
+
+        .form-group {
+            text-align: left;
+        }
+
+        label {
+            color: white;
+        }
     </style>
 </head>
 <body class="gradient-custom">
@@ -18,23 +38,40 @@
     <div class="container-fluid row justify-content-center align-content-center">
         <div class="card bg-dark" style="border-radius: 1rem;">
             <div class="card-body p-5 text-center">
-                <h2 class="text-white">LOGIN</h2>
-                <p class="text-white-50 mt-2 mb-5">서비스 사용을 위해 로그인을 해주세요!</p>
 
-                <div class = "mb-2">
-                    <a href="/oauth2/authorization/google">
-                        <img src="/img/google.png">
-                    </a>
-                </div>
-                <div class = "mb-2">
-                    <a href="/oauth2/authorization/naver">
-                        <img src="/img/naver.png">
-                    </a>
-                </div>
-                <div class = "mb-2">
-                    <a href="/oauth2/authorization/kakao">
-                        <img src="/img/kakao.png">
-                    </a>
+                <h2 class="text-white">LOGIN</h2>
+
+                <form th:action="@{/loginProc}" method="post">
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <input type="text" class="form-control" id="email" name="email" required autofocus="autofocus">
+                    </div>
+                    <div class="form-group">
+                        <label for="password">Password</label>
+                        <input type="password" class="form-control" id="password" name="password" required>
+                    </div>
+                    <div>
+                        <button type="submit" class="btn btn-primary btn-block">Login</button>
+                        <a href="/signup" class="btn btn-secondary btn-block">Sign Up</a>
+                    </div>
+                </form>
+
+                <div class="social-icons mt-4">
+                    <div class="mb-2">
+                        <a th:href="@{/oauth2/authorization/google}">
+                            <img src="/img/google.png" class="social-icon">
+                        </a>
+                    </div>
+                    <div class="mb-2">
+                        <a th:href="@{/oauth2/authorization/naver}">
+                            <img src="/img/naver.png" class="social-icon">
+                        </a>
+                    </div>
+                    <div class="mb-2">
+                        <a th:href="@{/oauth2/authorization/kakao}">
+                            <img src="/img/kakao.png" class="social-icon">
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>
