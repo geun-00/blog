@@ -41,6 +41,10 @@
 
                 <h2 class="text-white">LOGIN</h2>
 
+                <div th:if="${param['invalid-session']}">
+                    <span th:text="#{session.expired}" class="alert alert-info"></span>
+                </div>
+
                 <div th:if="${param.error}" class="form-group">
                     <span th:text="${exception}?: '잘못된 아이디나 암호입니다'" class="alert alert-danger"></span>
                 </div>
@@ -55,7 +59,7 @@
                         <input type="password" class="form-control" id="password" name="password" required>
                     </div>
                     <div>
-                        <button type="submit" class="btn btn-primary btn-block">Login</button>
+                        <button type="submit" class="btn btn-primary btn-block" id="login-btn">Login</button>
                         <a href="/signup" class="btn btn-secondary btn-block">Sign Up</a>
                     </div>
                 </form>
@@ -63,17 +67,17 @@
                 <div class="social-icons mt-4">
                     <div class="mb-2">
                         <a th:href="@{/oauth2/authorization/google}">
-                            <img src="/img/google.png" class="social-icon">
+                            <img src="/images/google.png" class="social-icon">
                         </a>
                     </div>
                     <div class="mb-2">
                         <a th:href="@{/oauth2/authorization/naver}">
-                            <img src="/img/naver.png" class="social-icon">
+                            <img src="/images/naver.png" class="social-icon">
                         </a>
                     </div>
                     <div class="mb-2">
                         <a th:href="@{/oauth2/authorization/kakao}">
-                            <img src="/img/kakao.png" class="social-icon">
+                            <img src="/images/kakao.png" class="social-icon">
                         </a>
                     </div>
                 </div>

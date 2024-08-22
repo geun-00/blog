@@ -1,14 +1,8 @@
 package com.spring.blog.common.config;
 
 import com.spring.blog.common.config.authority.CustomAuthorityMapper;
-import com.spring.blog.common.config.filter.TokenAuthenticationFilter;
-import com.spring.blog.common.config.jwt.TokenProvider;
-import com.spring.blog.common.config.oauth.OAuth2AuthorizationRequestBasedOnCookieRepository;
 import com.spring.blog.common.config.oauth.LoginFailureHandler;
-import com.spring.blog.common.config.oauth.LoginSuccessHandler;
-import com.spring.blog.repository.RefreshTokenRepository;
 import com.spring.blog.service.CustomUserDetailsService;
-import com.spring.blog.service.UserService;
 import com.spring.blog.service.oauth.CustomOAuth2UserService;
 import com.spring.blog.service.oauth.CustomOidcUserService;
 import lombok.RequiredArgsConstructor;
@@ -26,7 +20,6 @@ import org.springframework.security.core.authority.mapping.GrantedAuthoritiesMap
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.HttpStatusEntryPoint;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 @Configuration
@@ -34,50 +27,44 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 @RequiredArgsConstructor
 public class WebOAuthSecurityConfig {
 
-    private final UserService userService;
-    private final TokenProvider tokenProvider;
     private final PasswordEncoder passwordEncoder;
     private final CustomOidcUserService customOidcUserService;
-    private final RefreshTokenRepository refreshTokenRepository;
     private final CustomOAuth2UserService customOAuth2UserService;
     private final CustomUserDetailsService customUserDetailsService;
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
-        AuthenticationManager authenticationManager = setAuthenticationManager(http);
-
         http
                 .csrf(AbstractHttpConfigurer::disable)
+                .cors(AbstractHttpConfigurer::disable)
                 .httpBasic(AbstractHttpConfigurer::disable)
 
-                .formLogin(formLogin -> formLogin
-                        .loginPage("/login")
-                        .loginProcessingUrl("/loginProc")
-                        .usernameParameter("email")
-                        .successHandler(loginSuccessHandler())
-                        .failureHandler(new LoginFailureHandler())
+                .sessionManagement(session -> session
+                        .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
+                        .invalidSessionUrl("/login?invalid-session")
+                        .maximumSessions(1)
+                        .expiredUrl("/login")
                 )
 
-                .authenticationManager(authenticationManager)
-
-                .sessionManagement(session ->
-                        session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-
-                .addFilterBefore(tokenAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)
+                .authenticationManager(setAuthenticationManager(http))
 
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/css/**", "/js/**", "/images/**", "/webjars/**", "/favicon.*", "/*/icon-*", "/h2-console/**").permitAll()
-                        .requestMatchers("/api/token", "/signup", "/login*").permitAll()
+                        .requestMatchers("/css/**", "/js/**", "/images/*", "/webjars/**", "/favicon.*", "/*/icon-*", "/h2-console/**").permitAll()
+                        .requestMatchers("/", "/signup", "/login*").permitAll()
                         .requestMatchers("/api/**").authenticated()
                         .anyRequest().permitAll())
 
+                .formLogin(
+                        formLogin -> formLogin
+                                .loginPage("/login")
+                                .loginProcessingUrl("/loginProc")
+                                .usernameParameter("email")
+                                .failureHandler(new LoginFailureHandler())
+                )
+
                 .oauth2Login(oauth2 -> oauth2
                         .loginPage("/login")
-                        .authorizationEndpoint(auth -> auth
-                                .authorizationRequestRepository(oAuth2AuthorizationRequestBasedOnCookieRepository())
-                        )
-                        .successHandler(loginSuccessHandler())
                         .failureHandler(new LoginFailureHandler())
                         .userInfoEndpoint(userInfo -> userInfo
                                 .userService(customOAuth2UserService)
@@ -88,16 +75,9 @@ public class WebOAuthSecurityConfig {
                 .logout(logout -> logout
                         .logoutUrl("/logout")
                         .logoutSuccessUrl("/login")
-                        .deleteCookies("access_token", "refresh_token", "JSESSIONID")
+                        .deleteCookies("JSESSIONID")
                         .invalidateHttpSession(true)
                         .clearAuthentication(true)
-                )
-
-                .exceptionHandling(exception -> exception
-                        .defaultAuthenticationEntryPointFor(
-                                new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED),
-                                new AntPathRequestMatcher("/api/**")
-                        )
                 )
         ;
 
@@ -118,14 +98,15 @@ public class WebOAuthSecurityConfig {
         return builder.build();
     }
 
+/*
     @Bean
     public LoginSuccessHandler loginSuccessHandler() {
         return new LoginSuccessHandler(
+                userService,
                 tokenProvider,
                 refreshTokenRepository,
-                oAuth2AuthorizationRequestBasedOnCookieRepository(),
-                userService
-        );
+                oAuth2AuthorizationRequestBasedOnCookieRepository()
+                );
     }
 
     @Bean
@@ -137,6 +118,7 @@ public class WebOAuthSecurityConfig {
     public OAuth2AuthorizationRequestBasedOnCookieRepository oAuth2AuthorizationRequestBasedOnCookieRepository() {
         return new OAuth2AuthorizationRequestBasedOnCookieRepository();
     }
+*/
 
     @Bean
     public GrantedAuthoritiesMapper customAuthorityMapper() {

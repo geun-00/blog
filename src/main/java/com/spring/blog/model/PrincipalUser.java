@@ -35,12 +35,12 @@ public record PrincipalUser(ProviderUser providerUser) implements UserDetails, O
 
     @Override
     public Object getDetails() {
-        return null;
+        return providerUser;
     }
 
     @Override
     public Object getPrincipal() {
-        return null;
+        return this;
     }
 
     @Override
@@ -65,7 +65,7 @@ public record PrincipalUser(ProviderUser providerUser) implements UserDetails, O
 
     @Override
     public Map<String, Object> getClaims() {
-        return null;
+        return getAttributes();
     }
 
     @Override

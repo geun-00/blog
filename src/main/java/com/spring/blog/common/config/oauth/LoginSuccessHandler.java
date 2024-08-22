@@ -1,12 +1,12 @@
 package com.spring.blog.common.config.oauth;
 
 import com.spring.blog.common.config.jwt.TokenProvider;
+import com.spring.blog.common.converters.utils.CookieUtil;
 import com.spring.blog.domain.RefreshToken;
 import com.spring.blog.domain.User;
 import com.spring.blog.model.PrincipalUser;
 import com.spring.blog.repository.RefreshTokenRepository;
 import com.spring.blog.service.UserService;
-import com.spring.blog.common.converters.utils.CookieUtil;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -28,10 +28,10 @@ public class LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
     public static final Duration REFRESH_TOKEN_DURATION = Duration.ofDays(14);
     public static final Duration ACCESS_TOKEN_DURATION = Duration.ofDays(1);
 
+    private final UserService userService;
     private final TokenProvider tokenProvider;
     private final RefreshTokenRepository refreshTokenRepository;
-    private final OAuth2AuthorizationRequestBasedOnCookieRepository authorizationRequestRepository;
-    private final UserService userService;
+//    private final OAuth2AuthorizationRequestBasedOnCookieRepository authorizationRequestRepository;
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
@@ -51,6 +51,7 @@ public class LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
 
         //인증 관련 설정값, 쿠키 제거
         clearAuthenticationAttributes(request, response);
+        super.onAuthenticationSuccess(request, response, authentication);
 
         //리다이렉트
         getRedirectStrategy().sendRedirect(request, response, REDIRECT_PATH);
@@ -85,6 +86,6 @@ public class LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
     private void clearAuthenticationAttributes(HttpServletRequest request, HttpServletResponse response) {
 
         super.clearAuthenticationAttributes(request);
-        authorizationRequestRepository.removeAuthorizationRequestCookies(request, response);
+//        authorizationRequestRepository.removeAuthorizationRequestCookies(request, response);
     }
 }

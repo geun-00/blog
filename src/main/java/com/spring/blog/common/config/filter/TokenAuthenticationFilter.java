@@ -8,19 +8,39 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.util.PatternMatchUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
+import java.util.regex.Pattern;
 
 @RequiredArgsConstructor
 public class TokenAuthenticationFilter extends OncePerRequestFilter {
 
+    private final static String[] excludePaths = new String[]{
+            "/login",
+            "/signup",
+            "/css/**",
+            "/js/**",
+            "/images/**",
+            "/webjars/**",
+            "/favicon.*",
+            "/h2-console/**"
+    };
     private final static String TOKEN_PREFIX = "Bearer ";
     private final static String HEADER_AUTHORIZATION = "Authorization";
+
     private final TokenProvider tokenProvider;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+
+        String requestURI = request.getRequestURI();
+
+        if (PatternMatchUtils.simpleMatch(excludePaths, requestURI)) {
+            filterChain.doFilter(request, response);
+            return;
+        }
 
         //요청 헤더 Authorization 조회
         String authorizationHeader = request.getHeader(HEADER_AUTHORIZATION);
@@ -28,9 +48,9 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
         String token = getAccessToken(authorizationHeader);
 
         //유효한 토큰일 때만 인증 정보 설정
-        if (tokenProvider.validToken(token)) {
+        if (token != null && tokenProvider.validToken(token)) {
             Authentication authentication = tokenProvider.getAuthentication(token);
-            SecurityContextHolder.getContextHolderStrategy().getContext().setAuthentication(authentication);
+            SecurityContextHolder.getContext().setAuthentication(authentication);
         }
 
         filterChain.doFilter(request, response);

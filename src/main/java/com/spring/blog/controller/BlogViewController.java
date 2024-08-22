@@ -19,9 +19,13 @@ public class BlogViewController {
 
     private final BlogService blogService;
 
+    @GetMapping("/")
+    public String home() {
+        return "redirect:/articles";
+    }
+
     @GetMapping("/articles")
     public String getArticles(Model model) {
-
         List<ArticleListViewResponse> articles = blogService.findAll().stream()
                 .map(ArticleListViewResponse::new)
                 .toList();

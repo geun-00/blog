@@ -1,6 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org"
-      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>블로그 글 목록</title>
@@ -26,7 +25,6 @@
         </div>
         <br>
     </div>
-    <button type="button" class="btn btn-secondary" sec:authorize="isAuthenticated()" onclick="location.href='/logout'">로그아웃</button>
 </div>
 
 <script src="/js/article.js"></script>

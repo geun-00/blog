@@ -1,20 +1,35 @@
 <!-- src/main/resources/templates/fragments/header.html -->
 <!DOCTYPE html>
-<html th:fragment="common_header" xmlns:th="http://www.thymeleaf.org">
+<html th:fragment="common_header"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Blog</title>
+    <title>Blog</title>
     <style>
         .clickable {
             cursor: pointer; /* 클릭 가능한 요소를 표시 */
+            display: inline-block;
         }
     </style>
 </head>
 <body>
-<div class="p-5 mb-5 text-center bg-light clickable" th:onclick="|window.location.href='@{/articles}'|">
-    <h1 class="mb-3">My Blog</h1>
+<div class="p-5 mb-5 text-center bg-light">
+    <div class="d-flex justify-content-end">
+        <button type="button" class="btn btn-secondary" sec:authorize="isAuthenticated()" onclick="location.href='/logout'">
+            로그아웃
+        </button>
+        <button type="button" class="btn btn-secondary" sec:authorize="isAnonymous()" onclick="location.href='/login'">
+            로그인
+        </button>
+        <button type="button" class="btn btn-primary" sec:authorize="isAuthenticated()" id="mypage-btn" onclick="location.href='/mypage'">
+            마이 페이지
+        </button>
+    </div>
+    <h1 sec:authorize="isAuthenticated()" th:text="${#authentication.getName()} + '\'s 블로그'" class="mb-3 clickable" th:onclick="|window.location.href='@{/articles}'|"></h1>
     <h4 class="mb-3">블로그에 오신 것을 환영합니다.</h4>
 </div>
 </body>
 </html>
+
