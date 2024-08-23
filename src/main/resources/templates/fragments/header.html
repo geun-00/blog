@@ -23,7 +23,7 @@
         <button type="button" class="btn btn-secondary" sec:authorize="isAnonymous()" onclick="location.href='/login'">
             로그인
         </button>
-        <button type="button" class="btn btn-primary" sec:authorize="isAuthenticated()" id="mypage-btn" onclick="location.href='/mypage'">
+        <button type="button" class="btn btn-primary" sec:authorize="isAuthenticated()" onclick="location.href='/myPage'">
             마이 페이지
         </button>
     </div>
@@ -32,4 +32,3 @@
 </div>
 </body>
 </html>
-

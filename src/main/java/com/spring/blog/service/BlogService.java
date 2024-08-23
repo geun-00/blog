@@ -1,9 +1,11 @@
 package com.spring.blog.service;
 
 import com.spring.blog.domain.Article;
+import com.spring.blog.domain.User;
 import com.spring.blog.dto.AddArticleRequest;
 import com.spring.blog.dto.UpdateArticleRequest;
 import com.spring.blog.repository.BlogRepository;
+import com.spring.blog.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -12,27 +14,35 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 @Service
-@Transactional
+@Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class BlogService {
 
     private final BlogRepository blogRepository;
+    private final UserRepository userRepository;
 
+    @Transactional
     public Article save(AddArticleRequest request, String userName) {
-        return blogRepository.save(request.toEntity(userName));
+
+        User user = userRepository.findByNickname(userName).orElseThrow(() -> new IllegalArgumentException(" "));
+
+        Article article = request.toEntity(userName);
+
+        user.addArticle(article);
+
+        return blogRepository.save(article);
     }
 
-    @Transactional(readOnly = true)
     public List<Article> findAll() {
         return blogRepository.findAll();
     }
 
-    @Transactional(readOnly = true)
     public Article findById(Long id) {
         return blogRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("not found : " + id));
     }
 
+    @Transactional
     public void delete(long id) {
         Article article = blogRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("not found :" + id));
@@ -42,6 +52,7 @@ public class BlogService {
         blogRepository.delete(article);
     }
 
+    @Transactional
     public Article update(long id, UpdateArticleRequest request) {
         Article article = blogRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("not found :" + id));

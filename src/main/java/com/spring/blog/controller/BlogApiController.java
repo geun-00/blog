@@ -1,5 +1,6 @@
 package com.spring.blog.controller;
 
+import com.spring.blog.common.annotation.CurrentUser;
 import com.spring.blog.domain.Article;
 import com.spring.blog.dto.AddArticleRequest;
 import com.spring.blog.dto.ArticleResponse;
@@ -8,6 +9,8 @@ import com.spring.blog.service.BlogService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -16,7 +19,6 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.security.Principal;
 import java.util.List;
 
 @RestController
@@ -25,9 +27,11 @@ public class BlogApiController {
 
     private final BlogService blogService;
 
+    @PreAuthorize("hasAuthority('ROLE_USER')")
     @PostMapping("/api/articles")
-    public ResponseEntity<Article> addArticle(@RequestBody AddArticleRequest request, Principal principal) {
-        Article savedArticle = blogService.save(request, principal.getName());
+    public ResponseEntity<Article> addArticle(@RequestBody AddArticleRequest request,
+                                              @CurrentUser Authentication authentication) {
+        Article savedArticle = blogService.save(request, authentication.getName());
 
         return ResponseEntity.status(HttpStatus.CREATED).body(savedArticle);
     }
