@@ -4,6 +4,9 @@ import com.spring.blog.domain.Article;
 import com.spring.blog.dto.ArticleListViewResponse;
 import com.spring.blog.dto.ArticleViewResponse;
 import com.spring.blog.service.BlogService;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -21,6 +24,21 @@ public class BlogViewController {
 
     @GetMapping("/")
     public String home() {
+        return "redirect:/articles";
+    }
+
+    @GetMapping("/guest")
+    public String guest(HttpServletRequest request, HttpServletResponse response) {
+
+        request.getSession().invalidate();
+
+        for (Cookie cookie : request.getCookies()) {
+            if ("JSESSIONID".equals(cookie.getName())) {
+                cookie.setMaxAge(0);
+                cookie.setPath("/");
+                response.addCookie(cookie);
+            }
+        }
         return "redirect:/articles";
     }
 
