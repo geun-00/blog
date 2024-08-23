@@ -68,10 +68,6 @@ spring:
     # 테이블 생성 후 sql 파일 실행
     defer-datasource-initialization: true
 
-jwt:
-  issuer: ENC(XD3KNuRKbcq1POQl4lo2f98SxP4HylXrUDTNeBR1G7U=)
-  secret_key: ENC(s8+oCX5whHJv6Xozto5BaHJVHM6EmHy4IEfnqCNyzqC+co8RA+thrQha+aE2/u+kw8tarCvg/JNv824g+YxUUJpOHGIhiYWHccGLZtrJjqoyEh7Kj6431HD/Lx+OqNzuLcI9x7AtQH7h1zpVce2gyjHQBdvwnYbafhy/eCSycomxj0zeTn8FOSu/8FMo2PKI)
-
 jasypt:
   encryptor:
     bean: jasyptEncryptor

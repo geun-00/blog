@@ -107,16 +107,6 @@ public class WebOAuthSecurityConfig {
                 oAuth2AuthorizationRequestBasedOnCookieRepository()
                 );
     }
-
-    @Bean
-    public TokenAuthenticationFilter tokenAuthenticationFilter() {
-        return new TokenAuthenticationFilter(tokenProvider);
-    }
-
-    @Bean
-    public OAuth2AuthorizationRequestBasedOnCookieRepository oAuth2AuthorizationRequestBasedOnCookieRepository() {
-        return new OAuth2AuthorizationRequestBasedOnCookieRepository();
-    }
 */
 
     @Bean
