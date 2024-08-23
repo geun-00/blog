@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta charset="UTF-8">
     <title>회원 가입</title>
@@ -26,14 +27,14 @@
 
                 <div class = "mb-2">
                     <form th:action="@{/user}" method="POST" th:object="${addUserRequest}">
-                        <div class="mb-3">
+                        <div class="mb-3" sec:authorize="isAnonymous()">
                             <label class="form-label text-white">Email address</label>
                             <input type="email" class="form-control" name="email"
                                    th:value="*{email}"
                                    required placeholder="이메일 형식에 맞춰주세요.">
                             <div th:errors="*{email}" class="text-danger"></div>
                         </div>
-                        <div class="mb-3">
+                        <div class="mb-3" sec:authorize="isAnonymous()">
                             <label class="form-label text-white">Password</label>
                             <input type="password" class="form-control" name="password"
                                    pattern="^(?=.*[A-Za-z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,16}$"

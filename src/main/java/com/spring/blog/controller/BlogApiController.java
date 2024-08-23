@@ -5,6 +5,7 @@ import com.spring.blog.domain.Article;
 import com.spring.blog.dto.AddArticleRequest;
 import com.spring.blog.dto.ArticleResponse;
 import com.spring.blog.dto.UpdateArticleRequest;
+import com.spring.blog.model.PrincipalUser;
 import com.spring.blog.service.BlogService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -31,7 +32,9 @@ public class BlogApiController {
     @PostMapping("/api/articles")
     public ResponseEntity<Article> addArticle(@RequestBody AddArticleRequest request,
                                               @CurrentUser Authentication authentication) {
-        Article savedArticle = blogService.save(request, authentication.getName());
+
+        PrincipalUser principalUser = (PrincipalUser) authentication.getPrincipal();
+        Article savedArticle = blogService.save(request, principalUser.providerUser().getEmail());
 
         return ResponseEntity.status(HttpStatus.CREATED).body(savedArticle);
     }

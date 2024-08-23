@@ -1,5 +1,6 @@
 package com.spring.blog.model;
 
+import com.spring.blog.domain.User;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.oauth2.core.oidc.OidcIdToken;
@@ -10,7 +11,7 @@ import org.springframework.security.oauth2.core.user.OAuth2User;
 import java.util.Collection;
 import java.util.Map;
 
-public record PrincipalUser(ProviderUser providerUser) implements UserDetails, OAuth2User, OidcUser {
+public record PrincipalUser(ProviderUser providerUser, User user) implements UserDetails, OAuth2User, OidcUser {
 
     @Override
     public String getName() {
@@ -34,7 +35,7 @@ public record PrincipalUser(ProviderUser providerUser) implements UserDetails, O
 
     @Override
     public String getUsername() {
-        return providerUser.getUsername();
+        return user != null ? user.getNickname() : providerUser.getUsername();
     }
 
     @Override

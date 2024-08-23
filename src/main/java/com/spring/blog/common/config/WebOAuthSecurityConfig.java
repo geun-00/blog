@@ -1,8 +1,10 @@
 package com.spring.blog.common.config;
 
 import com.spring.blog.common.config.authority.CustomAuthorityMapper;
+import com.spring.blog.common.config.oauth.CustomOAuth2SuccessHandler;
 import com.spring.blog.common.config.oauth.LoginFailureHandler;
 import com.spring.blog.service.CustomUserDetailsService;
+import com.spring.blog.service.UserService;
 import com.spring.blog.service.oauth.CustomOAuth2UserService;
 import com.spring.blog.service.oauth.CustomOidcUserService;
 import lombok.RequiredArgsConstructor;
@@ -26,6 +28,7 @@ import org.springframework.security.web.SecurityFilterChain;
 @RequiredArgsConstructor
 public class WebOAuthSecurityConfig {
 
+    private final UserService userService;
     private final PasswordEncoder passwordEncoder;
     private final CustomOidcUserService customOidcUserService;
     private final CustomOAuth2UserService customOAuth2UserService;
@@ -64,6 +67,7 @@ public class WebOAuthSecurityConfig {
 
                 .oauth2Login(oauth2 -> oauth2
                         .loginPage("/login")
+                        .successHandler(customOAuth2SuccessHandler())
                         .failureHandler(new LoginFailureHandler())
                         .userInfoEndpoint(userInfo -> userInfo
                                 .userService(customOAuth2UserService)
@@ -97,17 +101,10 @@ public class WebOAuthSecurityConfig {
         return builder.build();
     }
 
-/*
     @Bean
-    public LoginSuccessHandler loginSuccessHandler() {
-        return new LoginSuccessHandler(
-                userService,
-                tokenProvider,
-                refreshTokenRepository,
-                oAuth2AuthorizationRequestBasedOnCookieRepository()
-                );
+    public CustomOAuth2SuccessHandler customOAuth2SuccessHandler() {
+        return new CustomOAuth2SuccessHandler(userService);
     }
-*/
 
     @Bean
     public GrantedAuthoritiesMapper customAuthorityMapper() {

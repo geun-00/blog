@@ -59,8 +59,7 @@ public class User extends BaseEntity {
         this.registrationId = registrationId;
     }
 
-    public User update(String nickname) {
+    public void updateNickname(String nickname) {
         this.nickname = nickname;
-        return this;
     }
 }

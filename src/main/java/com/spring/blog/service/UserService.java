@@ -36,11 +36,16 @@ public class UserService {
         return userRepository.save(
             User.builder()
                     .email(providerUser.getEmail())
-                    .nickname(providerUser.getUsername())
                     .password(passwordEncoder.encode(providerUser.getPassword()))
                     .registrationId(socialType)
                     .build()
         );
+    }
+
+    @Transactional
+    public void updateNickname(String nickname, String email) {
+        User user = findByEmail(email);
+        user.updateNickname(nickname);
     }
 
     public User findById(Long userId) {

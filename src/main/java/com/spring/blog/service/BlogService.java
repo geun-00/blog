@@ -22,11 +22,11 @@ public class BlogService {
     private final UserRepository userRepository;
 
     @Transactional
-    public Article save(AddArticleRequest request, String userName) {
+    public Article save(AddArticleRequest request, String email) {
 
-        User user = userRepository.findByNickname(userName).orElseThrow(() -> new IllegalArgumentException(" "));
+        User user = userRepository.findByEmail(email).orElseThrow(() -> new IllegalArgumentException(" "));
 
-        Article article = request.toEntity(userName);
+        Article article = request.toEntity(user.getNickname());
 
         user.addArticle(article);
 

@@ -48,6 +48,6 @@ public class CustomOidcUserService extends AbstractOAuth2UserService
 
         save(providerUser, userRequest);
 
-        return new PrincipalUser(providerUser);
+        return new PrincipalUser(providerUser, null);
     }
 }

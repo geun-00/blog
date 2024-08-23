@@ -45,6 +45,10 @@
                     <span th:text="#{session.expired}" class="alert alert-info"></span>
                 </div>
 
+                <div th:if="${param.success}">
+                    <span th:text="#{signup.success}" class="alert alert-info"></span>
+                </div>
+
                 <div th:if="${param.error}" class="form-group">
                     <span th:text="${exception}?: '잘못된 아이디나 암호입니다'" class="alert alert-danger"></span>
                 </div>

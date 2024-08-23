@@ -32,7 +32,7 @@ public class CustomUserDetailsService implements UserDetailsService {
                                     .authorities(List.of(new SimpleGrantedAuthority("user")))
                                     .build();
 
-                            return new PrincipalUser(provider);
+                            return new PrincipalUser(provider, null);
                         })
                 .orElseThrow(() -> new UsernameNotFoundException("not found :" + email));
     }
