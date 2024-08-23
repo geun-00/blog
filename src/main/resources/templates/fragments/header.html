@@ -16,19 +16,42 @@
 </head>
 <body>
 <div class="p-5 mb-5 text-center bg-light">
-    <div class="d-flex justify-content-end">
-        <button type="button" class="btn btn-secondary" sec:authorize="isAuthenticated()" onclick="location.href='/logout'">
-            로그아웃
+    <div class="d-flex justify-content-between">
+        <button id="user-del-dtn" type="button" class="btn btn-danger" sec:authorize="isAuthenticated()">
+            회원 탈퇴
         </button>
-        <button type="button" class="btn btn-secondary" sec:authorize="isAnonymous()" onclick="location.href='/login'">
-            로그인
-        </button>
-        <button type="button" class="btn btn-primary" sec:authorize="isAuthenticated()" onclick="location.href='/myPage'">
-            마이 페이지
-        </button>
+        <div>
+            <button type="button" class="btn btn-secondary" sec:authorize="isAuthenticated()" onclick="location.href='/logout'">
+                로그아웃
+            </button>
+            <button type="button" class="btn btn-secondary" sec:authorize="isAnonymous()" onclick="location.href='/login'">
+                로그인
+            </button>
+            <button type="button" class="btn btn-primary" sec:authorize="isAuthenticated()" onclick="location.href='/myPage'">
+                마이 페이지
+            </button>
+        </div>
     </div>
     <h1 sec:authorize="isAuthenticated()" th:text="${#authentication.getName()} + '\'s 블로그'" class="mb-3 clickable" th:onclick="|window.location.href='@{/articles}'|"></h1>
     <h4 class="mb-3">블로그에 오신 것을 환영합니다.</h4>
 </div>
 </body>
+<script>
+    const userDelButton = document.getElementById('user-del-dtn');
+
+    if (userDelButton != null) {
+        userDelButton.addEventListener('click', event => {
+            function success() {
+                alert('탈퇴 되었습니다.');
+                location.replace('/login');
+            };
+            function fail() {
+                alert('오류가 발생했습니다.');
+                location.replace('/articles');
+            };
+
+            httpRequest('DELETE','/user', null, success, fail)
+        });
+    }
+</script>
 </html>

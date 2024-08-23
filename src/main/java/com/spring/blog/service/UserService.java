@@ -48,6 +48,12 @@ public class UserService {
         user.updateNickname(nickname);
     }
 
+    @Transactional
+    public void deleteUser(String email) {
+        User user = findByEmail(email);
+        userRepository.delete(user);
+    }
+
     public User findById(Long userId) {
         return userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("Unexpected user"));
