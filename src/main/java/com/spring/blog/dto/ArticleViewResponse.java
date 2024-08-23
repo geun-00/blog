@@ -4,7 +4,7 @@ import com.spring.blog.domain.Article;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Getter
 @NoArgsConstructor
@@ -13,7 +13,7 @@ public class ArticleViewResponse {
     private Long id;
     private String title;
     private String content;
-    private LocalDate createdAt;
+    private LocalDateTime createdAt;
     private String author;
 
     public ArticleViewResponse(Article article) {
