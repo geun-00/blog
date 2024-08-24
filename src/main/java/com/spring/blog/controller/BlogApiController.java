@@ -30,13 +30,13 @@ public class BlogApiController {
 
     @PreAuthorize("hasAuthority('ROLE_USER')")
     @PostMapping("/api/articles")
-    public ResponseEntity<Article> addArticle(@RequestBody AddArticleRequest request,
-                                              @CurrentUser Authentication authentication) {
+    public ResponseEntity<ArticleResponse> addArticle(@RequestBody AddArticleRequest request,
+                                                      @CurrentUser Authentication authentication) {
 
         PrincipalUser principalUser = (PrincipalUser) authentication.getPrincipal();
         Article savedArticle = blogService.save(request, principalUser.providerUser().getEmail());
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(savedArticle);
+        return ResponseEntity.status(HttpStatus.CREATED).body(new ArticleResponse(savedArticle));
     }
 
     @GetMapping("/api/articles")
@@ -64,10 +64,10 @@ public class BlogApiController {
     }
 
     @PutMapping("/api/articles/{id}")
-    public ResponseEntity<Article> updateArticle(@PathVariable("id") long id,
+    public ResponseEntity<ArticleResponse> updateArticle(@PathVariable("id") long id,
                                                  @RequestBody UpdateArticleRequest request) {
         Article updatedArticle = blogService.update(id, request);
 
-        return ResponseEntity.ok().body(updatedArticle);
+        return ResponseEntity.ok().body(new ArticleResponse(updatedArticle));
     }
 }

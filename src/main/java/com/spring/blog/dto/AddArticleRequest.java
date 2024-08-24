@@ -1,16 +1,19 @@
 package com.spring.blog.dto;
 
 import com.spring.blog.domain.Article;
+import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
-import lombok.Getter;
+import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@NoArgsConstructor
+@Data
 @AllArgsConstructor
-@Getter
+@NoArgsConstructor
 public class AddArticleRequest {
 
+    @NotBlank
     private String title;
+    @NotBlank
     private String content;
 
     public Article toEntity(String author) {

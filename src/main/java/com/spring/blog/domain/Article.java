@@ -34,7 +34,7 @@ public class Article extends BaseEntity {
     private String author;
 
     @ManyToOne
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
     @Builder

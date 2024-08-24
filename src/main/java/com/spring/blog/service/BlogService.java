@@ -20,14 +20,15 @@ public class BlogService {
 
     private final BlogRepository blogRepository;
     private final UserRepository userRepository;
+    private final ValidationService validationService;
 
     @Transactional
     public Article save(AddArticleRequest request, String email) {
 
+        validationService.checkValid(request);
+
         User user = userRepository.findByEmail(email).orElseThrow(() -> new IllegalArgumentException(" "));
-
         Article article = request.toEntity(user.getNickname());
-
         user.addArticle(article);
 
         return blogRepository.save(article);

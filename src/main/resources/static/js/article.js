@@ -60,8 +60,8 @@ if (createButton != null) {
             location.replace('/articles');
         };
         function fail() {
-            alert('등록 실패했습니다.');
-            location.replace('/articles');
+            alert('입력이 올바르지 않습니다.');
+            location.replace('/new-article');
         };
 
         httpRequest('POST','/api/articles', body, success, fail)
