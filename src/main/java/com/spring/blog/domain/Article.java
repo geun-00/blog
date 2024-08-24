@@ -2,6 +2,7 @@ package com.spring.blog.domain;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -30,18 +31,14 @@ public class Article extends BaseEntity {
     @Column(name = "content", nullable = false)
     private String content;
 
-    @Column(name = "author", nullable = false)
-    private String author;
-
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
     @Builder
-    public Article(String title, String content, String author) {
+    public Article(String title, String content) {
         this.title = title;
         this.content = content;
-        this.author = author;
     }
 
     public void update(String title, String content) {

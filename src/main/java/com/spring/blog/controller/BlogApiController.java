@@ -51,7 +51,7 @@ public class BlogApiController {
 
     @GetMapping("/api/articles/{id}")
     public ResponseEntity<ArticleResponse> findArticle(@PathVariable("id") long id) {
-        Article article = blogService.findById(id);
+        Article article = blogService.findWithUserById(id);
 
         return ResponseEntity.ok().body(new ArticleResponse(article));
     }
@@ -65,7 +65,7 @@ public class BlogApiController {
 
     @PutMapping("/api/articles/{id}")
     public ResponseEntity<ArticleResponse> updateArticle(@PathVariable("id") long id,
-                                                 @RequestBody UpdateArticleRequest request) {
+                                                         @RequestBody UpdateArticleRequest request) {
         Article updatedArticle = blogService.update(id, request);
 
         return ResponseEntity.ok().body(new ArticleResponse(updatedArticle));

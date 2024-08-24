@@ -6,8 +6,8 @@ import com.spring.blog.dto.AddArticleRequest;
 import com.spring.blog.dto.UpdateArticleRequest;
 import com.spring.blog.repository.BlogRepository;
 import com.spring.blog.repository.UserRepository;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -27,50 +27,41 @@ public class BlogService {
 
         validationService.checkValid(request);
 
-        User user = userRepository.findByEmail(email).orElseThrow(() -> new IllegalArgumentException(" "));
-        Article article = request.toEntity(user.getNickname());
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new EntityNotFoundException("not found : " + email));
+        Article article = request.toEntity();
         user.addArticle(article);
 
         return blogRepository.save(article);
     }
 
-    public List<Article> findAll() {
-        return blogRepository.findAll();
-    }
-
-    public Article findById(Long id) {
-        return blogRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("not found : " + id));
-    }
-
-    @Transactional
-    public void delete(long id) {
-        Article article = blogRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("not found :" + id));
-
-        authorizeArticleAuthor(article);
-
-        blogRepository.delete(article);
-    }
-
     @Transactional
     public Article update(long id, UpdateArticleRequest request) {
-        Article article = blogRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("not found :" + id));
 
-        authorizeArticleAuthor(article);
+        validationService.checkValid(request);
+
+        Article article = blogRepository.findWithUserById(id)
+                .orElseThrow(() -> new EntityNotFoundException("not found : " + id));
 
         article.update(request.getTitle(), request.getContent());
 
         return article;
     }
 
-    //게시글을 작성한 사용자인지 확인
-    private void authorizeArticleAuthor(Article article) {
+    @Transactional
+    public void delete(long id) {
+        Article article = blogRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("not found : " + id));
 
-        String userName = SecurityContextHolder.getContextHolderStrategy().getContext().getAuthentication().getName();
-        if (!article.getAuthor().equals(userName)) {
-            throw new IllegalArgumentException("not authorized");
-        }
+        blogRepository.delete(article);
+    }
+
+    public List<Article> findAll() {
+        return blogRepository.findAll();
+    }
+
+    public Article findWithUserById(Long id) {
+        return blogRepository.findWithUserById(id)
+                .orElseThrow(() -> new EntityNotFoundException("not found : " + id));
     }
 }

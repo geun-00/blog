@@ -5,6 +5,7 @@ import com.spring.blog.domain.User;
 import com.spring.blog.dto.AddUserRequest;
 import com.spring.blog.model.ProviderUser;
 import com.spring.blog.repository.UserRepository;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -31,32 +32,33 @@ public class UserService {
     }
 
     @Transactional
-    public User save(ProviderUser providerUser, SocialType socialType) {
-
-        return userRepository.save(
+    public void save(ProviderUser providerUser, SocialType socialType) {
+        userRepository.save(
             User.builder()
+                    .registrationId(socialType)
                     .email(providerUser.getEmail())
                     .password(passwordEncoder.encode(providerUser.getPassword()))
-                    .registrationId(socialType)
                     .build()
         );
     }
 
     @Transactional
     public void updateNickname(String nickname, String email) {
-        User user = findByEmail(email);
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new EntityNotFoundException("Unexpected User : " + email));
         user.updateNickname(nickname);
     }
 
     @Transactional
     public void deleteUser(String email) {
-        User user = findByEmail(email);
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new EntityNotFoundException("Unexpected User : " + email));
         userRepository.delete(user);
     }
 
     public User findById(Long userId) {
         return userRepository.findById(userId)
-                .orElseThrow(() -> new IllegalArgumentException("Unexpected user"));
+                .orElseThrow(() -> new EntityNotFoundException("Unexpected User : " + userId));
     }
 
     public User findByEmail(String email) {

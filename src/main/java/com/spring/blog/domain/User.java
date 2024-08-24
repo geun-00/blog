@@ -37,13 +37,13 @@ public class User extends BaseEntity {
     @Column(name = "email", nullable = false, unique = true)
     private String email;
 
-    @Column(name = "password")
+    @Column(name = "password", nullable = false)
     private String password;
 
-    @Column(name = "nickname", unique = true)
+    @Column(name = "nickname", nullable = false, unique = true)
     private String nickname;
 
-    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, orphanRemoval = true)
+    @OneToMany(mappedBy = "user", orphanRemoval = true)
     private List<Article> articles = new ArrayList<>();
 
     public void addArticle(Article article) {
