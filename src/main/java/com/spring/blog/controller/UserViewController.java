@@ -2,8 +2,11 @@ package com.spring.blog.controller;
 
 import com.spring.blog.common.annotation.CurrentUser;
 import com.spring.blog.controller.validator.AddUserValidator;
+import com.spring.blog.domain.User;
 import com.spring.blog.dto.AddUserRequest;
+import com.spring.blog.dto.UserInfoResponse;
 import com.spring.blog.model.PrincipalUser;
+import com.spring.blog.service.BlogService;
 import com.spring.blog.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
@@ -23,9 +26,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 public class UserViewController {
 
     private final UserService userService;
+    private final BlogService blogService;
     private final AddUserValidator addUserValidator;
 
-    @InitBinder
+    @InitBinder("addUserRequest")
     public void init(WebDataBinder dataBinder) {
         dataBinder.addValidators(addUserValidator);
     }
@@ -65,5 +69,18 @@ public class UserViewController {
         }
 
         return "redirect:/login?success";
+    }
+
+    @GetMapping("/myPage")
+    public String myPage(@CurrentUser Authentication authentication, Model model) {
+
+        PrincipalUser principalUser = (PrincipalUser) authentication.getPrincipal();
+
+        User foundUser = userService.findByEmail(principalUser.getEmail());
+        Long countUserArticles = blogService.countUserArticles(foundUser.getId());
+
+        model.addAttribute("user", new UserInfoResponse(foundUser, countUserArticles));
+
+        return "myPage";
     }
 }

@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>User Profile</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
+    <style>
+        .user-info {
+            margin-top: 20px;
+        }
+        .user-info .card {
+            padding: 20px;
+        }
+    </style>
+</head>
+<body>
+
+<div th:replace="~{fragments/header :: common_header}"></div>
+
+<div class="container">
+    <h1 class="my-4">My Page</h1>
+
+    <div class="user-info">
+        <div class="card">
+            <div class="card-body">
+                <dl class="row">
+                    <dt class="col-sm-3">이메일 :</dt>
+                    <dd class="col-sm-9" th:text="${user.email}"></dd>
+
+                    <dt class="col-sm-3">이름 :</dt>
+                    <dd class="col-sm-9" th:text="${user.username}"></dd>
+
+                    <dt class="col-sm-3">가입일 :</dt>
+                    <dd class="col-sm-9" th:text="${#temporals.format(user.createdAt, 'yyyy-MM-dd HH:mm')}"></dd>
+
+                    <dt class="col-sm-3">가입 정보:</dt>
+                    <dd class="col-sm-9">
+                        <div th:switch="${user.registrationId.getSocialName()}">
+                            <span th:case="naver">네이버</span>
+                            <span th:case="kakao">카카오</span>
+                            <span th:case="google">구글</span>
+                            <span th:case="*">기타</span>
+                        </div>
+                    </dd>
+
+                    <dt class="col-sm-3">작성한 게시글 :</dt>
+                    <dd class="col-sm-9" th:text="${user.countArticles} + 개"></dd>
+                </dl>
+            </div>
+        </div>
+    </div>
+
+    <a href="#" class="btn btn-secondary mt-4">Edit Profile</a>
+</div>
+</body>
+</html>
