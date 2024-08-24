@@ -23,10 +23,10 @@ public class AddUserValidator implements Validator {
 
         AddUserRequest request = (AddUserRequest) target;
 
-        if (userService.findByEmail(request.getEmail()) != null) {
+        if (userService.existsByEmail(request.getEmail())) {
             errors.rejectValue("email","Duplicate","이미 사용 중인 이메일입니다.");
         }
-        if (userService.findByNickname(request.getNickname()) != null) {
+        if (userService.existsByNickname(request.getNickname())) {
             errors.rejectValue("nickname","Duplicate","이미 사용 중인 이름입니다.");
         }
     }

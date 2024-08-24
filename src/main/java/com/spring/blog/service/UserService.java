@@ -44,15 +44,13 @@ public class UserService {
 
     @Transactional
     public void updateNickname(String nickname, String email) {
-        User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new EntityNotFoundException("Unexpected User : " + email));
+        User user = findByEmail(email);
         user.updateNickname(nickname);
     }
 
     @Transactional
     public void deleteUser(String email) {
-        User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new EntityNotFoundException("Unexpected User : " + email));
+        User user = findByEmail(email);
         userRepository.delete(user);
     }
 
@@ -63,11 +61,14 @@ public class UserService {
 
     public User findByEmail(String email) {
         return userRepository.findByEmail(email)
-                .orElse(null);
+                .orElseThrow(() -> new EntityNotFoundException("Unexpected User : " + email));
     }
 
-    public User findByNickname(String nickname) {
-        return userRepository.findByNickname(nickname)
-                .orElse(null);
+    public boolean existsByNickname(String nickname) {
+        return userRepository.existsByNickname(nickname);
+    }
+
+    public boolean existsByEmail(String email) {
+        return userRepository.existsByEmail(email);
     }
 }
