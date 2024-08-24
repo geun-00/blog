@@ -41,16 +41,19 @@
 
     if (userDelButton != null) {
         userDelButton.addEventListener('click', event => {
-            function success() {
-                alert('탈퇴 되었습니다.');
-                location.replace('/login');
-            };
-            function fail() {
-                alert('오류가 발생했습니다.');
-                location.replace('/articles');
-            };
 
-            httpRequest('DELETE','/user', null, success, fail)
+            if (confirm("정말 탈퇴하시겠습니까?")) {
+                function success() {
+                    alert('탈퇴 되었습니다.');
+                    location.replace('/login');
+                }
+                function fail() {
+                    alert('오류가 발생했습니다.');
+                    location.replace('/articles');
+                }
+
+                httpRequest('DELETE','/user', null, success, fail)
+            }
         });
     }
 </script>
