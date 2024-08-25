@@ -39,6 +39,7 @@ public class BlogApiController {
         return ResponseEntity.status(HttpStatus.CREATED).body(new ArticleResponse(savedArticle));
     }
 
+/*
     @GetMapping("/api/articles")
     public ResponseEntity<List<ArticleResponse>> findAllArticles() {
         List<ArticleResponse> articles = blogService.findAll()
@@ -48,6 +49,7 @@ public class BlogApiController {
 
         return ResponseEntity.ok().body(articles);
     }
+*/
 
     @GetMapping("/api/articles/{id}")
     public ResponseEntity<ArticleResponse> findArticle(@PathVariable("id") long id) {

@@ -60,6 +60,10 @@ public class BlogService {
         return blogRepository.findAll();
     }
 
+    public List<Article> findAllByCreatedAtDesc() {
+        return blogRepository.findAllByCreatedAtDesc();
+    }
+
     public Article findWithUserById(Long id) {
         return blogRepository.findWithUserById(id)
                 .orElseThrow(() -> new EntityNotFoundException("not found : " + id));

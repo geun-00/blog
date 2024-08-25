@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Controller
@@ -44,11 +45,12 @@ public class BlogViewController {
 
     @GetMapping("/articles")
     public String getArticles(Model model) {
-        List<ArticleListViewResponse> articles = blogService.findAll().stream()
+        List<ArticleListViewResponse> articles = blogService.findAllByCreatedAtDesc().stream()
                 .map(ArticleListViewResponse::new)
                 .toList();
 
         model.addAttribute("articles", articles);
+        model.addAttribute("currentDate", LocalDate.now());
 
         return "articleList";
     }

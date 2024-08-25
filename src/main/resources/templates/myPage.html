@@ -31,7 +31,7 @@
                     <dd class="col-sm-9" th:text="*{username}"/>
 
                     <dt class="col-sm-3">가입일 :</dt>
-                    <dd class="col-sm-9" th:text="${#temporals.format(*{createdAt}, 'yyyy-MM-dd HH:mm')}"></dd>
+                    <dd class="col-sm-9" th:text="${#temporals.format(user.createdAt, 'yyyy-MM-dd')}"></dd>
 
                     <dt class="col-sm-3">가입 정보:</dt>
                     <dd class="col-sm-9">
