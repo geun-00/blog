@@ -52,4 +52,8 @@ public record PrincipalUser(ProviderUser providerUser, User user) implements Use
     public OidcIdToken getIdToken() {
         return null;
     }
+
+    public PrincipalUser withUpdatedUser(User user) {
+        return new PrincipalUser(this.providerUser, user);
+    }
 }

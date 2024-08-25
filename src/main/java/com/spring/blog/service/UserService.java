@@ -3,6 +3,7 @@ package com.spring.blog.service;
 import com.spring.blog.common.converters.enums.SocialType;
 import com.spring.blog.domain.User;
 import com.spring.blog.dto.AddUserRequest;
+import com.spring.blog.dto.EditUserRequest;
 import com.spring.blog.model.ProviderUser;
 import com.spring.blog.repository.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
@@ -26,6 +27,7 @@ public class UserService {
                 User.builder()
                         .email(request.getEmail())
                         .nickname(request.getNickname())
+                        .registrationId(SocialType.NONE)
                         .password(passwordEncoder.encode(request.getPassword()))
                         .build()
         );
@@ -52,6 +54,14 @@ public class UserService {
     public void deleteUser(String email) {
         User user = findByEmail(email);
         userRepository.delete(user);
+    }
+
+    @Transactional
+    public User editUser(String email, EditUserRequest request) {
+        User user = findByEmail(email);
+        user.edit(request.getEmail(), request.getNickname());
+
+        return user;
     }
 
     public User findById(Long userId) {

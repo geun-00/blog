@@ -2,14 +2,19 @@ package com.spring.blog.controller;
 
 import com.spring.blog.common.annotation.CurrentUser;
 import com.spring.blog.controller.validator.AddUserValidator;
+import com.spring.blog.controller.validator.EditUserValidator;
 import com.spring.blog.domain.User;
 import com.spring.blog.dto.AddUserRequest;
+import com.spring.blog.dto.EditUserRequest;
 import com.spring.blog.dto.UserInfoResponse;
 import com.spring.blog.model.PrincipalUser;
 import com.spring.blog.service.BlogService;
 import com.spring.blog.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -28,10 +33,16 @@ public class UserViewController {
     private final UserService userService;
     private final BlogService blogService;
     private final AddUserValidator addUserValidator;
+    private final EditUserValidator editUserValidator;
 
     @InitBinder("addUserRequest")
-    public void init(WebDataBinder dataBinder) {
+    public void initAddUserBinder(WebDataBinder dataBinder) {
         dataBinder.addValidators(addUserValidator);
+    }
+
+    @InitBinder("editUserRequest")
+    public void initEditUserBinder(WebDataBinder dataBinder) {
+        dataBinder.addValidators(editUserValidator);
     }
 
     @GetMapping("/login")
@@ -64,8 +75,8 @@ public class UserViewController {
         }
         //OAuth 인증 가입, 별명만 재설정
         else {
-            PrincipalUser principalUser = (PrincipalUser) authentication.getPrincipal();
-            userService.updateNickname(request.getNickname(), principalUser.getEmail());
+            PrincipalUser principalUser = getPrincipal(authentication);
+            userService.updateNickname(request.getNickname(), principalUser.providerUser().getEmail());
         }
 
         return "redirect:/login?success";
@@ -74,13 +85,64 @@ public class UserViewController {
     @GetMapping("/myPage")
     public String myPage(@CurrentUser Authentication authentication, Model model) {
 
-        PrincipalUser principalUser = (PrincipalUser) authentication.getPrincipal();
+        PrincipalUser principalUser = getPrincipal(authentication);
 
-        User foundUser = userService.findByEmail(principalUser.getEmail());
+        User foundUser = userService.findByEmail(principalUser.providerUser().getEmail());
         Long countUserArticles = blogService.countUserArticles(foundUser.getId());
 
         model.addAttribute("user", new UserInfoResponse(foundUser, countUserArticles));
 
         return "myPage";
+    }
+
+    @GetMapping("/myPage/edit")
+    public String editProfile(Model model) {
+
+        model.addAttribute("editUserRequest", new EditUserRequest());
+
+        return "myPageEdit";
+    }
+
+    @PostMapping("/user/edit")
+    public String userEdit(@Validated @ModelAttribute EditUserRequest request, BindingResult bindingResult,
+                           @CurrentUser Authentication authentication) {
+
+        if (bindingResult.hasErrors()) {
+            return "myPageEdit";
+        }
+
+        PrincipalUser principalUser = getPrincipal(authentication);
+        User updatedUser = userService.editUser(principalUser.providerUser().getEmail(), request);
+
+        updateContext(principalUser, authentication, updatedUser);
+
+        return "redirect:/myPage";
+    }
+
+    private void updateContext(PrincipalUser principalUser, Authentication authentication, User user) {
+
+        PrincipalUser updatedprincipalUser = principalUser.withUpdatedUser(user);
+
+        Authentication newAuth = null;
+
+        if (authentication instanceof OAuth2AuthenticationToken) {
+            newAuth = new OAuth2AuthenticationToken(
+                    updatedprincipalUser,
+                    authentication.getAuthorities(),
+                    updatedprincipalUser.providerUser().getClientRegistration().getRegistrationId()
+            );
+        } else if (authentication instanceof UsernamePasswordAuthenticationToken) {
+            newAuth = new UsernamePasswordAuthenticationToken(
+                    updatedprincipalUser,
+                    authentication.getCredentials(),
+                    authentication.getAuthorities()
+            );
+        }
+
+        SecurityContextHolder.getContextHolderStrategy().getContext().setAuthentication(newAuth);
+    }
+
+    private PrincipalUser getPrincipal(Authentication authentication) {
+        return (PrincipalUser) authentication.getPrincipal();
     }
 }

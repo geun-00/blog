@@ -25,10 +25,10 @@
             <div class="card-body">
                 <dl class="row">
                     <dt class="col-sm-3">이메일 :</dt>
-                    <dd class="col-sm-9" th:text="${user.email}"></dd>
+                    <dd class="col-sm-9" th:text="${user.email}"/>
 
                     <dt class="col-sm-3">이름 :</dt>
-                    <dd class="col-sm-9" th:text="${user.username}"></dd>
+                    <dd class="col-sm-9" th:text="${user.username}"/>
 
                     <dt class="col-sm-3">가입일 :</dt>
                     <dd class="col-sm-9" th:text="${#temporals.format(user.createdAt, 'yyyy-MM-dd HH:mm')}"></dd>
@@ -44,13 +44,12 @@
                     </dd>
 
                     <dt class="col-sm-3">작성한 게시글 :</dt>
-                    <dd class="col-sm-9" th:text="${user.countArticles} + 개"></dd>
+                    <dd class="col-sm-9" th:text="${user.countArticles} + ' 개'"></dd>
                 </dl>
+                <a href="myPage/edit" id="edit-btn" class="btn btn-secondary">수정하기</a>
             </div>
         </div>
     </div>
-
-    <a href="#" class="btn btn-secondary mt-4">Edit Profile</a>
 </div>
 </body>
 </html>
