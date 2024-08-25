@@ -26,8 +26,13 @@
                 <button type="button" id="modify-btn" th:if="${#authentication.getName() == article.author}"
                         th:onclick="|location.href='@{/new-article?id={articleId}(articleId=${article.id})}'|"
                         class="btn btn-primary btn-sm">수정</button>
+
                 <button type="button" id="delete-btn" th:if="${#authentication.getName() == article.author}"
                         class="btn btn-secondary btn-sm">삭제</button>
+
+                <a th:href="@{/myPage(author=${article.author})}" th:if="${#authentication.getName() != article.author}"
+                        class="btn btn-primary btn-sm">작성자 조회
+                </a>
             </article>
         </div>
     </div>

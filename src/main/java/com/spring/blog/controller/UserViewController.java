@@ -17,6 +17,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.WebDataBinder;
@@ -83,11 +84,18 @@ public class UserViewController {
     }
 
     @GetMapping("/myPage")
-    public String myPage(@CurrentUser Authentication authentication, Model model) {
+    public String myPage(@RequestParam(value = "author", required = false) String nickname,
+                         @CurrentUser Authentication authentication, Model model) {
 
-        PrincipalUser principalUser = getPrincipal(authentication);
+        User foundUser;
 
-        User foundUser = userService.findByEmail(principalUser.providerUser().getEmail());
+        if (StringUtils.hasText(nickname)) {
+            foundUser = userService.findByUsername(nickname);
+        } else {
+            PrincipalUser principalUser = getPrincipal(authentication);
+            foundUser = userService.findByEmail(principalUser.providerUser().getEmail());
+        }
+
         Long countUserArticles = blogService.countUserArticles(foundUser.getId());
 
         model.addAttribute("user", new UserInfoResponse(foundUser, countUserArticles));

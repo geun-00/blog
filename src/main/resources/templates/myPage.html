@@ -17,7 +17,7 @@
 
 <div th:replace="~{fragments/header :: common_header}"></div>
 
-<div class="container">
+<div class="container" th:object="${user}">
     <h1 class="my-4">My Page</h1>
 
     <div class="user-info">
@@ -25,17 +25,17 @@
             <div class="card-body">
                 <dl class="row">
                     <dt class="col-sm-3">이메일 :</dt>
-                    <dd class="col-sm-9" th:text="${user.email}"/>
+                    <dd class="col-sm-9" th:text="*{email}"/>
 
                     <dt class="col-sm-3">이름 :</dt>
-                    <dd class="col-sm-9" th:text="${user.username}"/>
+                    <dd class="col-sm-9" th:text="*{username}"/>
 
                     <dt class="col-sm-3">가입일 :</dt>
-                    <dd class="col-sm-9" th:text="${#temporals.format(user.createdAt, 'yyyy-MM-dd HH:mm')}"></dd>
+                    <dd class="col-sm-9" th:text="${#temporals.format(*{createdAt}, 'yyyy-MM-dd HH:mm')}"></dd>
 
                     <dt class="col-sm-3">가입 정보:</dt>
                     <dd class="col-sm-9">
-                        <div th:switch="${user.registrationId.getSocialName()}">
+                        <div th:switch="*{registrationId.getSocialName()}">
                             <span th:case="naver">네이버</span>
                             <span th:case="kakao">카카오</span>
                             <span th:case="google">구글</span>
@@ -46,7 +46,7 @@
                     <dt class="col-sm-3">작성한 게시글 :</dt>
                     <dd class="col-sm-9" th:text="${user.countArticles} + ' 개'"></dd>
                 </dl>
-                <a href="myPage/edit" id="edit-btn" class="btn btn-secondary">수정하기</a>
+                <a th:if="${#authentication.getName().equals(user.username)}" href="myPage/edit" id="edit-btn" class="btn btn-secondary">수정하기</a>
             </div>
         </div>
     </div>

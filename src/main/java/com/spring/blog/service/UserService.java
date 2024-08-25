@@ -74,6 +74,11 @@ public class UserService {
                 .orElseThrow(() -> new EntityNotFoundException("Unexpected User : " + email));
     }
 
+    public User findByUsername(String nickname) {
+        return userRepository.findByNickname(nickname)
+                .orElseThrow(() -> new EntityNotFoundException("Unexpected User : " + nickname));
+    }
+
     public boolean existsByNickname(String nickname) {
         return userRepository.existsByNickname(nickname);
     }
