@@ -51,6 +51,11 @@ spring:
   thymeleaf:
     cache: false
 
+  jpa:
+    properties:
+      hibernate:
+        use_sql_comments: true
+
 server:
   servlet:
     session:
