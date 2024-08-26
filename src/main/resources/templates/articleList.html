@@ -24,95 +24,137 @@
 <div th:replace="~{fragments/header :: common_header}"></div>
 
 <div class="container">
-    <div>
-
-    </div>
     <table class="table table-bordered">
         <thead>
-        <tr>
-            <th class="visually-hidden">번호</th>
-            <th>제목</th>
-            <th>작성일</th>
-            <th>작성자</th>
-        </tr>
+            <tr>
+                <th class="visually-hidden">번호</th>
+                <th>제목</th>
+                <th>작성일</th>
+                <th>작성자</th>
+            </tr>
         </thead>
-        <tbody>
-        <tr th:each="article, iter : ${articles}">
-            <td th:text="${iter.index + 1}"></td>
-            <td>
-                <a th:href="@{/articles/{id}(id=${article.id})}" th:text="${article.title}"></a>
-            </td>
-            <td>
-                <span th:if="${#temporals.format(article.createdAt.toLocalDate(), 'yyyy-MM-dd').equals(#temporals.format(currentDate, 'yyyy-MM-dd'))}"
-                      th:text="${#temporals.format(article.createdAt, 'HH:mm')}"></span>
-                <span th:unless="${#temporals.format(article.createdAt.toLocalDate(), 'yyyy-MM-dd').equals(#temporals.format(currentDate, 'yyyy-MM-dd'))}"
-                      th:text="${#temporals.format(article.createdAt, 'yyyy-MM-dd')}"></span>
-            </td>
-            <td>
-                <a th:text="${article.author}"></a>
-            </td>
-        </tr>
+        <tbody id="article-list">
+            <tr th:each="article, iter : ${articles}">
+                <td th:text="${iter.count}"></td>
+                <td>
+                    <a th:href="@{/articles/{id}(id=${article.id})}" th:text="${article.title}"></a>
+                </td>
+                <td>
+                    <span th:if="${#temporals.format(article.createdAt.toLocalDate(), 'yyyy-MM-dd').equals(#temporals.format(currentDate, 'yyyy-MM-dd'))}"
+                              th:text="${#temporals.format(article.createdAt, 'HH:mm')}"></span>
+                    <span th:unless="${#temporals.format(article.createdAt.toLocalDate(), 'yyyy-MM-dd').equals(#temporals.format(currentDate, 'yyyy-MM-dd'))}"
+                          th:text="${#temporals.format(article.createdAt, 'yyyy-MM-dd')}"></span>
+                </td>
+                <td>
+                    <a th:text="${article.author}"></a>
+                </td>
+            </tr>
         </tbody>
     </table>
 
-    <form id="search-form">
-        <div class="mb-3 d-flex justify-content-between align-items-center">
-            <div>
-                <label for="search-type" class="form-label">조회 방식</label>
-                <select id="search-type" class="form-select">
-                    <option value="title">제목</option>
-                    <option value="content">내용</option>
-                    <option value="title-content">제목+내용</option>
-                </select>
-            </div>
-            <a type="button" sec:authorize="isAuthenticated()"
-               href="/new-article" class="btn btn-secondary btn-sm mb-3">
-                글 등록
-            </a>
+
+    <div class="mb-3 d-flex justify-content-between align-items-center">
+        <div>
+            <select id="search-type" class="form-select">
+                <option value="title">제목</option>
+                <option value="content">내용</option>
+                <option value="author">작성자</option>
+                <option value="title-content">제목+내용</option>
+                <option value="period">기간</option>
+            </select>
+            <label for="search-type" class="form-label">(으)로 조회</label>
         </div>
 
-        <div id="search-title" class="mb-3" style="display: none;">
-            <label for="title" class="form-label">제목</label>
-            <input type="text" id="title" class="form-control">
-        </div>
+        <a type="button" sec:authorize="isAuthenticated()"
+           href="/new-article" class="btn btn-secondary btn-sm mb-3">
+            글 등록
+        </a>
+    </div>
 
-        <div id="search-content" class="mb-3" style="display: none;">
-            <label for="content" class="form-label">내용</label>
-            <input type="text" id="content" class="form-control">
-        </div>
+    <div id="search-title" class="mb-3" style="display: none;">
+        <label for="searchTitle" class="form-label">제목</label>
+        <input type="text" id="searchTitle" class="form-control">
+    </div>
 
-        <div id="search-title-content" class="mb-3" style="display: none;">
-            <label for="title-content-title" class="form-label">제목</label>
-            <input type="text" id="title-content-title" class="form-control">
-            <label for="title-content-content" class="form-label mt-2">내용</label>
-            <input type="text" id="title-content-content" class="form-control">
-        </div>
+    <div id="search-content" class="mb-3" style="display: none;">
+        <label for="searchContent" class="form-label">내용</label>
+        <input type="text" id="searchContent" class="form-control">
+    </div>
 
-        <button type="submit" class="btn btn-primary mt-3">검색</button>
-    </form>
+    <div id="search-author" class="mb-3" style="display: none;">
+        <label for="searchAuthor" class="form-label">작성자</label>
+        <input type="text" id="searchAuthor" class="form-control">
+    </div>
+
+    <div id="search-title-content" class="mb-3" style="display: none;">
+        <label for="searchTitleWithContent" class="form-label">제목</label>
+        <input type="text" id="searchTitleWithContent" class="form-control">
+        <label for="searchContentWithTitle" class="form-label mt-2">내용</label>
+        <input type="text" id="searchContentWithTitle" class="form-control">
+    </div>
+
+    <div id="search-date" class="mb-3" style="display: none;">
+        <label for="search-date-start" class="form-label">시작</label>
+        <input type="date" id="search-date-start" class="form-control">
+        <label for="search-date-end" class="form-label mt-2">종료</label>
+        <input type="date" id="search-date-end" class="form-control">
+    </div>
+
+    <button style="margin-bottom: 50px" onclick="submitForm()" class="btn btn-primary mt-3">검색</button>
 </div>
 
 <script src="/js/article.js"></script>
+<script src="/js/search.js"></script>
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', function () {
+
         const searchTypeSelect = document.getElementById('search-type');
+
+        const searchDateDiv = document.getElementById('search-date');
         const searchTitleDiv = document.getElementById('search-title');
+        const searchAuthorDiv = document.getElementById('search-author');
         const searchContentDiv = document.getElementById('search-content');
         const searchTitleContentDiv = document.getElementById('search-title-content');
+
+        const searchTitleInput = document.getElementById('searchTitle');
+        const searchContentInput = document.getElementById('searchContent');
+        const searchAuthorInput = document.getElementById('searchAuthor');
+        const searchTitleWithContentInput = document.getElementById('searchTitleWithContent');
+        const searchContentWithTitleInput = document.getElementById('searchContentWithTitle');
+        const searchDateStartInput = document.getElementById('search-date-start');
+        const searchDateEndInput = document.getElementById('search-date-end');
+
+        function clearInputs() {
+            searchTitleInput.value = '';
+            searchContentInput.value = '';
+            searchAuthorInput.value = '';
+            searchTitleWithContentInput.value = '';
+            searchContentWithTitleInput.value = '';
+            searchDateStartInput.value = '';
+            searchDateEndInput.value = '';
+        }
 
         function updateSearchFields() {
             const selectedValue = searchTypeSelect.value;
 
+            clearInputs();
+
             searchTitleDiv.style.display = 'none';
             searchContentDiv.style.display = 'none';
             searchTitleContentDiv.style.display = 'none';
+            searchAuthorDiv.style.display = 'none';
+            searchDateDiv.style.display = 'none';
 
             if (selectedValue === 'title') {
                 searchTitleDiv.style.display = 'block';
             } else if (selectedValue === 'content') {
                 searchContentDiv.style.display = 'block';
+            } else if (selectedValue === 'author') {
+                searchAuthorDiv.style.display = 'block';
             } else if (selectedValue === 'title-content') {
                 searchTitleContentDiv.style.display = 'block';
+            } else if (selectedValue === 'period') {
+                searchDateDiv.style.display = 'block';
             }
         }
 

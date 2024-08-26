@@ -3,7 +3,9 @@ package com.spring.blog.controller;
 import com.spring.blog.common.annotation.CurrentUser;
 import com.spring.blog.domain.Article;
 import com.spring.blog.dto.AddArticleRequest;
+import com.spring.blog.dto.ArticleListViewResponse;
 import com.spring.blog.dto.ArticleResponse;
+import com.spring.blog.dto.ArticleSearchRequest;
 import com.spring.blog.dto.UpdateArticleRequest;
 import com.spring.blog.model.PrincipalUser;
 import com.spring.blog.service.BlogService;
@@ -39,17 +41,17 @@ public class BlogApiController {
         return ResponseEntity.status(HttpStatus.CREATED).body(new ArticleResponse(savedArticle));
     }
 
-/*
-    @GetMapping("/api/articles")
-    public ResponseEntity<List<ArticleResponse>> findAllArticles() {
-        List<ArticleResponse> articles = blogService.findAll()
+    @PostMapping("/articles/search")
+    public ResponseEntity<List<ArticleListViewResponse>> findAllArticles(@RequestBody ArticleSearchRequest request) {
+
+        List<ArticleListViewResponse> articles = blogService.findAll()
                 .stream()
-                .map(ArticleResponse::new)
+                .map(ArticleListViewResponse::new)
                 .toList();
 
         return ResponseEntity.ok().body(articles);
     }
-*/
+
 
     @GetMapping("/api/articles/{id}")
     public ResponseEntity<ArticleResponse> findArticle(@PathVariable("id") long id) {
