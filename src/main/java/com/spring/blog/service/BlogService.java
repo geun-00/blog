@@ -3,7 +3,9 @@ package com.spring.blog.service;
 import com.spring.blog.domain.Article;
 import com.spring.blog.domain.User;
 import com.spring.blog.dto.AddArticleRequest;
+import com.spring.blog.dto.ArticleSearchRequest;
 import com.spring.blog.dto.UpdateArticleRequest;
+import com.spring.blog.repository.BlogQueryRepository;
 import com.spring.blog.repository.BlogRepository;
 import com.spring.blog.repository.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
@@ -11,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Arrays;
 import java.util.List;
 
 @Service
@@ -21,6 +24,7 @@ public class BlogService {
     private final BlogRepository blogRepository;
     private final UserRepository userRepository;
     private final ValidationService validationService;
+    private final BlogQueryRepository blogQueryRepository;
 
     @Transactional
     public Article save(AddArticleRequest request, String email) {
@@ -71,5 +75,9 @@ public class BlogService {
 
     public Long countUserArticles(Long userId) {
         return blogRepository.countByUserId(userId);
+    }
+
+    public List<Article> findAllByCond(ArticleSearchRequest request) {
+        return blogQueryRepository.findAllByCond(request);
     }
 }

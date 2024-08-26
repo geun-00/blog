@@ -69,7 +69,6 @@ function submitForm() {
         }
     })
 
-    // 비동기 요청 보내기
     fetch('/articles/search', {
         method: 'POST',
         headers: {
@@ -79,20 +78,26 @@ function submitForm() {
     })
         .then(response => response.json())
         .then(data => {
-            // 결과를 동적으로 표시
             const resultsDiv = document.getElementById('article-list');
-            resultsDiv.innerHTML = ''; // 기존 결과를 비우기
+            resultsDiv.innerHTML = '';
 
+            const today = new Date();
+            const formattedToday = `${today.getFullYear()}. ${today.getMonth() + 1}. ${today.getDate()}.`;
             let count = 1;
+
             data.forEach(article => {
                 const articleElement = document.createElement('tr');
+                const articleDate = new Date(article.createdAt);
+                const articleDateString = articleDate.toLocaleDateString();
+                const articleTimeString = articleDate.toTimeString().split(' ')[0].substring(0, 5);
+
                 articleElement.innerHTML = `
                 <td>${count++}</td>
                 <td>
                     <a href="/articles/${article.id}">${article.title}</a>
                 </td>
                 <td>
-                    ${new Date(article.createdAt).toLocaleDateString()}
+                    ${articleDateString === formattedToday ? articleTimeString : articleDateString}
                 </td>
                 <td>
                     ${article.author}
@@ -102,7 +107,7 @@ function submitForm() {
             });
         })
         .catch(error => {
-            console.error('Fetch error:', error);
-            alert('서버와의 통신 중 오류가 발생했습니다.');
+            alert('오류가 발생했습니다.');
+            location.replace('/articles');
         });
 }

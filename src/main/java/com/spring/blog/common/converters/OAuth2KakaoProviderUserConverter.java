@@ -1,6 +1,6 @@
 package com.spring.blog.common.converters;
 
-import com.spring.blog.common.converters.enums.SocialType;
+import com.spring.blog.common.enums.SocialType;
 import com.spring.blog.common.converters.utils.OAuthAttributesUtils;
 import com.spring.blog.model.ProviderUser;
 import com.spring.blog.model.social.KakaoUser;

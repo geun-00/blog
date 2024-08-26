@@ -1,5 +1,6 @@
 package com.spring.blog.dto;
 
+import com.spring.blog.common.enums.SearchType;
 import lombok.Data;
 
 import java.time.LocalDate;
@@ -7,7 +8,7 @@ import java.time.LocalDate;
 @Data
 public class ArticleSearchRequest {
 
-    private String searchType;
+    private SearchType searchType;
     private String title;
     private String content;
     private String author;
@@ -15,13 +16,13 @@ public class ArticleSearchRequest {
     private Period period;
 
     @Data
-    private static class TitleContent {
+    public static class TitleContent {
         private String title;
         private String content;
     }
 
     @Data
-    private static class Period{
+    public static class Period {
         private LocalDate startDate;
         private LocalDate endDate;
     }

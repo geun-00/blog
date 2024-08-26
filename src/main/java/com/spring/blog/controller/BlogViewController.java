@@ -1,5 +1,6 @@
 package com.spring.blog.controller;
 
+import com.spring.blog.common.enums.SearchType;
 import com.spring.blog.domain.Article;
 import com.spring.blog.dto.ArticleListViewResponse;
 import com.spring.blog.dto.ArticleViewResponse;
@@ -51,6 +52,7 @@ public class BlogViewController {
 
         model.addAttribute("articles", articles);
         model.addAttribute("currentDate", LocalDate.now());
+        model.addAttribute("searchType", SearchType.values());
 
         return "articleList";
     }

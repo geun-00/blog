@@ -1,4 +1,4 @@
-package com.spring.blog.common.converters.enums;
+package com.spring.blog.common.enums;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

@@ -52,15 +52,12 @@
         </tbody>
     </table>
 
-
     <div class="mb-3 d-flex justify-content-between align-items-center">
         <div>
             <select id="search-type" class="form-select">
-                <option value="title">제목</option>
-                <option value="content">내용</option>
-                <option value="author">작성자</option>
-                <option value="title-content">제목+내용</option>
-                <option value="period">기간</option>
+                <option th:each="type : ${searchType}"
+                        th:value="${type.description_en}"
+                        th:text="${type.description_kr}"></option>
             </select>
             <label for="search-type" class="form-label">(으)로 조회</label>
         </div>
@@ -124,20 +121,31 @@
         const searchDateStartInput = document.getElementById('search-date-start');
         const searchDateEndInput = document.getElementById('search-date-end');
 
-        function clearInputs() {
-            searchTitleInput.value = '';
-            searchContentInput.value = '';
-            searchAuthorInput.value = '';
-            searchTitleWithContentInput.value = '';
-            searchContentWithTitleInput.value = '';
-            searchDateStartInput.value = '';
-            searchDateEndInput.value = '';
+        function loadFromLocalStorage() {
+            searchTypeSelect.value = localStorage.getItem('searchType') || '';
+            searchTitleInput.value = localStorage.getItem('title') || '';
+            searchContentInput.value = localStorage.getItem('content') || '';
+            searchAuthorInput.value = localStorage.getItem('author') || '';
+            searchTitleWithContentInput.value = localStorage.getItem('titleContent') || '';
+            searchContentWithTitleInput.value = localStorage.getItem('contentWithTitle') || '';
+            searchDateStartInput.value = localStorage.getItem('startDate') || '';
+            searchDateEndInput.value = localStorage.getItem('endDate') || '';
+        }
+
+        function saveToLocalStorage() {
+            localStorage.setItem('searchType', searchTypeSelect.value);
+            localStorage.setItem('title', searchTitleInput.value);
+            localStorage.setItem('content', searchContentInput.value);
+            localStorage.setItem('author', searchAuthorInput.value);
+            localStorage.setItem('titleContent', searchTitleWithContentInput.value);
+            localStorage.setItem('contentWithTitle', searchContentWithTitleInput.value);
+            localStorage.setItem('startDate', searchDateStartInput.value);
+            localStorage.setItem('endDate', searchDateEndInput.value);
         }
 
         function updateSearchFields() {
-            const selectedValue = searchTypeSelect.value;
 
-            clearInputs();
+            const selectedValue = searchTypeSelect.value;
 
             searchTitleDiv.style.display = 'none';
             searchContentDiv.style.display = 'none';
@@ -158,9 +166,26 @@
             }
         }
 
-        updateSearchFields();
+        // 페이지가 로드되거나 뒤로 가기, 새로 고침 발생 시
+        window.addEventListener('pageshow', function (event) {
+            if (event.persisted || window.performance && window.PerformanceNavigationTiming.prototype === 'back_forward') {
+                // 페이지 캐시로부터 로드되거나 뒤로 가기 또는 새로 고침일 때만 실행
+                loadFromLocalStorage();
+                updateSearchFields();
+            }
+        });
 
-        searchTypeSelect.addEventListener('change', updateSearchFields);
+        searchTypeSelect.addEventListener('change', function () {
+            saveToLocalStorage();
+            updateSearchFields();
+        });
+
+        document.querySelectorAll('input').forEach(input => {
+            input.addEventListener('input', saveToLocalStorage);
+        });
+
+        // 초기 필드 업데이트
+        updateSearchFields();
     });
 </script>
 </body>

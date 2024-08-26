@@ -1,6 +1,6 @@
 package com.spring.blog.service;
 
-import com.spring.blog.common.converters.enums.SocialType;
+import com.spring.blog.common.enums.SocialType;
 import com.spring.blog.domain.User;
 import com.spring.blog.dto.AddUserRequest;
 import com.spring.blog.dto.EditUserRequest;

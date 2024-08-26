@@ -1,6 +1,6 @@
 package com.spring.blog.dto;
 
-import com.spring.blog.common.converters.enums.SocialType;
+import com.spring.blog.common.enums.SocialType;
 import com.spring.blog.domain.User;
 import lombok.Data;
 

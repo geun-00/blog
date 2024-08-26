@@ -44,7 +44,7 @@ public class BlogApiController {
     @PostMapping("/articles/search")
     public ResponseEntity<List<ArticleListViewResponse>> findAllArticles(@RequestBody ArticleSearchRequest request) {
 
-        List<ArticleListViewResponse> articles = blogService.findAll()
+        List<ArticleListViewResponse> articles = blogService.findAllByCond(request)
                 .stream()
                 .map(ArticleListViewResponse::new)
                 .toList();

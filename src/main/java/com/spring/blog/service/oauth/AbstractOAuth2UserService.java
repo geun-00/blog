@@ -1,7 +1,7 @@
 package com.spring.blog.service.oauth;
 
 import com.spring.blog.common.converters.ProviderUserRequest;
-import com.spring.blog.common.converters.enums.SocialType;
+import com.spring.blog.common.enums.SocialType;
 import com.spring.blog.domain.User;
 import com.spring.blog.model.ProviderUser;
 import com.spring.blog.repository.UserRepository;
@@ -10,8 +10,6 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
 import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
-import org.springframework.security.oauth2.core.OAuth2AuthorizationException;
-import org.springframework.security.oauth2.core.OAuth2Error;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;

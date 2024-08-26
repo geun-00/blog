@@ -1,6 +1,6 @@
 package com.spring.blog.domain;
 
-import com.spring.blog.common.converters.enums.SocialType;
+import com.spring.blog.common.enums.SocialType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
