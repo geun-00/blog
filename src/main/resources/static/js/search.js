@@ -78,6 +78,8 @@ function submitForm() {
     })
         .then(response => response.json())
         .then(data => {
+            sessionStorage.setItem('searchResults', JSON.stringify(data));
+
             const resultsDiv = document.getElementById('article-list');
             resultsDiv.innerHTML = '';
 
