@@ -1,5 +1,16 @@
 document.addEventListener('DOMContentLoaded', function () {
 
+    const sizeSelector = document.getElementById('size-selector');
+
+    const urlParams = new URLSearchParams(window.location.search);
+    const size = urlParams.get('size');
+
+    if (size) {
+        sizeSelector.textContent = `${size}개씩`;
+    } else {
+        sizeSelector.textContent = '10개씩';
+    }
+
     const searchFields = {
         period: document.getElementById('search-date'),
         title: document.getElementById('search-title'),
@@ -80,12 +91,18 @@ window.addEventListener('pageshow', function (event) {
     if (window.performance) {
         if (type === 'back_forward' || type === 'reload') {
             const storedResults = sessionStorage.getItem('searchResults');
+            const pagingResults = sessionStorage.getItem('pagingResults');
+
             if (storedResults) {
                 renderData(storedResults);
+            } else if (pagingResults) {
+                renderData(pagingResults);
             }
-        } else if (type === 'navigate') {
+        }
+        else if (type === 'navigate') {
             sessionStorage.removeItem('searchResults');
             sessionStorage.removeItem('searchState');
+            sessionStorage.removeItem('pagingResults');
         }
     }
 });

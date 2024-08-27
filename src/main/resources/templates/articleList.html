@@ -7,6 +7,53 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
 
     <style>
+        /* 전체 pagination 컨테이너 스타일 */
+        #pagination {
+            text-align: center;
+            margin-top: 20px;
+            margin-bottom: 20px;
+        }
+
+        /* 페이지 번호 링크 기본 스타일 */
+        #pagination a {
+            text-decoration: none;
+            color: #007bff;
+            padding: 8px 16px;
+            margin: 0 4px;
+            border-radius: 4px;
+        }
+
+        /* 현재 페이지 활성화 스타일 */
+        #pagination a.active {
+            background-color: #007bff;
+            color: white;
+        }
+
+        /* 페이지 번호 링크 호버 스타일 */
+        #pagination a:hover {
+            background-color: #e9ecef;
+            color: #0056b3;
+        }
+
+        /* 이전 및 다음 버튼 스타일 */
+        #pagination a.prev, #pagination a.next {
+            font-weight: bold;
+            background-color: #f8f9fa;
+            border: 1px solid #dee2e6;
+        }
+
+        /* 이전 및 다음 버튼 호버 스타일 */
+        #pagination a.prev:hover, #pagination a.next:hover {
+            background-color: #e2e6ea;
+        }
+
+        /* 버튼 비활성화 스타일 */
+        #pagination a.disabled {
+            color: #6c757d;
+            pointer-events: none;
+            cursor: not-allowed;
+        }
+
         .visually-hidden {
             position: absolute;
             width: 1px;
@@ -17,6 +64,49 @@
             clip: rect(0, 0, 0, 0);
             border: 0;
         }
+
+        .dropdown {
+            position: relative;
+            display: inline-block;
+        }
+
+        .select_box {
+            display: inline-block;
+            padding: 10px;
+            background-color: #f8f9fa;
+            border: 1px solid #ced4da;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .dropdown-menu {
+            display: none;
+            position: absolute;
+            top: 100%;
+            right: 0;
+            background-color: #ffffff;
+            border: 1px solid #ced4da;
+            border-radius: 4px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+            z-index: 1000;
+            width: 100%;
+        }
+
+        .dropdown-menu li {
+            list-style: none;
+        }
+
+        .dropdown-menu a {
+            display: block;
+            padding: 10px;
+            color: #000;
+            text-decoration: none;
+        }
+
+        .dropdown-menu a:hover {
+            background-color: #f1f1f1;
+        }
+
     </style>
 </head>
 <body>
@@ -24,6 +114,19 @@
 <div th:replace="~{fragments/header :: common_header}"></div>
 
 <div class="container">
+    <div class="d-flex justify-content-end">
+        <div class="dropdown">
+            <a id="size-selector" onclick="toggleDropdown()" class="select_box">10개씩</a>
+            <ul class="dropdown-menu">
+                <li><a href="#" onclick="setPageSize(5)">5개씩</a></li>
+                <li><a href="#" onclick="setPageSize(10)">10개씩</a></li>
+                <li><a href="#" onclick="setPageSize(20)">20개씩</a></li>
+                <li><a href="#" onclick="setPageSize(30)">30개씩</a></li>
+                <li><a href="#" onclick="setPageSize(40)">40개씩</a></li>
+            </ul>
+        </div>
+    </div>
+
     <table class="table table-bordered">
         <thead>
             <tr>
@@ -52,8 +155,30 @@
         </tbody>
     </table>
 
+    <div id="pagination">
+        <a href="/"
+           class="prev"
+           th:if="${page.prev}"
+           th:attr="data-page=${page.prevPage}"
+           onclick="loadPage(this.getAttribute('data-page'))">이전</a>
+
+        <span th:each="pageNum : ${page.pageNumList}">
+            <a href="/"
+               th:classappend="${pageNum == page.currentPage} ? 'active' : ''"
+               th:attr="data-page=${pageNum}"
+               onclick="loadPage(this.getAttribute('data-page'))"
+               th:text="${pageNum}"></a>
+        </span>
+
+        <a href="/"
+           class="next"
+           th:if="${page.next}"
+           th:attr="data-page=${page.nextPage}"
+           onclick="loadPage(this.getAttribute('data-page'))">다음</a>
+    </div>
+
     <div class="mb-3 d-flex justify-content-between align-items-center">
-        <div>
+        <div class="d-flex justify-content-center align-items-center w-100">
             <select id="search-type" class="form-select">
                 <option th:each="type : ${searchType}"
                         th:value="${type.description_en}"
@@ -103,5 +228,6 @@
 <script src="/js/search.js"></script>
 <script src="/js/renderData.js"></script>
 <script src="/js/searchPageEvents.js"></script>
+<script src="/js/pagingProcess.js"></script>
 </body>
 </html>

@@ -3,17 +3,20 @@ package com.spring.blog.service;
 import com.spring.blog.domain.Article;
 import com.spring.blog.domain.User;
 import com.spring.blog.dto.AddArticleRequest;
+import com.spring.blog.dto.ArticleListViewResponse;
 import com.spring.blog.dto.ArticleSearchRequest;
+import com.spring.blog.dto.PageResponse;
 import com.spring.blog.dto.UpdateArticleRequest;
 import com.spring.blog.repository.BlogQueryRepository;
 import com.spring.blog.repository.BlogRepository;
 import com.spring.blog.repository.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Arrays;
 import java.util.List;
 
 @Service
@@ -64,8 +67,18 @@ public class BlogService {
         return blogRepository.findAll();
     }
 
-    public List<Article> findAllByCreatedAtDesc() {
-        return blogRepository.findAllByCreatedAtDesc();
+    public PageResponse<ArticleListViewResponse> findAll(Pageable pageable) {
+
+        Page<ArticleListViewResponse> articles = blogRepository
+                .findAll(pageable)
+                .map(ArticleListViewResponse::new);
+
+        return PageResponse.<ArticleListViewResponse>withAll()
+                .dataList(articles.getContent())
+                .currentPage(pageable.getPageNumber() + 1)
+                .pageSize(pageable.getPageSize())
+                .totalCount(articles.getTotalElements())
+                .build();
     }
 
     public Article findWithUserById(Long id) {

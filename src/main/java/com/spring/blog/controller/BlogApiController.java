@@ -6,10 +6,13 @@ import com.spring.blog.dto.AddArticleRequest;
 import com.spring.blog.dto.ArticleListViewResponse;
 import com.spring.blog.dto.ArticleResponse;
 import com.spring.blog.dto.ArticleSearchRequest;
+import com.spring.blog.dto.PageResponse;
 import com.spring.blog.dto.UpdateArticleRequest;
 import com.spring.blog.model.PrincipalUser;
 import com.spring.blog.service.BlogService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -20,6 +23,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -48,6 +52,18 @@ public class BlogApiController {
                 .stream()
                 .map(ArticleListViewResponse::new)
                 .toList();
+
+        return ResponseEntity.ok().body(articles);
+    }
+
+    @GetMapping("/page/articles")
+    public ResponseEntity<PageResponse<ArticleListViewResponse>> getPagingArticles(
+            @RequestParam(value = "page", defaultValue = "0") int page,
+            @RequestParam(value = "size", defaultValue = "10") int size) {
+
+        PageResponse<ArticleListViewResponse> articles = blogService.findAll(
+                PageRequest.of(page, size, Sort.Direction.DESC, "createdAt")
+        );
 
         return ResponseEntity.ok().body(articles);
     }
