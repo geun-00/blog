@@ -23,19 +23,21 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
 @RestController
+@RequestMapping("/api")
 @RequiredArgsConstructor
 public class BlogApiController {
 
     private final BlogService blogService;
 
     @PreAuthorize("hasAuthority('ROLE_USER')")
-    @PostMapping("/api/articles")
+    @PostMapping("/articles")
     public ResponseEntity<ArticleResponse> addArticle(@RequestBody AddArticleRequest request,
                                                       @CurrentUser Authentication authentication) {
 
@@ -56,7 +58,7 @@ public class BlogApiController {
         return ResponseEntity.ok().body(articles);
     }
 
-    @GetMapping("/page/articles")
+    @GetMapping("/articles/page")
     public ResponseEntity<PageResponse<ArticleListViewResponse>> getPagingArticles(
             @RequestParam(value = "page", defaultValue = "0") int page,
             @RequestParam(value = "size", defaultValue = "10") int size) {
@@ -69,21 +71,21 @@ public class BlogApiController {
     }
 
 
-    @GetMapping("/api/articles/{id}")
+    @GetMapping("/articles/{id}")
     public ResponseEntity<ArticleResponse> findArticle(@PathVariable("id") long id) {
         Article article = blogService.findWithUserById(id);
 
         return ResponseEntity.ok().body(new ArticleResponse(article));
     }
 
-    @DeleteMapping("/api/articles/{id}")
+    @DeleteMapping("/articles/{id}")
     public ResponseEntity<Void> deleteArticle(@PathVariable("id") long id) {
         blogService.delete(id);
 
         return ResponseEntity.ok().build();
     }
 
-    @PutMapping("/api/articles/{id}")
+    @PutMapping("/articles/{id}")
     public ResponseEntity<ArticleResponse> updateArticle(@PathVariable("id") long id,
                                                          @RequestBody UpdateArticleRequest request) {
         Article updatedArticle = blogService.update(id, request);

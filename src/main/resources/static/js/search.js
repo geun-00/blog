@@ -69,7 +69,7 @@ function submitForm() {
         }
     })
 
-    fetch('/articles/search', {
+    fetch('/api/articles/search', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'

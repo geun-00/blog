@@ -16,11 +16,12 @@ function loadPage(pageNumber) {
     const params = new URLSearchParams(url.search);
     const pageSize = params.get('size') || '10';
 
-    fetch(`/page/articles?page=${pageNumber - 1}&size=${pageSize}`, {
+    sessionStorage.setItem('pageNumber', pageNumber);
+
+    fetch(`/api/articles/page?page=${pageNumber - 1}&size=${pageSize}`, {
         method: 'GET'
     }).then(res => res.json())
         .then(data => {
-            sessionStorage.setItem('pagingResults', JSON.stringify(data.dataList));
 
             const resultsDiv = document.getElementById('article-list');
             resultsDiv.innerHTML = '';
@@ -49,39 +50,41 @@ function loadPage(pageNumber) {
             `;
                 resultsDiv.appendChild(articleElement);
             });
+
             updatePagination(data)
         })
+}
+function updatePagination(data) {
+    const paginationDiv = document.getElementById('pagination');
+    paginationDiv.innerHTML = '';
 
-    function updatePagination(data) {
-        const paginationDiv = document.getElementById('pagination');
-        paginationDiv.innerHTML = '';
+    if (data.prev) {
+        const prevLink = document.createElement('a');
+        prevLink.href = "javascript:void(0);";
+        prevLink.setAttribute('data-page', data.prevPage);
+        prevLink.className = 'prev';
+        prevLink.onclick = () => loadPage(data.prevPage);
+        prevLink.textContent = "이전";
+        paginationDiv.appendChild(prevLink);
+    }
 
-        if (data.prev) {
-            const prevLink = document.createElement('a');
-            prevLink.href = "javascript:void(0);";
-            prevLink.setAttribute('data-page', data.prevPage);
-            prevLink.onclick = () => loadPage(data.prevPage);
-            prevLink.textContent = "이전";
-            paginationDiv.appendChild(prevLink);
-        }
+    data.pageNumList.forEach(pageNum => {
+        const pageLink = document.createElement('a');
+        pageLink.href = "javascript:void(0);";
+        pageLink.setAttribute('data-page', pageNum);
+        pageLink.className = pageNum === data.currentPage ? 'active' : '';
+        pageLink.onclick = () => loadPage(pageNum);
+        pageLink.textContent = pageNum;
+        paginationDiv.appendChild(pageLink);
+    });
 
-        data.pageNumList.forEach(pageNum => {
-            const pageLink = document.createElement('a');
-            pageLink.href = "javascript:void(0);";
-            pageLink.setAttribute('data-page', pageNum);
-            pageLink.className = pageNum === data.currentPage ? 'active' : '';
-            pageLink.onclick = () => loadPage(pageNum);
-            pageLink.textContent = pageNum;
-            paginationDiv.appendChild(pageLink);
-        });
-
-        if (data.next) {
-            const nextLink = document.createElement('a');
-            nextLink.href = "javascript:void(0);";
-            nextLink.setAttribute('data-page', data.nextPage);
-            nextLink.onclick = () => loadPage(data.nextPage);
-            nextLink.textContent = "다음";
-            paginationDiv.appendChild(nextLink);
-        }
+    if (data.next) {
+        const nextLink = document.createElement('a');
+        nextLink.href = "javascript:void(0);";
+        nextLink.setAttribute('data-page', data.nextPage);
+        nextLink.className = 'next';
+        nextLink.onclick = () => loadPage(data.nextPage);
+        nextLink.textContent = "다음";
+        paginationDiv.appendChild(nextLink);
     }
 }

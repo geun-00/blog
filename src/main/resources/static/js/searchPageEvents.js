@@ -91,18 +91,20 @@ window.addEventListener('pageshow', function (event) {
     if (window.performance) {
         if (type === 'back_forward' || type === 'reload') {
             const storedResults = sessionStorage.getItem('searchResults');
-            const pagingResults = sessionStorage.getItem('pagingResults');
+            const pageNumber = sessionStorage.getItem('pageNumber');
 
             if (storedResults) {
                 renderData(storedResults);
-            } else if (pagingResults) {
-                renderData(pagingResults);
+            }
+            else if (pageNumber) {
+                loadPage(pageNumber);
             }
         }
         else if (type === 'navigate') {
             sessionStorage.removeItem('searchResults');
             sessionStorage.removeItem('searchState');
-            sessionStorage.removeItem('pagingResults');
+
+            sessionStorage.removeItem('pageNumber');
         }
     }
 });

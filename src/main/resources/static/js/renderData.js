@@ -7,7 +7,8 @@ function renderData(storedResults) {
 
     const today = new Date();
     const formattedToday = `${today.getFullYear()}. ${today.getMonth() + 1}. ${today.getDate()}.`;
-    let count = 1;
+
+    let count = sessionStorage.getItem('currentPage');
 
     data.forEach(article => {
         const articleElement = document.createElement('tr');
