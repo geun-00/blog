@@ -67,18 +67,22 @@ public class BlogService {
         return blogRepository.findAll();
     }
 
+    public PageResponse<ArticleListViewResponse> findAllByCond(ArticleSearchRequest request, Pageable pageable) {
+
+        Page<ArticleListViewResponse> articles = blogQueryRepository
+                .findAllByCond(request, pageable)
+                .map(ArticleListViewResponse::new);
+
+        return getPageResponse(pageable, articles);
+    }
+
     public PageResponse<ArticleListViewResponse> findAll(Pageable pageable) {
 
         Page<ArticleListViewResponse> articles = blogRepository
                 .findAll(pageable)
                 .map(ArticleListViewResponse::new);
 
-        return PageResponse.<ArticleListViewResponse>withAll()
-                .dataList(articles.getContent())
-                .currentPage(pageable.getPageNumber() + 1)
-                .pageSize(pageable.getPageSize())
-                .totalCount(articles.getTotalElements())
-                .build();
+        return getPageResponse(pageable, articles);
     }
 
     public Article findWithUserById(Long id) {
@@ -90,7 +94,12 @@ public class BlogService {
         return blogRepository.countByUserId(userId);
     }
 
-    public List<Article> findAllByCond(ArticleSearchRequest request) {
-        return blogQueryRepository.findAllByCond(request);
+    private PageResponse<ArticleListViewResponse> getPageResponse(Pageable pageable, Page<ArticleListViewResponse> articles) {
+        return PageResponse.<ArticleListViewResponse>withAll()
+                .dataList(articles.getContent())
+                .currentPage(pageable.getPageNumber() + 1)
+                .pageSize(pageable.getPageSize())
+                .totalCount(articles.getTotalElements())
+                .build();
     }
 }

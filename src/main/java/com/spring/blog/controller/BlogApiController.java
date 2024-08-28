@@ -11,8 +11,9 @@ import com.spring.blog.dto.UpdateArticleRequest;
 import com.spring.blog.model.PrincipalUser;
 import com.spring.blog.service.BlogService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -24,10 +25,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/api")
@@ -48,24 +46,20 @@ public class BlogApiController {
     }
 
     @PostMapping("/articles/search")
-    public ResponseEntity<List<ArticleListViewResponse>> findAllArticles(@RequestBody ArticleSearchRequest request) {
+    public ResponseEntity<PageResponse<ArticleListViewResponse>> findAllArticlesByCond(
+            @RequestBody ArticleSearchRequest request,
+            @PageableDefault Pageable pageable) {
 
-        List<ArticleListViewResponse> articles = blogService.findAllByCond(request)
-                .stream()
-                .map(ArticleListViewResponse::new)
-                .toList();
+        PageResponse<ArticleListViewResponse> articles = blogService.findAllByCond(request, pageable);
 
         return ResponseEntity.ok().body(articles);
     }
 
     @GetMapping("/articles/page")
     public ResponseEntity<PageResponse<ArticleListViewResponse>> getPagingArticles(
-            @RequestParam(value = "page", defaultValue = "0") int page,
-            @RequestParam(value = "size", defaultValue = "10") int size) {
+            @PageableDefault(direction = Sort.Direction.DESC, sort = "createdAt") Pageable pageable) {
 
-        PageResponse<ArticleListViewResponse> articles = blogService.findAll(
-                PageRequest.of(page, size, Sort.Direction.DESC, "createdAt")
-        );
+        PageResponse<ArticleListViewResponse> articles = blogService.findAll(pageable);
 
         return ResponseEntity.ok().body(articles);
     }

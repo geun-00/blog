@@ -33,11 +33,18 @@ document.addEventListener('DOMContentLoaded', function () {
 
     function saveState() {
         const state = {
-            selectedType: searchTypeSelect.value,
-            inputs: Object.keys(searchInputs).reduce((acc, key) => {
-                acc[key] = searchInputs[key].value;
-                return acc;
-            }, {})
+            searchType: searchTypeSelect.value,
+            title: searchInputs.searchTitleInput.value,
+            content: searchInputs.searchContentInput.value,
+            author: searchInputs.searchAuthorInput.value,
+            titleContent: {
+                title: searchInputs.searchTitleWithContentInput.value,
+                content: searchInputs.searchContentWithTitleInput.value
+            },
+            period: {
+                startDate: searchInputs.searchDateStartInput.value,
+                endDate: searchInputs.searchDateEndInput.value
+            }
         };
 
         sessionStorage.setItem('searchState', JSON.stringify(state));
@@ -74,37 +81,30 @@ document.addEventListener('DOMContentLoaded', function () {
         if (searchFields[selectedValue]) {
             searchFields[selectedValue].style.display = 'block';
         }
-
-        saveState();
     }
-
-    Object.values(searchInputs).forEach(input => {
-        input.addEventListener('input', saveState);
-    });
 
     searchTypeSelect.addEventListener('change', updateSearchFields);
     restoreState();
+
+    // 검색 버튼 클릭 시 상태 저장 및 검색
+    const searchButton = document.getElementById('search-button');
+    searchButton.addEventListener('click', function () {
+        saveState();
+    });
 });
 
 window.addEventListener('pageshow', function (event) {
     const type = performance.getEntriesByType('navigation')[0].type;
     if (window.performance) {
         if (type === 'back_forward' || type === 'reload') {
-            const storedResults = sessionStorage.getItem('searchResults');
             const pageNumber = sessionStorage.getItem('pageNumber');
-
-            if (storedResults) {
-                renderData(storedResults);
-            }
-            else if (pageNumber) {
+            if (pageNumber) {
                 loadPage(pageNumber);
             }
         }
         else if (type === 'navigate') {
-            sessionStorage.removeItem('searchResults');
-            sessionStorage.removeItem('searchState');
-
             sessionStorage.removeItem('pageNumber');
+            sessionStorage.removeItem('searchState');
         }
     }
 });

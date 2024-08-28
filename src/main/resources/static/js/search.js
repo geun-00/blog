@@ -54,7 +54,7 @@ function submitForm() {
         alert(message + '(을)를 입력해주세요');
     }
 
-    const body = JSON.stringify({
+    const searchState = JSON.stringify({
         searchType: searchType,
         title: searchTitle,
         content: searchContent,
@@ -69,47 +69,9 @@ function submitForm() {
         }
     })
 
-    fetch('/api/articles/search', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: body
-    })
-        .then(response => response.json())
-        .then(data => {
-            sessionStorage.setItem('searchResults', JSON.stringify(data));
+    sessionStorage.setItem('searchState', searchState);
 
-            const resultsDiv = document.getElementById('article-list');
-            resultsDiv.innerHTML = '';
+    const pageNumber = sessionStorage.getItem('pageNumber') || '1';
 
-            const today = new Date();
-            const formattedToday = `${today.getFullYear()}. ${today.getMonth() + 1}. ${today.getDate()}.`;
-            let count = 1;
-
-            data.forEach(article => {
-                const articleElement = document.createElement('tr');
-                const articleDate = new Date(article.createdAt);
-                const articleDateString = articleDate.toLocaleDateString();
-                const articleTimeString = articleDate.toTimeString().split(' ')[0].substring(0, 5);
-
-                articleElement.innerHTML = `
-                <td>${count++}</td>
-                <td>
-                    <a href="/articles/${article.id}">${article.title}</a>
-                </td>
-                <td>
-                    ${articleDateString === formattedToday ? articleTimeString : articleDateString}
-                </td>
-                <td>
-                    ${article.author}
-                </td>
-            `;
-                resultsDiv.appendChild(articleElement);
-            });
-        })
-        .catch(error => {
-            alert('오류가 발생했습니다.');
-            location.replace('/articles');
-        });
+    loadPage(pageNumber)
 }

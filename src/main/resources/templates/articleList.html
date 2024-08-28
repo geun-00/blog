@@ -111,9 +111,12 @@
 </head>
 <body>
 
+<!------------------------ 헤더 ------------------------>
 <div th:replace="~{fragments/header :: common_header}"></div>
 
 <div class="container">
+
+    <!------------------------ 페이징 사이즈 선택 목록 ------------------------>
     <div class="d-flex justify-content-end">
         <div class="dropdown">
             <a id="size-selector" onclick="toggleDropdown()" class="select_box">10개씩</a>
@@ -127,6 +130,7 @@
         </div>
     </div>
 
+    <!------------------------ 전체 글 데이터 또는 비동기 동적 데이터 ------------------------>
     <table class="table table-bordered">
         <thead>
             <tr>
@@ -155,6 +159,7 @@
         </tbody>
     </table>
 
+    <!------------------------ 페이징 처리 ------------------------>
     <div id="pagination">
         <a href="/"
            class="prev"
@@ -177,6 +182,7 @@
            onclick="loadPage(this.getAttribute('data-page'))">다음</a>
     </div>
 
+    <!------------------------ 검색 조건 및 글 등록 ------------------------>
     <div class="mb-3 d-flex justify-content-between align-items-center">
         <div class="d-flex justify-content-center align-items-center w-100">
             <select id="search-type" class="form-select">
@@ -193,6 +199,7 @@
         </a>
     </div>
 
+    <!------------------------ 검색 조건 입력 및 검색 버튼 ------------------------>
     <div id="search-title" class="mb-3" style="display: none;">
         <label for="searchTitle" class="form-label">제목</label>
         <input type="text" id="searchTitle" class="form-control">
@@ -222,12 +229,23 @@
         <input type="date" id="search-date-end" class="form-control">
     </div>
 
-    <button style="margin-bottom: 50px" onclick="submitForm()" class="btn btn-primary mt-3">검색</button>
+    <button style="margin-bottom: 50px" onclick="submitForm()" id="search-button" class="btn btn-primary mt-3">검색</button>
 </div>
 
 <script src="/js/search.js"></script>
-<script src="/js/renderData.js"></script>
 <script src="/js/searchPageEvents.js"></script>
-<script src="/js/pagingProcess.js"></script>
+<script src="/js/loadPage.js"></script>
+<script>
+    function toggleDropdown() {
+        const dropdownMenu = document.querySelector('.dropdown-menu');
+        dropdownMenu.style.display = dropdownMenu.style.display === 'block' ? 'none' : 'block';
+    }
+
+    function setPageSize(size) {
+        const currentUrl = new URL(window.location.href);
+        currentUrl.searchParams.set('size', size);
+        window.location.href = currentUrl.toString();
+    }
+</script>
 </body>
 </html>

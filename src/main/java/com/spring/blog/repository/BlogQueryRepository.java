@@ -1,10 +1,14 @@
 package com.spring.blog.repository;
 
 import com.querydsl.core.types.dsl.BooleanExpression;
+import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.spring.blog.domain.Article;
 import com.spring.blog.dto.ArticleSearchRequest;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.support.PageableExecutionUtils;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
@@ -19,13 +23,22 @@ public class BlogQueryRepository {
     private final JPAQueryFactory query;
 
 
-    public List<Article> findAllByCond(ArticleSearchRequest request) {
+    public Page<Article> findAllByCond(ArticleSearchRequest request, Pageable pageable) {
 
-        return query.selectFrom(article)
+        List<Article> content = query.selectFrom(article)
                 .join(article.user).fetchJoin()
                 .where(getCondByRequest(request))
                 .orderBy(article.createdAt.desc())
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
                 .fetch();
+
+        JPAQuery<Long> countQuery = query
+                .select(article.count())
+                .from(article)
+                .where(getCondByRequest(request));
+
+        return PageableExecutionUtils.getPage(content, pageable, countQuery::fetchOne);
     }
 
     private BooleanExpression getCondByRequest(ArticleSearchRequest request) {
