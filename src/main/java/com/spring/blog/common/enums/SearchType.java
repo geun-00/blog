@@ -12,7 +12,8 @@ public enum SearchType {
     CONTENT("content", "내용"),
     AUTHOR("author", "작성자"),
     TITLE_CONTENT("title-content", "제목 + 내용"),
-    PERIOD("period", "기간");
+    PERIOD("period", "기간"),
+    VIEWS("views", "조회수");
 
     private final String description_en;
     private final String description_kr;

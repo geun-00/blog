@@ -62,6 +62,9 @@ public class BlogQueryRepository {
                 return betweenPeriod(request.getPeriod().getStartDate(),
                                      request.getPeriod().getEndDate());
             }
+            case VIEWS -> { //조회수로 조회
+                return goeViews(request.getViews());
+            }
         }
 
         throw new IllegalArgumentException("예외 발생");
@@ -82,5 +85,9 @@ public class BlogQueryRepository {
     private BooleanExpression betweenPeriod(LocalDate startDate, LocalDate endDate) {
         return article.createdAt.between(startDate.atStartOfDay(),
                 endDate.atStartOfDay().plusHours(23).plusMinutes(59).plusSeconds(59));
+    }
+
+    private BooleanExpression goeViews(Long views) {
+        return article.views.goe(views);
     }
 }

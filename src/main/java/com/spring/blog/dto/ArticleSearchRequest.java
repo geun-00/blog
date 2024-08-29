@@ -12,6 +12,7 @@ public class ArticleSearchRequest {
     private String title;
     private String content;
     private String author;
+    private Long views;
     private TitleContent titleContent;
     private Period period;
 
