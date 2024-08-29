@@ -5,6 +5,30 @@
     <meta charset="UTF-8">
     <title>블로그 글</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
+    <style>
+        /* 작성자 이름 스타일 */
+        .author-name {
+            font-weight: bold;
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+
+        .author-name:hover {
+            color: #007bff; /* 호버 시 색상 변경 */
+            text-decoration: underline; /* 링크 스타일 추가 */
+        }
+
+        /* 작성일 스타일 */
+        .text-muted.fst-italic {
+            color: #6c757d; /* 약간 회색 톤 */
+        }
+
+        /* 구분선 스타일 */
+        hr.my-3 {
+            border: 0;
+            border-top: 1px solid #dee2e6; /* 회색 구분선 */
+        }
+    </style>
 </head>
 <body>
 
@@ -16,28 +40,35 @@
             <article th:object="${article}">
                 <input type="hidden" id="article-id" th:field="*{id}">
                 <header class="mb-4">
-                    <h1 class="fw-bolder mb-1" th:text="*{title}"></h1>
-                    <div class="text-muted fst-italic mb-2"
-                         th:text="|Posted on ${#temporals.format(article.createdAt, 'yyyy-MM-dd HH:mm')} By *{author}|">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h1 class="fw-bolder mb-1" th:text="*{title}"></h1>
+                        <div th:if="${#authentication.getName() == article.author}">
+                            <a class="btn btn-primary text-white" id="modify-btn"
+                               th:onclick="|location.href='@{/new-article?id={articleId}(articleId=${article.id})}'|">
+                                수정
+                            </a>
+                            <a class="btn btn-secondary text-white" id="delete-btn">삭제</a>
+                        </div>
                     </div>
-                    <p th:text="|조회수 : ${article.views}|"></p>
-                </header>
-                <section class="mb-5">
+                    <div>
+                        <span class="author-name me-2" th:text="${article.author}"
+                              th:onclick="|location.href='@{/myPage(author=${article.author})}'|">
+                        </span>
+                    </div>
+                    <div>
+                        <span class="text-muted fst-italic"
+                              th:text="${#temporals.format(article.createdAt, 'yyyy.MM.dd. HH:mm')}">
+                        </span>
+                        <img src="/images/views.png" style="width: 20px; height: 20px; margin-left: 10px;">
+                        <span th:text="${article.views}"></span>
+                    </div>
+                    <hr class="my-3">
                     <p class="fs-5 mb-4" th:text="*{content}"></p>
-                </section>
-                <button type="button" id="modify-btn" th:if="${#authentication.getName() == article.author}"
-                        th:onclick="|location.href='@{/new-article?id={articleId}(articleId=${article.id})}'|"
-                        class="btn btn-primary btn-sm">수정</button>
-
-                <button type="button" id="delete-btn" th:if="${#authentication.getName() == article.author}"
-                        class="btn btn-secondary btn-sm">삭제</button>
-
-                <a th:href="@{/myPage(author=${article.author})}" th:if="${#authentication.getName() != article.author}"
-                        class="btn btn-primary btn-sm">작성자 조회
-                </a>
+                </header>
             </article>
         </div>
     </div>
 </div>
 <script src="/js/article.js"></script>
 </body>
+</html>
