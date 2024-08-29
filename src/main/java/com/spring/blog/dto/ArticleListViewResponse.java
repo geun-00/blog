@@ -9,6 +9,7 @@ import java.time.LocalDateTime;
 public class ArticleListViewResponse {
 
     private final Long id;
+    private final long views;
     private final String title;
     private final String content;
     private final String author;
@@ -16,6 +17,7 @@ public class ArticleListViewResponse {
 
     public ArticleListViewResponse(Article article) {
         this.id = article.getId();
+        this.views = article.getViews();
         this.title = article.getTitle();
         this.content = article.getContent();
         this.createdAt = article.getCreatedAt();

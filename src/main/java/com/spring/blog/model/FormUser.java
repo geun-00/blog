@@ -19,7 +19,7 @@ public class FormUser implements ProviderUser {
 
     @Override
     public String getId() {
-        return id;
+        return "[Form]" + id;
     }
 
     @Override

@@ -69,6 +69,9 @@ function renderArticles(data, pageNumber, pageSize) {
                 <td>
                     ${article.author}
                 </td>
+                <td>
+                    ${article.views}
+                </td>
             `;
 
         resultsDiv.appendChild(articleElement);

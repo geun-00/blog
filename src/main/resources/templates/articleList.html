@@ -138,23 +138,25 @@
                 <th>제목</th>
                 <th>작성일</th>
                 <th>작성자</th>
+                <th>조회</th>
             </tr>
         </thead>
         <tbody id="article-list">
             <tr th:each="article, iter : ${articles}">
-                <td th:text="${iter.count}"></td>
+                <td th:text="${iter.count}"></td> <!--번호-->
                 <td>
-                    <a th:href="@{/articles/{id}(id=${article.id})}" th:text="${article.title}"></a>
+                    <a th:href="@{/articles/{id}(id=${article.id})}" th:text="${article.title}"></a> <!--제목-->
                 </td>
-                <td>
+                <td> <!--작성일-->
                     <span th:if="${#temporals.format(article.createdAt.toLocalDate(), 'yyyy-MM-dd').equals(#temporals.format(currentDate, 'yyyy-MM-dd'))}"
                               th:text="${#temporals.format(article.createdAt, 'HH:mm')}"></span>
                     <span th:unless="${#temporals.format(article.createdAt.toLocalDate(), 'yyyy-MM-dd').equals(#temporals.format(currentDate, 'yyyy-MM-dd'))}"
                           th:text="${#temporals.format(article.createdAt, 'yyyy-MM-dd')}"></span>
                 </td>
-                <td>
+                <td> <!--작성자-->
                     <a th:text="${article.author}"></a>
                 </td>
+                <td th:text="${article.views}"></td> <!--조회-->
             </tr>
         </tbody>
     </table>

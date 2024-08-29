@@ -1,5 +1,6 @@
 package com.spring.blog.controller;
 
+import com.spring.blog.common.annotation.UserKey;
 import com.spring.blog.common.enums.SearchType;
 import com.spring.blog.domain.Article;
 import com.spring.blog.dto.ArticleListViewResponse;
@@ -36,15 +37,16 @@ public class BlogViewController {
     @GetMapping("/guest")
     public String guest(HttpServletRequest request, HttpServletResponse response) {
 
-        request.getSession().invalidate();
-
-        for (Cookie cookie : request.getCookies()) {
-            if ("JSESSIONID".equals(cookie.getName())) {
-                cookie.setMaxAge(0);
-                cookie.setPath("/");
-                response.addCookie(cookie);
+        if (request.getCookies() != null) {
+            for (Cookie cookie : request.getCookies()) {
+                if ("JSESSIONID".equals(cookie.getName())) {
+                    cookie.setMaxAge(0);
+                    cookie.setPath("/");
+                    response.addCookie(cookie);
+                }
             }
         }
+
         return "redirect:/articles";
     }
 
@@ -64,9 +66,11 @@ public class BlogViewController {
     }
 
     @GetMapping("/articles/{id}")
-    public String getArticle(@PathVariable("id") Long id, Model model) {
+    public String getArticle(@PathVariable("id") Long id,
+                             @UserKey String userKey,
+                             Model model) {
 
-        Article article = blogService.findWithUserById(id);
+        Article article = blogService.getArticleAndIncreaseViews(id, userKey);
         model.addAttribute("article", new ArticleViewResponse(article));
 
         return "article";

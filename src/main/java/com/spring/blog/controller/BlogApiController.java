@@ -64,14 +64,6 @@ public class BlogApiController {
         return ResponseEntity.ok().body(articles);
     }
 
-
-    @GetMapping("/articles/{id}")
-    public ResponseEntity<ArticleResponse> findArticle(@PathVariable("id") long id) {
-        Article article = blogService.findWithUserById(id);
-
-        return ResponseEntity.ok().body(new ArticleResponse(article));
-    }
-
     @DeleteMapping("/articles/{id}")
     public ResponseEntity<Void> deleteArticle(@PathVariable("id") long id) {
         blogService.delete(id);

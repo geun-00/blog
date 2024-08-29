@@ -35,6 +35,9 @@ public class Article extends BaseEntity {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
+    @Column(name = "views")
+    private long views;
+
     @Builder
     public Article(String title, String content) {
         this.title = title;
@@ -48,5 +51,9 @@ public class Article extends BaseEntity {
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    public void increaseViews() {
+        this.views += 1;
     }
 }

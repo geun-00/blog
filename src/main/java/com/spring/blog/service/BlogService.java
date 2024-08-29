@@ -14,10 +14,15 @@ import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.SetOperations;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Set;
 
 @Service
 @Transactional(readOnly = true)
@@ -28,6 +33,7 @@ public class BlogService {
     private final UserRepository userRepository;
     private final ValidationService validationService;
     private final BlogQueryRepository blogQueryRepository;
+    private final RedisTemplate<String, Object> redisTemplate;
 
     @Transactional
     public Article save(AddArticleRequest request, String email) {
@@ -61,6 +67,29 @@ public class BlogService {
                 .orElseThrow(() -> new EntityNotFoundException("not found : " + id));
 
         blogRepository.delete(article);
+    }
+
+    @Transactional
+    public Article getArticleAndIncreaseViews(Long id, String userKey) {
+
+        Article foundArticle = findWithUserById(id);
+
+        SetOperations<String, Object> so = redisTemplate.opsForSet();
+        Set<Object> viewedArticles = so.members(userKey);
+
+        //레디스에서 오늘 조회한 게시글 목록에 없을 때에만 조회수 증가
+        if (viewedArticles == null || !viewedArticles.contains(String.valueOf(id))) {
+
+            foundArticle.increaseViews();
+            so.add(userKey, String.valueOf(id));
+
+            //TTL 설정, 오늘 자정까지
+            LocalDateTime now = LocalDateTime.now();
+            LocalDateTime nextDay = now.toLocalDate().plusDays(1).atStartOfDay();
+            redisTemplate.expire(userKey, Duration.between(now, nextDay));
+        }
+
+        return foundArticle;
     }
 
     public List<Article> findAll() {

@@ -1,6 +1,5 @@
 package com.spring.blog.service;
 
-import com.spring.blog.domain.User;
 import com.spring.blog.model.FormUser;
 import com.spring.blog.model.PrincipalUser;
 import com.spring.blog.model.ProviderUser;
@@ -13,6 +12,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -26,6 +26,7 @@ public class CustomUserDetailsService implements UserDetailsService {
         return userRepository.findByEmail(email).map(
                         user -> {
                             ProviderUser provider = FormUser.builder()
+                                    .id(UUID.randomUUID().toString())
                                     .username(user.getNickname())
                                     .password(user.getPassword())
                                     .email(user.getEmail())

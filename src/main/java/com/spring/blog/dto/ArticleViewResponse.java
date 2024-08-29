@@ -11,6 +11,7 @@ import java.time.LocalDateTime;
 public class ArticleViewResponse {
 
     private Long id;
+    private long views;
     private String title;
     private String content;
     private LocalDateTime createdAt;
@@ -22,5 +23,6 @@ public class ArticleViewResponse {
         this.content = article.getContent();
         this.createdAt = article.getCreatedAt();
         this.author = article.getUser().getNickname();
+        this.views = article.getViews();
     }
 }
