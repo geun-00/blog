@@ -57,9 +57,11 @@ spring:
       port: 6379
 
   jpa:
+    show-sql: true
     properties:
       hibernate:
-        use_sql_comments: true
+        format_sql: true
+        highlight_sql: true
 
 server:
   servlet:
@@ -73,10 +75,11 @@ jasypt:
 
 logging:
   level:
-    sql: debug
-    orm:
-      jdbc:
-        bind: trace
+    org:
+      hibernate:
+        orm:
+          jdbc:
+            bind: trace
 ---
 
 spring:
@@ -93,7 +96,6 @@ spring:
   jpa:
     properties:
       hibernate:
-        format_sql: true
         hbm2ddl:
           auto: none
         dialect: org.hibernate.dialect.MySQLDialect
@@ -112,10 +114,3 @@ spring:
   h2:
     console:
       enabled: true
-
-  jpa:
-    defer-datasource-initialization: true # 테이블 생성 후 sql 파일 실행
-    show-sql: true
-    properties:
-      hibernate:
-        format_sql: true
