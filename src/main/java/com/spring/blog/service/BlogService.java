@@ -94,18 +94,14 @@ public class BlogService {
 
     public PageResponse<ArticleListViewResponse> findAllByCond(ArticleSearchRequest request, Pageable pageable) {
 
-        Page<ArticleListViewResponse> articles = blogQueryRepository
-                .findAllByCond(request, pageable)
-                .map(ArticleListViewResponse::new);
+        Page<ArticleListViewResponse> articles = blogQueryRepository.findAllByCond(request, pageable);
 
         return getPageResponse(pageable, articles);
     }
 
     public PageResponse<ArticleListViewResponse> findAll(Pageable pageable) {
 
-        Page<ArticleListViewResponse> articles = blogRepository
-                .findAll(pageable)
-                .map(ArticleListViewResponse::new);
+        Page<ArticleListViewResponse> articles = blogQueryRepository.findAll(pageable);
 
         return getPageResponse(pageable, articles);
     }

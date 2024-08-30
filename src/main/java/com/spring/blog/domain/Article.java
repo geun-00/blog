@@ -61,6 +61,10 @@ public class Article extends BaseEntity {
     }
 
     public void increaseViews() {
-        this.views += 1;
+        this.views++;
+    }
+
+    public void addComment(Comment comment) {
+        this.comments.add(comment);
     }
 }

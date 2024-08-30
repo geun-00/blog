@@ -42,7 +42,7 @@ public class Comment extends BaseEntity {
         this.user = user;
         this.article = article;
 
-        user.getComments().add(this);
-        article.getComments().add(this);
+        article.addComment(this);
+        user.addComment(this);
     }
 }

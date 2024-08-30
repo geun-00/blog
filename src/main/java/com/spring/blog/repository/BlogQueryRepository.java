@@ -1,10 +1,12 @@
 package com.spring.blog.repository;
 
 import com.querydsl.core.types.dsl.BooleanExpression;
+import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import com.spring.blog.domain.Article;
+import com.spring.blog.dto.ArticleListViewResponse;
 import com.spring.blog.dto.ArticleSearchRequest;
+import com.spring.blog.dto.QArticleListViewResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -15,6 +17,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 import static com.spring.blog.domain.QArticle.article;
+import static com.spring.blog.domain.QComment.comment;
 
 @Repository
 @RequiredArgsConstructor
@@ -22,12 +25,33 @@ public class BlogQueryRepository {
 
     private final JPAQueryFactory query;
 
+    /**
+     * 조회 조건 X
+     **/
+    public Page<ArticleListViewResponse> findAll(Pageable pageable) {
+        return findArticlesByCond(null, pageable);
+    }
 
-    public Page<Article> findAllByCond(ArticleSearchRequest request, Pageable pageable) {
+    /**
+     * 조회 조건 O
+     **/
+    public Page<ArticleListViewResponse> findAllByCond(ArticleSearchRequest request, Pageable pageable) {
+        return findArticlesByCond(request, pageable);
+    }
 
-        List<Article> content = query.selectFrom(article)
-                .join(article.user).fetchJoin()
+    private Page<ArticleListViewResponse> findArticlesByCond(ArticleSearchRequest request, Pageable pageable) {
+
+        List<ArticleListViewResponse> content = query
+                .select(new QArticleListViewResponse(
+                        article,
+                        JPAExpressions  //서브 쿼리
+                                .select(comment.count())
+                                .from(comment)
+                                .where(comment.article.eq(article))
+                ))
+                .from(article)
                 .where(getCondByRequest(request))
+                .join(article.user).fetchJoin()
                 .orderBy(article.createdAt.desc())
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
@@ -42,6 +66,10 @@ public class BlogQueryRepository {
     }
 
     private BooleanExpression getCondByRequest(ArticleSearchRequest request) {
+
+        if (request == null) {
+            return null;
+        }
 
         switch (request.getSearchType()) {
             case TITLE -> { //제목으로 조회
