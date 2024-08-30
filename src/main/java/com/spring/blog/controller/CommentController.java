@@ -27,8 +27,8 @@ public class CommentController {
 
         PrincipalUser principalUser = (PrincipalUser) authentication.getPrincipal();
         String email = principalUser.providerUser().getEmail();
-        Comment comment = commentService.addComment(commentRequest, email);
+        CommentResponse comment = commentService.addComment(commentRequest, email);
 
-        return ResponseEntity.ok().body(new CommentResponse(comment));
+        return ResponseEntity.ok().body(comment);
     }
 }

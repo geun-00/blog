@@ -26,7 +26,10 @@ public class ArticleViewResponse {
         this.createdAt = article.getCreatedAt();
         this.comments = article.getComments()
                 .stream()
-                .map(CommentResponse::new)
+                .map(comment -> {
+                    boolean isAuthor = comment.getUser().getNickname().equals(article.getUser().getNickname());
+                    return new CommentResponse(comment, isAuthor);
+                })
                 .toList();
     }
 }

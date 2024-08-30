@@ -58,9 +58,20 @@
 
                     <!-------------------댓글 목록------------------->
                     <div class="comment_list mt-4" id="comment-list">
-                        <div th:each="comment : ${article.comments}" class="comment_item">
-                            <span class="comment_author" th:text="${comment.author}"></span>
-                            <span class="comment_content" th:text="${comment.comment}"></span>
+                        <div th:each="comment : ${article.comments}" class="comment-item mb-3">
+                            <input type="hidden" id="comment-id" th:value="${comment.id}">
+                            <div class="comment-header">
+                                <div class="d-flex align-items-center">
+                                    <a class="author-name fw-bold" th:text="${comment.author}"
+                                       th:onclick="|location.href='@{/myPage(author=${comment.author})}'|"></a>
+                                    <span th:if="${comment.isAuthor()}"
+                                          class="badge bg-success ms-2">작성자</span>
+                                </div>
+                                <div class="text-muted fst-italic"
+                                     th:text="${#temporals.format(comment.createdAt, 'yyyy.MM.dd. HH:mm')}"></div>
+                            </div>
+                            <div class="comment-content fs-5" th:text="${comment.comment}"></div>
+                            <hr class="comment-divider">
                         </div>
                     </div>
                     <!-------------------댓글 목록------------------->
