@@ -1,7 +1,7 @@
 package com.spring.blog.controller.validator;
 
 import com.spring.blog.domain.User;
-import com.spring.blog.dto.EditUserRequest;
+import com.spring.blog.dto.request.EditUserRequest;
 import com.spring.blog.model.PrincipalUser;
 import com.spring.blog.service.UserService;
 import lombok.RequiredArgsConstructor;

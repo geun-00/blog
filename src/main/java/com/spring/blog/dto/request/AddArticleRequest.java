@@ -1,4 +1,4 @@
-package com.spring.blog.dto;
+package com.spring.blog.dto.request;
 
 import com.spring.blog.domain.Article;
 import jakarta.validation.constraints.NotBlank;

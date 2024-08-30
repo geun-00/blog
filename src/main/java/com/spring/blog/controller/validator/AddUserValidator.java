@@ -1,6 +1,6 @@
 package com.spring.blog.controller.validator;
 
-import com.spring.blog.dto.AddUserRequest;
+import com.spring.blog.dto.request.AddUserRequest;
 import com.spring.blog.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;

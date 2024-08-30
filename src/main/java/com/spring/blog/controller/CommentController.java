@@ -2,8 +2,8 @@ package com.spring.blog.controller;
 
 import com.spring.blog.common.annotation.CurrentUser;
 import com.spring.blog.domain.Comment;
-import com.spring.blog.dto.CommentRequest;
-import com.spring.blog.dto.CommentResponse;
+import com.spring.blog.dto.request.CommentRequest;
+import com.spring.blog.dto.response.CommentResponse;
 import com.spring.blog.model.PrincipalUser;
 import com.spring.blog.service.CommentService;
 import lombok.RequiredArgsConstructor;

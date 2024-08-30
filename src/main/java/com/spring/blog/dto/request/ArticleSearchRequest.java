@@ -1,4 +1,4 @@
-package com.spring.blog.dto;
+package com.spring.blog.dto.request;
 
 import com.spring.blog.common.enums.SearchType;
 import lombok.Data;

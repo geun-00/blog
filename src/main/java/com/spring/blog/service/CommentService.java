@@ -3,7 +3,7 @@ package com.spring.blog.service;
 import com.spring.blog.domain.Article;
 import com.spring.blog.domain.Comment;
 import com.spring.blog.domain.User;
-import com.spring.blog.dto.CommentRequest;
+import com.spring.blog.dto.request.CommentRequest;
 import com.spring.blog.repository.BlogRepository;
 import com.spring.blog.repository.CommentRepository;
 import com.spring.blog.repository.UserRepository;

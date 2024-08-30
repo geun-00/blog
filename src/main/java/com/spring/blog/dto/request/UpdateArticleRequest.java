@@ -1,4 +1,4 @@
-package com.spring.blog.dto;
+package com.spring.blog.dto.request;
 
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;

@@ -2,8 +2,8 @@ package com.spring.blog.service;
 
 import com.spring.blog.common.enums.SocialType;
 import com.spring.blog.domain.User;
-import com.spring.blog.dto.AddUserRequest;
-import com.spring.blog.dto.EditUserRequest;
+import com.spring.blog.dto.request.AddUserRequest;
+import com.spring.blog.dto.request.EditUserRequest;
 import com.spring.blog.model.ProviderUser;
 import com.spring.blog.repository.UserRepository;
 import jakarta.persistence.EntityNotFoundException;

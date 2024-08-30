@@ -2,12 +2,12 @@ package com.spring.blog.controller;
 
 import com.spring.blog.common.annotation.CurrentUser;
 import com.spring.blog.domain.Article;
-import com.spring.blog.dto.AddArticleRequest;
-import com.spring.blog.dto.ArticleListViewResponse;
-import com.spring.blog.dto.ArticleResponse;
-import com.spring.blog.dto.ArticleSearchRequest;
-import com.spring.blog.dto.PageResponse;
-import com.spring.blog.dto.UpdateArticleRequest;
+import com.spring.blog.dto.request.AddArticleRequest;
+import com.spring.blog.dto.response.ArticleListViewResponse;
+import com.spring.blog.dto.response.ArticleResponse;
+import com.spring.blog.dto.request.ArticleSearchRequest;
+import com.spring.blog.dto.response.PageResponse;
+import com.spring.blog.dto.request.UpdateArticleRequest;
 import com.spring.blog.model.PrincipalUser;
 import com.spring.blog.service.BlogService;
 import lombok.RequiredArgsConstructor;

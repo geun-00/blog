@@ -1,13 +1,12 @@
-package com.spring.blog.dto;
+package com.spring.blog.dto.request;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
-public class AddUserRequest {
+public class EditUserRequest {
 
     private String email;
-    private String password;
     private String nickname;
 }
