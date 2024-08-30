@@ -1,0 +1,66 @@
+/* 작성자 이름 스타일 */
+.author-name {
+    font-weight: bold;
+    cursor: pointer;
+    transition: color 0.3s ease;
+}
+.author-name:hover {
+    color: #007bff; /* 호버 시 색상 변경 */
+    text-decoration: underline; /* 링크 스타일 추가 */
+}
+/* 작성일 스타일 */
+.text-muted.fst-italic {
+    color: #6c757d; /* 약간 회색 톤 */
+}
+/* 구분선 스타일 */
+hr.my-3 {
+    border: 0;
+    border-top: 1px solid #dee2e6; /* 회색 구분선 */
+}
+
+.CommentWriter {
+    background-color: #f9f9f9; /* 배경색을 밝게 설정 */
+    border-radius: 8px; /* 모서리를 둥글게 */
+    padding: 15px; /* 내부 여백 */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* 그림자 추가 */
+    max-width: 100%; /* 부모 요소의 전체 너비 사용 */
+    margin-top: 20px; /* 위쪽 여백 */
+    text-align: left; /* 텍스트 왼쪽 정렬 */
+}
+
+.comment_inbox_name {
+    font-weight: bold; /* 이름을 굵게 표시 */
+    font-size: 14px; /* 이름 폰트 크기 */
+    margin-bottom: 10px; /* 이름과 텍스트 에어리어 사이 여백 */
+    display: block;
+}
+
+.comment_inbox_text {
+    width: 100%; /* 텍스트 에어리어 너비를 부모에 맞춤 */
+    padding: 10px; /* 내부 여백 */
+    border: 1px solid #ccc; /* 경계선 색상 */
+    border-radius: 5px; /* 모서리를 둥글게 */
+    font-size: 14px; /* 텍스트 크기 */
+    resize: none; /* 크기 조절 비활성화 */
+    box-sizing: border-box; /* 패딩 포함 너비 계산 */
+}
+
+.comment_inbox_text:focus {
+    /*border-color: #007bff; !* 포커스 시 경계선 색 변경 *!*/
+    outline: none; /* 기본 포커스 아웃라인 제거 */
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5); /* 포커스 시 그림자 효과 */
+}
+
+.register_box {
+    text-align: right; /* 버튼을 오른쪽으로 정렬 */
+    margin-top: 10px; /* 상단 여백 */
+}
+
+.btn_register {
+    background-color: #007bff; /* 버튼 배경색 */
+    color: white; /* 버튼 글자색 */
+    padding: 8px 15px; /* 버튼 내부 여백 */
+    border-radius: 5px; /* 버튼 모서리 둥글게 */
+    text-decoration: none; /* 기본 링크 스타일 제거 */
+    font-size: 14px; /* 버튼 폰트 크기 */
+}
