@@ -24,7 +24,7 @@ public class CommentService {
     @Transactional
     public Comment addComment(CommentRequest request, String email) {
 
-        Article foundArticle = blogRepository.findWithUserById(request.getArticleId()).orElseThrow(
+        Article foundArticle = blogRepository.findById(request.getArticleId()).orElseThrow(
                 () -> new EntityNotFoundException("not found : " + request.getArticleId()));
 
         User foundUser = userRepository.findByEmail(email).orElseThrow(

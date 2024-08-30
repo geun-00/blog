@@ -12,8 +12,11 @@ import java.util.Optional;
 
 public interface BlogRepository extends JpaRepository<Article, Long> {
 
-    @EntityGraph(attributePaths = "user")
-    Optional<Article> findWithUserById(long id);
+    @Query("SELECT a FROM Article a " +
+            "JOIN FETCH a.user " +
+            "LEFT JOIN FETCH a.comments " +
+            "WHERE a.id = :id")
+    Optional<Article> findWithUserAndCommentsById(@Param("id") Long id);
 
     @Query("SELECT COUNT(a) FROM Article a WHERE a.user.id = :userId")
     long countByUserId(@Param("userId") Long userId);

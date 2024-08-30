@@ -57,10 +57,10 @@
                     <!-------------------댓글 입력 창------------------->
 
                     <!-------------------댓글 목록------------------->
-                    <div class="comment_list mt-4">
-                        <div class="comment_item">
-                            <span class="comment_author">작성자 이름</span>
-                            <span class="comment_content">댓글 내용</span>
+                    <div class="comment_list mt-4" id="comment-list">
+                        <div th:each="comment : ${article.comments}" class="comment_item">
+                            <span class="comment_author" th:text="${comment.author}"></span>
+                            <span class="comment_content" th:text="${comment.comment}"></span>
                         </div>
                     </div>
                     <!-------------------댓글 목록------------------->

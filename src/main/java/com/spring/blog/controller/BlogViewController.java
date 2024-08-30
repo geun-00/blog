@@ -4,6 +4,7 @@ import com.spring.blog.common.annotation.UserKey;
 import com.spring.blog.common.enums.SearchType;
 import com.spring.blog.domain.Article;
 import com.spring.blog.dto.ArticleListViewResponse;
+import com.spring.blog.dto.AddArticleViewResponse;
 import com.spring.blog.dto.ArticleViewResponse;
 import com.spring.blog.dto.PageResponse;
 import com.spring.blog.service.BlogService;
@@ -80,10 +81,10 @@ public class BlogViewController {
     public String newArticle(@RequestParam(name = "id", required = false) Long id, Model model) {
 
         if (id == null) {
-            model.addAttribute("article", new ArticleViewResponse());
+            model.addAttribute("article", new AddArticleViewResponse());
         } else {
-            Article article = blogService.findWithUserById(id);
-            model.addAttribute("article", new ArticleViewResponse(article));
+            Article article = blogService.findById(id);
+            model.addAttribute("article", new AddArticleViewResponse(article));
         }
 
         return "newArticle";

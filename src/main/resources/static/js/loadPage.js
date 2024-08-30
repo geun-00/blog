@@ -61,7 +61,10 @@ function renderArticles(data, pageNumber, pageSize) {
         articleElement.innerHTML = `
                 <td>${count++}</td>
                 <td>
-                    <a href="/articles/${article.id}">${article.title}</a>
+                    <div class="article-container">
+                        <a href="/articles/${article.id}">${article.title}</a>
+                        <span>[${article.countComment}]</span> <!-- 댓글 수 표시 -->
+                    </div>
                 </td>
                 <td>
                     ${articleDateString === formattedToday ? articleTimeString : articleDateString}

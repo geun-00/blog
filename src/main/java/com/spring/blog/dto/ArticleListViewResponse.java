@@ -10,6 +10,7 @@ public class ArticleListViewResponse {
 
     private final Long id;
     private final long views;
+    private final int countComment;
     private final String title;
     private final String content;
     private final String author;
@@ -19,6 +20,7 @@ public class ArticleListViewResponse {
         this.id = article.getId();
         this.views = article.getViews();
         this.title = article.getTitle();
+        this.countComment = article.getComments().size();
         this.content = article.getContent();
         this.createdAt = article.getCreatedAt();
         this.author = article.getUser().getNickname();

@@ -53,7 +53,7 @@ public class BlogService {
 
         validationService.checkValid(request);
 
-        Article article = blogRepository.findWithUserById(id)
+        Article article = blogRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("not found : " + id));
 
         article.update(request.getTitle(), request.getContent());
@@ -72,7 +72,7 @@ public class BlogService {
     @Transactional
     public Article getArticleAndIncreaseViews(Long id, String userKey) {
 
-        Article foundArticle = findWithUserById(id);
+        Article foundArticle = findWithUserAndCommentsById(id);
 
         SetOperations<String, Object> so = redisTemplate.opsForSet();
         Set<Object> viewedArticles = so.members(userKey);
@@ -90,10 +90,6 @@ public class BlogService {
         }
 
         return foundArticle;
-    }
-
-    public List<Article> findAll() {
-        return blogRepository.findAll();
     }
 
     public PageResponse<ArticleListViewResponse> findAllByCond(ArticleSearchRequest request, Pageable pageable) {
@@ -114,13 +110,22 @@ public class BlogService {
         return getPageResponse(pageable, articles);
     }
 
-    public Article findWithUserById(Long id) {
-        return blogRepository.findWithUserById(id)
+    public Article findWithUserAndCommentsById(Long id) {
+        return blogRepository.findWithUserAndCommentsById(id)
                 .orElseThrow(() -> new EntityNotFoundException("not found : " + id));
     }
 
     public Long countUserArticles(Long userId) {
         return blogRepository.countByUserId(userId);
+    }
+
+    public Article findById(Long id) {
+        return blogRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("not found : " + id));
+    }
+
+    public List<Article> findAll() {
+        return blogRepository.findAll();
     }
 
     private PageResponse<ArticleListViewResponse> getPageResponse(Pageable pageable, Page<ArticleListViewResponse> articles) {
