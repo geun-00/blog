@@ -1,0 +1,111 @@
+.article-container {
+    display: flex;
+    align-items: center; /* 수직 정렬 */
+}
+
+.article-container a {
+    margin-right: 10px; /* 링크와 댓글 수 사이에 공간 추가 */
+}
+
+.article-container span {
+    color: #888; /* 댓글 수 텍스트 색상 */
+}
+/* 전체 pagination 컨테이너 스타일 */
+#pagination {
+    text-align: center;
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+/* 페이지 번호 링크 기본 스타일 */
+#pagination a {
+    text-decoration: none;
+    color: #007bff;
+    padding: 8px 16px;
+    margin: 0 4px;
+    border-radius: 4px;
+}
+
+/* 현재 페이지 활성화 스타일 */
+#pagination a.active {
+    background-color: #007bff;
+    color: white;
+}
+
+/* 페이지 번호 링크 호버 스타일 */
+#pagination a:hover {
+    background-color: #e9ecef;
+    color: #0056b3;
+}
+
+/* 이전 및 다음 버튼 스타일 */
+#pagination a.prev, #pagination a.next {
+    font-weight: bold;
+    background-color: #f8f9fa;
+    border: 1px solid #dee2e6;
+}
+
+/* 이전 및 다음 버튼 호버 스타일 */
+#pagination a.prev:hover, #pagination a.next:hover {
+    background-color: #e2e6ea;
+}
+
+/* 버튼 비활성화 스타일 */
+#pagination a.disabled {
+    color: #6c757d;
+    pointer-events: none;
+    cursor: not-allowed;
+}
+
+.visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    padding: 0;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    border: 0;
+}
+
+.dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.select_box {
+    display: inline-block;
+    padding: 10px;
+    background-color: #f8f9fa;
+    border: 1px solid #ced4da;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.dropdown-menu {
+    display: none;
+    position: absolute;
+    top: 100%;
+    right: 0;
+    background-color: #ffffff;
+    border: 1px solid #ced4da;
+    border-radius: 4px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+    z-index: 1000;
+    width: 100%;
+}
+
+.dropdown-menu li {
+    list-style: none;
+}
+
+.dropdown-menu a {
+    display: block;
+    padding: 10px;
+    color: #000;
+    text-decoration: none;
+}
+
+.dropdown-menu a:hover {
+    background-color: #f1f1f1;
+}
