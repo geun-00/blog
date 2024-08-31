@@ -5,7 +5,6 @@ document.addEventListener('DOMContentLoaded', function() {
     const submitButton = document.getElementById('submit-btn');
 
     submitButton.addEventListener('click', function(event) {
-        event.preventDefault();
 
         const articleId = document.getElementById('article-id').value;
         const commentText = document.querySelector('.comment_inbox_text').value.trim();
@@ -47,23 +46,31 @@ document.addEventListener('DOMContentLoaded', function() {
 
                 newComment.innerHTML = `
                     <input type="hidden" id="comment-id" value="${data.id}">
+                    
                     <div class="comment-header d-flex align-items-start">
                         <div class="d-flex align-items-start flex-grow-1">
                             <a class="author-name fw-bold">${data.author}</a>
                             ${isAuthor ? '<span class="badge bg-success text-white ms-2">작성자</span>' : ''}
                         </div>
                     </div>
+                    
                     <div class="d-flex align-items-center position-relative">
                         <div class="comment-content fs-5 flex-grow-1">${data.comment}</div>
-                        
-                        <button class="btn btn-link p-0 ms-3" style="margin-left: auto" type="button" onclick="toggleOptions(this)">
+                        <input type="text" class="form-control d-none" style="flex-grow: 1;"/>
+                        <button class="btn btn-link p-0 ms-3" style="margin-left: auto" 
+                                type="button" onclick="toggleOptions(this)">
                             <img src="/images/menu.png" alt="options" style="width: 20px; height: 20px;">
                         </button>
                         <ul class="options-menu list-unstyled position-absolute" style="display: none; left: 100%; top: 0; margin-left: 5px;">
-                            <li><a href="#" class="dropdown-item" onclick="editComment(this)">수정하기</a></li>
-                            <li><a href="#" class="dropdown-item text-danger" onclick="deleteComment(this)">삭제하기</a></li>
+                            <li><button class="dropdown-item" 
+                                        onclick="editComment(this)">수정하기</button></li>
+                            <li><button class="dropdown-item text-danger" 
+                                        onclick="deleteComment(this)">삭제하기</button></li>
                         </ul>
-                      
+                        <div class="edit-buttons d-none" style="margin-top: 5px;">
+                            <button class="btn btn-primary btn-sm" onclick="saveEdit(this)">수정</button>
+                            <button class="btn btn-secondary btn-sm" onclick="cancelEdit(this)">취소</button>
+                        </div>
                     </div>
                     <div class="text-muted fst-italic">${formatDateTime(data.createdAt)}</div>
                     <hr class="comment-divider">
