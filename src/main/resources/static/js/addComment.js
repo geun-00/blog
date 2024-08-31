@@ -1,4 +1,7 @@
 document.addEventListener('DOMContentLoaded', function() {
+
+    articleEvents();
+
     const submitButton = document.getElementById('submit-btn');
 
     submitButton.addEventListener('click', function(event) {
