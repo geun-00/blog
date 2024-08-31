@@ -79,6 +79,7 @@ hr.my-3 {
 .comment-header {
     display: flex;
     flex-direction: column;
+    position: relative;
     gap: 0.5rem; /* 작성자와 작성일 사이 간격 설정 */
 }
 
@@ -89,6 +90,7 @@ hr.my-3 {
 
 .text-muted {
     color: #6c757d; /* 작성일의 색상 설정 */
+    margin-top: 0.5rem;
 }
 
 .comment-content {
@@ -103,7 +105,7 @@ hr.my-3 {
     font-size: 0.75em;
     border-radius: 0.25rem;
     display: inline-block;
-    margin-left: 1rem;
+    margin-left: 0.3rem;
 }
 
 /* 댓글 구분선 */
@@ -111,4 +113,48 @@ hr.my-3 {
     border-top: 1px solid #ddd;
     margin-top: 1rem;
     margin-bottom: 1rem;
+}
+
+.options-menu {
+    background: #fff;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    z-index: 1000; /* Ensure menu is above other content */
+}
+
+.options-menu li {
+    margin: 0;
+}
+
+.options-menu a {
+    display: block;
+    padding: 10px;
+    text-decoration: none;
+}
+
+.options-menu a:hover {
+    background-color: #f8f9fa;
+}
+.alert {
+    margin-top: 10px;
+    padding: 15px;
+    border: 1px solid transparent;
+    border-radius: 4px;
+}
+
+.alert-warning {
+    color: #856404;
+    background-color: #fff3cd;
+    border-color: #ffeeba;
+}
+
+.alert-link {
+    font-weight: bold;
+    color: #004085;
+}
+
+.alert-link:hover {
+    color: #002752;
+    text-decoration: underline;
 }

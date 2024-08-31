@@ -49,10 +49,9 @@ public class SetupData implements ApplicationListener<ContextRefreshedEvent> {
                 for (int k = 1; k <= 10; k++) {
 
                     CommentRequest commentRequest = new CommentRequest();
-                    commentRequest.setArticleId(savedArticle.getId());
                     commentRequest.setComment(k + "번째 댓글");
 
-                    commentService.addComment(commentRequest, savedUser.getEmail());
+                    commentService.addComment(savedArticle.getId(), commentRequest, savedUser.getEmail());
                 }
             }
         }

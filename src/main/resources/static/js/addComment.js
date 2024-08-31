@@ -13,11 +13,10 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
         const body = JSON.stringify({
-            articleId: articleId,
             comment: commentText
         });
 
-        fetch('/api/comments', {
+        fetch(`/api/comments/${articleId}`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -44,16 +43,28 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
 
                 newComment.innerHTML = `
-                    <div class="comment-header">
-                        <div class="d-flex align-items-center">
+                    <input type="hidden" id="comment-id" value="${data.id}">
+                    <div class="comment-header d-flex align-items-start">
+                        <div class="d-flex align-items-start flex-grow-1">
                             <a class="author-name fw-bold">${data.author}</a>
                             ${isAuthor ? '<span class="badge bg-success text-white ms-2">작성자</span>' : ''}
                         </div>
-                        <div class="text-muted fst-italic">${formatDateTime(data.createdAt)}</div>
                     </div>
-                    <div class="comment-content fs-5">${data.comment}</div>
+                    <div class="d-flex align-items-center position-relative">
+                        <div class="comment-content fs-5 flex-grow-1">${data.comment}</div>
+                        
+                        <button class="btn btn-link p-0 ms-3" style="margin-left: auto" type="button" onclick="toggleOptions(this)">
+                            <img src="/images/menu.png" alt="options" style="width: 20px; height: 20px;">
+                        </button>
+                        <ul class="options-menu list-unstyled position-absolute" style="display: none; left: 100%; top: 0; margin-left: 5px;">
+                            <li><a href="#" class="dropdown-item" onclick="editComment(this)">수정하기</a></li>
+                            <li><a href="#" class="dropdown-item text-danger" onclick="deleteComment(this)">삭제하기</a></li>
+                        </ul>
+                      
+                    </div>
+                    <div class="text-muted fst-italic">${formatDateTime(data.createdAt)}</div>
                     <hr class="comment-divider">
-                `;
+                    `;
                 commentList.appendChild(newComment);
 
                 const authorElement = newComment.querySelector('.author-name');

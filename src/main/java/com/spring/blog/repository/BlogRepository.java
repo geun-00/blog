@@ -23,4 +23,9 @@ public interface BlogRepository extends JpaRepository<Article, Long> {
 
     @EntityGraph(attributePaths = "user")
     Page<Article> findAll(Pageable pageable);
+
+    @Query("SELECT a FROM Article a " +
+            "JOIN FETCH a.user " +
+            "WHERE a.id = :id")
+    Optional<Article> findByIdWithUser(@Param("id") Long articleId);
 }
