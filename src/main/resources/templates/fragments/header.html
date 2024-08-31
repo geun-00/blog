@@ -36,7 +36,6 @@
     <h4 class="mb-3">블로그에 오신 것을 환영합니다.</h4>
 </div>
 </body>
-<script src="/js/article.js"></script>
 <script>
     const userDelButton = document.getElementById('user-del-dtn');
 
@@ -44,6 +43,20 @@
         userDelButton.addEventListener('click', event => {
 
             if (confirm("정말 탈퇴하시겠습니까?")) {
+
+                fetch('/api/user', {
+                    method: 'delete',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                }).then(response => {
+                    if (response.status === 200 || response.status === 201) {
+                        return success();
+                    } else {
+                        return fail();
+                    }
+                }).catch(error => fail());
+
                 function success() {
                     alert('탈퇴 되었습니다.');
                     location.replace('/login');
@@ -52,8 +65,6 @@
                     alert('오류가 발생했습니다.');
                     location.replace('/articles');
                 }
-
-                httpRequest('DELETE','/user', null, success, fail)
             }
         });
     }
