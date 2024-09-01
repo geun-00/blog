@@ -45,6 +45,9 @@
 
                     <dt class="col-sm-3">작성한 게시글 :</dt>
                     <dd class="col-sm-9" th:text="${user.countArticles} + ' 개'"></dd>
+
+                    <dt class="col-sm-3">작성한 댓글 :</dt>
+                    <dd class="col-sm-9" th:text="${user.countComments} + ' 개'"></dd>
                 </dl>
                 <a th:if="${#authentication.getName().equals(user.username)}" href="myPage/edit" id="edit-btn" class="btn btn-secondary">수정하기</a>
             </div>

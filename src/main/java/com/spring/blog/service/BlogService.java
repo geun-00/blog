@@ -111,10 +111,6 @@ public class BlogService {
                 .orElseThrow(() -> new EntityNotFoundException("not found : " + id));
     }
 
-    public Long countUserArticles(Long userId) {
-        return blogRepository.countByUserId(userId);
-    }
-
     public Article findById(Long id) {
         return blogRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("not found : " + id));

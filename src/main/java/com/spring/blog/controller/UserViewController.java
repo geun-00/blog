@@ -87,18 +87,18 @@ public class UserViewController {
     public String myPage(@RequestParam(value = "author", required = false) String nickname,
                          @CurrentUser Authentication authentication, Model model) {
 
-        User foundUser;
+        String targetName;
 
         if (StringUtils.hasText(nickname)) {
-            foundUser = userService.findByUsername(nickname);
+            targetName = nickname;
         } else {
             PrincipalUser principalUser = getPrincipal(authentication);
-            foundUser = userService.findByEmail(principalUser.providerUser().getEmail());
+            targetName = principalUser.providerUser().getUsername();
         }
 
-        Long countUserArticles = blogService.countUserArticles(foundUser.getId());
+        UserInfoResponse response = userService.getUserInfo(targetName);
 
-        model.addAttribute("user", new UserInfoResponse(foundUser, countUserArticles));
+        model.addAttribute("user", response);
 
         return "myPage";
     }

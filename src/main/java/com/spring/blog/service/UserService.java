@@ -4,9 +4,11 @@ import com.spring.blog.common.enums.SocialType;
 import com.spring.blog.domain.User;
 import com.spring.blog.dto.request.AddUserRequest;
 import com.spring.blog.dto.request.EditUserRequest;
+import com.spring.blog.dto.response.UserInfoResponse;
 import com.spring.blog.model.ProviderUser;
 import com.spring.blog.repository.BlogRepository;
 import com.spring.blog.repository.CommentRepository;
+import com.spring.blog.repository.UserQueryRepository;
 import com.spring.blog.repository.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -24,6 +26,7 @@ public class UserService {
     private final PasswordEncoder passwordEncoder;
     private final CommentRepository commentRepository;
     private final BlogRepository blogRepository;
+    private final UserQueryRepository userQueryRepository;
 
     @Transactional
     public void save(AddUserRequest request) {
@@ -72,6 +75,10 @@ public class UserService {
         return user;
     }
 
+    public UserInfoResponse getUserInfo(String name) {
+        return userQueryRepository.getUserInfo(name);
+    }
+
     public User findById(Long userId) {
         return userRepository.findById(userId)
                 .orElseThrow(() -> new EntityNotFoundException("Unexpected User : " + userId));
@@ -80,11 +87,6 @@ public class UserService {
     public User findByEmail(String email) {
         return userRepository.findByEmail(email)
                 .orElseThrow(() -> new EntityNotFoundException("Unexpected User : " + email));
-    }
-
-    public User findByUsername(String nickname) {
-        return userRepository.findByNickname(nickname)
-                .orElseThrow(() -> new EntityNotFoundException("Unexpected User : " + nickname));
     }
 
     public boolean existsByNickname(String nickname) {
