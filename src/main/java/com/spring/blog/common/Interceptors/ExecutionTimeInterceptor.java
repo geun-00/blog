@@ -23,7 +23,7 @@ public class ExecutionTimeInterceptor implements HandlerInterceptor {
         long endTime = System.currentTimeMillis();
         long executionTime = endTime - startTime;
 
-        log.info("[{}] ({}) executed in {} ms", request.getMethod(), request.getRequestURI(), executionTime);
+        log.info("[{}] ({}) ({}) executed in {} ms", request.getMethod(), request.getRequestURI(), response.getStatus(), executionTime);
         if (ex != null) {
             log.error("{}", ex.getMessage());
         }
