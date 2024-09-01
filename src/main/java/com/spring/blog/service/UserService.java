@@ -5,6 +5,8 @@ import com.spring.blog.domain.User;
 import com.spring.blog.dto.request.AddUserRequest;
 import com.spring.blog.dto.request.EditUserRequest;
 import com.spring.blog.model.ProviderUser;
+import com.spring.blog.repository.BlogRepository;
+import com.spring.blog.repository.CommentRepository;
 import com.spring.blog.repository.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -20,6 +22,8 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final CommentRepository commentRepository;
+    private final BlogRepository blogRepository;
 
     @Transactional
     public void save(AddUserRequest request) {
@@ -53,6 +57,10 @@ public class UserService {
     @Transactional
     public void deleteUser(String email) {
         User user = findByEmail(email);
+
+        commentRepository.deleteByUserId(user.getId());
+        blogRepository.deleteByUserId(user.getId());
+
         userRepository.delete(user);
     }
 

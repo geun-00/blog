@@ -46,7 +46,7 @@ public class User extends BaseEntity {
     @OneToMany(mappedBy = "user", orphanRemoval = true)
     private List<Article> articles = new ArrayList<>();
 
-    @OneToMany(mappedBy = "user", orphanRemoval = true)
+    @OneToMany(mappedBy = "user")
     private List<Comment> comments = new ArrayList<>();
 
     public void addArticle(Article article) {

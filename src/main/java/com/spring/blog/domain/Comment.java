@@ -45,4 +45,8 @@ public class Comment extends BaseEntity {
         article.addComment(this);
         user.addComment(this);
     }
+
+    public void editComment(String comment) {
+        this.content = comment;
+    }
 }

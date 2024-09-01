@@ -98,7 +98,6 @@ spring:
       hibernate:
         hbm2ddl:
           auto: none
-        dialect: org.hibernate.dialect.MySQLDialect
 
 ---
 
