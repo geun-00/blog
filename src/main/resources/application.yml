@@ -83,6 +83,8 @@ logging:
 ---
 
 spring:
+  profiles:
+    include: aws
   config:
     activate:
       on-profile: local
