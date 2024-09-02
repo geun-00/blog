@@ -21,6 +21,7 @@ spring:
             scope:
               - openid
               - profile_nickname
+              - profile_image
               - account_email
             provider: kakao
           naver:

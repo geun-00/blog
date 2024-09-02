@@ -30,6 +30,7 @@ public class CustomUserDetailsService implements UserDetailsService {
                                     .username(user.getNickname())
                                     .password(user.getPassword())
                                     .email(user.getEmail())
+                                    .profileImageUrl(user.getProfileImageUrl())
                                     .authorities(List.of(new SimpleGrantedAuthority("user")))
                                     .build();
 

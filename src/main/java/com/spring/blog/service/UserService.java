@@ -49,6 +49,7 @@ public class UserService {
             User.builder()
                     .registrationId(socialType)
                     .email(providerUser.getEmail())
+                    .profileImageUrl(providerUser.getProfileImageUrl())
                     .password(passwordEncoder.encode(providerUser.getPassword()))
                     .build()
         );

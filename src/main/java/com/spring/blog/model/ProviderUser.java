@@ -13,6 +13,7 @@ public interface ProviderUser {
     String getUsername();
     String getPassword();
     String getEmail();
+    String getProfileImageUrl();
     List<? extends GrantedAuthority> getAuthorities();
 
     default String getProvider() {

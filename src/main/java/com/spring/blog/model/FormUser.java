@@ -15,6 +15,7 @@ public class FormUser implements ProviderUser {
     private String password;
     private String email;
     private String provider;
+    private String profileImageUrl;
     private List<? extends GrantedAuthority> authorities;
 
     @Override
@@ -35,6 +36,11 @@ public class FormUser implements ProviderUser {
     @Override
     public String getEmail() {
         return email;
+    }
+
+    @Override
+    public String getProfileImageUrl() {
+        return profileImageUrl;
     }
 
     @Override

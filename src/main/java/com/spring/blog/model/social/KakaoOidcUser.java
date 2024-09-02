@@ -20,4 +20,9 @@ public class KakaoOidcUser extends OAuth2ProviderUser {
     public String getUsername() {
         return (String) getAttributes().get("nickname");
     }
+
+    @Override
+    public String getProfileImageUrl() {
+        return (String) getAttributes().get("picture");
+    }
 }
