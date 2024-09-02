@@ -1,4 +1,4 @@
-package com.spring.blog.common.config;
+package com.spring.blog.common.config.configs;
 
 import com.spring.blog.common.Interceptors.ExecutionTimeInterceptor;
 import com.spring.blog.common.Interceptors.queryCounter.QueryCounter;

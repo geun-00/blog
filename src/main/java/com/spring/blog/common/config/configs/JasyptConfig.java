@@ -1,4 +1,4 @@
-package com.spring.blog.common.config;
+package com.spring.blog.common.config.configs;
 
 import org.jasypt.encryption.StringEncryptor;
 import org.jasypt.encryption.pbe.StandardPBEStringEncryptor;

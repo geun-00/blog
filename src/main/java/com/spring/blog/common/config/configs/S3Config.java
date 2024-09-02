@@ -1,4 +1,4 @@
-package com.spring.blog.common.config;
+package com.spring.blog.common.config.configs;
 
 import com.amazonaws.auth.AWSStaticCredentialsProvider;
 import com.amazonaws.auth.BasicAWSCredentials;

@@ -1,4 +1,4 @@
-package com.spring.blog.common.config;
+package com.spring.blog.common.config.configs;
 
 import com.spring.blog.common.config.authority.CustomAuthorityMapper;
 import com.spring.blog.common.config.oauth.CustomOAuth2SuccessHandler;
