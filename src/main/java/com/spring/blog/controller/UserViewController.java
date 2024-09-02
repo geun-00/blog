@@ -8,7 +8,6 @@ import com.spring.blog.dto.request.AddUserRequest;
 import com.spring.blog.dto.request.EditUserRequest;
 import com.spring.blog.dto.response.UserInfoResponse;
 import com.spring.blog.model.PrincipalUser;
-import com.spring.blog.service.BlogService;
 import com.spring.blog.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -32,7 +31,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 public class UserViewController {
 
     private final UserService userService;
-    private final BlogService blogService;
     private final AddUserValidator addUserValidator;
     private final EditUserValidator editUserValidator;
 

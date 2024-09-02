@@ -10,6 +10,7 @@ import com.spring.blog.repository.BlogRepository;
 import com.spring.blog.repository.CommentRepository;
 import com.spring.blog.repository.UserQueryRepository;
 import com.spring.blog.repository.UserRepository;
+import com.spring.blog.service.file.FileService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -22,10 +23,11 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class UserService {
 
+    private final FileService fileService;
+    private final BlogRepository blogRepository;
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final CommentRepository commentRepository;
-    private final BlogRepository blogRepository;
     private final UserQueryRepository userQueryRepository;
 
     @Transactional
@@ -35,6 +37,7 @@ public class UserService {
                         .email(request.getEmail())
                         .nickname(request.getNickname())
                         .registrationId(SocialType.NONE)
+                        .profileImageUrl(fileService.saveFile(request.getImageFile(), "user/"))
                         .password(passwordEncoder.encode(request.getPassword()))
                         .build()
         );

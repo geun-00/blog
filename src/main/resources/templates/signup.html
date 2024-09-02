@@ -26,7 +26,7 @@
                 <h2 class="text-white">회원가입</h2>
 
                 <div class = "mb-2">
-                    <form th:action="@{/user}" method="POST" th:object="${addUserRequest}">
+                    <form th:action="@{/user}" method="POST" th:object="${addUserRequest}" enctype="multipart/form-data">
                         <div class="mb-3" sec:authorize="isAnonymous()">
                             <label class="form-label text-white">Email address</label>
                             <input type="email" class="form-control" name="email"
@@ -49,6 +49,12 @@
                                    th:value="*{nickname}"
                                    required placeholder="블로그에서 사용하실 이름을 정해주세요.(2 ~ 10자 이내)">
                             <div th:errors="*{nickname}" class="text-danger"></div>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label text-white">Profile Image (Option)</label>
+                            <input type="file" class="form-control"
+                                   name="imageFile"
+                                   placeholder="블로그에서 사용하실 프로필 이미지를 정해주세요.(필수 X)">
                         </div>
 
                         <button type="submit" class="btn btn-primary">Submit</button>

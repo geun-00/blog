@@ -43,6 +43,9 @@ public class User extends BaseEntity {
     @Column(name = "nickname", unique = true)
     private String nickname;
 
+    @Column(name = "profile_image_url")
+    private String profileImageUrl;
+
     @OneToMany(mappedBy = "user", orphanRemoval = true)
     private List<Article> articles = new ArrayList<>();
 
@@ -55,11 +58,12 @@ public class User extends BaseEntity {
     }
 
     @Builder
-    public User(String email, String password, String nickname, SocialType registrationId) {
+    public User(String email, String password, String nickname, SocialType registrationId, String profileImageUrl) {
         this.email = email;
         this.password = password;
         this.nickname = nickname;
         this.registrationId = registrationId;
+        this.profileImageUrl = profileImageUrl;
     }
 
     public void updateNickname(String nickname) {
