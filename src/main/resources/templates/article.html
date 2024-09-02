@@ -28,6 +28,8 @@
                         </div>
                     </div>
                     <div>
+                        <img th:src="${article.profileImageUrl}" alt="Profile Image"
+                             class="rounded-circle img-fluid">
                         <span class="author-name me-2" th:text="${article.author}"
                               th:onclick="|location.href='@{/myPage(author=${article.author})}'|">
                         </span>
@@ -68,6 +70,8 @@
 
                             <div class="comment-header d-flex align-items-start">
                                 <div class="d-flex align-items-start flex-grow-1">
+                                    <img th:src="${comment.profileImageUrl}" alt="Profile Image"
+                                         class="rounded-circle img-fluid">
                                     <a class="author-name fw-bold" th:text="${comment.author}"
                                        th:onclick="|location.href='@{/myPage(author=${comment.author})}'|"></a>
                                     <span th:if="${comment.isAuthor()}"

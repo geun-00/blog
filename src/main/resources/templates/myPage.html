@@ -51,13 +51,16 @@
                             <dt class="col-sm-4">작성한 댓글 :</dt>
                             <dd class="col-sm-8" th:text="${user.countComments} + ' 개'"></dd>
                         </dl>
-                        <a th:if="${#authentication.getName().equals(user.username)}" href="myPage/edit" id="edit-btn" class="btn btn-secondary">수정하기</a>
                     </div>
 
                     <div class="col-md-4 text-center">
                         <img th:src="${user.profileImageUrl}" alt="Profile Image"
                              class="rounded-circle img-fluid" style="max-width: 250px; height: 200px;">
                     </div>
+                </div>
+                <div class="text-center mt-3">
+                    <a th:if="${#authentication.getName().equals(user.username)}"
+                       href="myPage/edit" id="edit-btn" class="btn btn-secondary">수정하기</a>
                 </div>
             </div>
         </div>

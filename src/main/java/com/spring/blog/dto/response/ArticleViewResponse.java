@@ -13,6 +13,7 @@ public class ArticleViewResponse {
     private String title;
     private String author;
     private String content;
+    private String profileImageUrl;
     private long views;
     private LocalDateTime createdAt;
     private List<CommentResponse> comments;
@@ -21,6 +22,7 @@ public class ArticleViewResponse {
         this.id = article.getId();
         this.title = article.getTitle();
         this.author = article.getUser().getNickname();
+        this.profileImageUrl = article.getUser().getProfileImageUrl();
         this.content = article.getContent();
         this.views = article.getViews();
         this.createdAt = article.getCreatedAt();

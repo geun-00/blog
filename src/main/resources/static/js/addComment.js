@@ -49,6 +49,8 @@ document.addEventListener('DOMContentLoaded', function() {
                     
                     <div class="comment-header d-flex align-items-start">
                         <div class="d-flex align-items-start flex-grow-1">
+                            <img src="${data.profileImageUrl}" alt="Profile Image"
+                                 class="rounded-circle img-fluid" style="width: 30px; height: 30px; margin-right: 1rem">
                             <a class="author-name fw-bold">${data.author}</a>
                             ${isAuthor ? '<span class="badge bg-success text-white ms-2">작성자</span>' : ''}
                         </div>

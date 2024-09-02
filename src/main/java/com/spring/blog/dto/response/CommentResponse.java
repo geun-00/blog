@@ -11,12 +11,14 @@ public class CommentResponse{
     private Long id;
     private String author;
     private String comment;
+    private String profileImageUrl;
     private LocalDateTime createdAt;
     private Boolean isAuthor;
 
     public CommentResponse(Comment comment, boolean isAuthor) {
         this.id = comment.getId();
         this.author = comment.getUser().getNickname();
+        this.profileImageUrl = comment.getUser().getProfileImageUrl();
         this.comment = comment.getContent();
         this.createdAt = comment.getCreatedAt();
         this.isAuthor = isAuthor;

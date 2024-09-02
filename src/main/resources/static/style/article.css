@@ -18,6 +18,12 @@ hr.my-3 {
     border-top: 1px solid #dee2e6; /* 회색 구분선 */
 }
 
+.img-fluid{
+    width: 35px;
+    height: 35px;
+    margin-right: 2px
+}
+
 .CommentWriter {
     background-color: #f9f9f9; /* 배경색을 밝게 설정 */
     border-radius: 8px; /* 모서리를 둥글게 */
