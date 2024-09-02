@@ -23,33 +23,42 @@
     <div class="user-info">
         <div class="card">
             <div class="card-body">
-                <dl class="row">
-                    <dt class="col-sm-3">이메일 :</dt>
-                    <dd class="col-sm-9" th:text="*{email}"/>
+                <div class="row">
+                    <div class="col-md-8">
+                        <dl class="row">
+                            <dt class="col-sm-4">이메일 :</dt>
+                            <dd class="col-sm-8" th:text="*{email}"></dd>
 
-                    <dt class="col-sm-3">이름 :</dt>
-                    <dd class="col-sm-9" th:text="*{username}"/>
+                            <dt class="col-sm-4">이름 :</dt>
+                            <dd class="col-sm-8" th:text="*{username}"></dd>
 
-                    <dt class="col-sm-3">가입일 :</dt>
-                    <dd class="col-sm-9" th:text="${#temporals.format(user.createdAt, 'yyyy-MM-dd')}"></dd>
+                            <dt class="col-sm-4">가입일 :</dt>
+                            <dd class="col-sm-8" th:text="${#temporals.format(user.createdAt, 'yyyy-MM-dd')}"></dd>
 
-                    <dt class="col-sm-3">가입 정보:</dt>
-                    <dd class="col-sm-9">
-                        <div th:switch="*{registrationId.getSocialName()}">
-                            <span th:case="naver">네이버</span>
-                            <span th:case="kakao">카카오</span>
-                            <span th:case="google">구글</span>
-                            <span th:case="*">기타</span>
-                        </div>
-                    </dd>
+                            <dt class="col-sm-4">가입 정보:</dt>
+                            <dd class="col-sm-8">
+                                <div th:switch="*{registrationId.getSocialName()}">
+                                    <span th:case="naver">네이버</span>
+                                    <span th:case="kakao">카카오</span>
+                                    <span th:case="google">구글</span>
+                                    <span th:case="*">기타</span>
+                                </div>
+                            </dd>
 
-                    <dt class="col-sm-3">작성한 게시글 :</dt>
-                    <dd class="col-sm-9" th:text="${user.countArticles} + ' 개'"></dd>
+                            <dt class="col-sm-4">작성한 게시글 :</dt>
+                            <dd class="col-sm-8" th:text="${user.countArticles} + ' 개'"></dd>
 
-                    <dt class="col-sm-3">작성한 댓글 :</dt>
-                    <dd class="col-sm-9" th:text="${user.countComments} + ' 개'"></dd>
-                </dl>
-                <a th:if="${#authentication.getName().equals(user.username)}" href="myPage/edit" id="edit-btn" class="btn btn-secondary">수정하기</a>
+                            <dt class="col-sm-4">작성한 댓글 :</dt>
+                            <dd class="col-sm-8" th:text="${user.countComments} + ' 개'"></dd>
+                        </dl>
+                        <a th:if="${#authentication.getName().equals(user.username)}" href="myPage/edit" id="edit-btn" class="btn btn-secondary">수정하기</a>
+                    </div>
+
+                    <div class="col-md-4 text-center">
+                        <img th:src="${user.profileImageUrl}" alt="Profile Image"
+                             class="rounded-circle img-fluid" style="max-width: 250px; height: 200px;">
+                    </div>
+                </div>
             </div>
         </div>
     </div>

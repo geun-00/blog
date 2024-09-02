@@ -95,7 +95,7 @@ public class UserViewController {
             targetName = nickname;
         } else {
             PrincipalUser principalUser = getPrincipal(authentication);
-            targetName = principalUser.providerUser().getUsername();
+            targetName = principalUser.getUsername();
         }
 
         UserInfoResponse response = userService.getUserInfo(targetName);

@@ -22,7 +22,7 @@
 
     <div class="user-info">
         <div class="card">
-            <form class="card-body" method="post" action="/user/edit" th:object="${editUserRequest}">
+            <form class="card-body" method="post" action="/user/edit" th:object="${editUserRequest}" enctype="multipart/form-data">
                 <dl class="row" >
                     <dt class="col-sm-3">이메일 :</dt>
                     <dd class="col-sm-9">
@@ -39,6 +39,11 @@
                                minlength="2" maxlength="10"
                                th:value="*{nickname}">
                         <span th:errors="*{nickname}" class="text-danger"></span>
+                    </dd>
+
+                    <dt class="col-sm-3">프로필 이미지 :</dt>
+                    <dd class="col-sm-9">
+                        <input type="file" id="image" name="file" class="form-control">
                     </dd>
                 </dl>
                 <div class="button-group">

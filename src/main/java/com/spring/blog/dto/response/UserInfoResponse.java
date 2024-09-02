@@ -12,6 +12,7 @@ public class UserInfoResponse {
 
     private String email;
     private String username;
+    private String profileImageUrl;
     private LocalDateTime createdAt;
     private SocialType registrationId;
     private Long countArticles;
@@ -22,6 +23,7 @@ public class UserInfoResponse {
         this.email = user.getEmail();
         this.username = user.getNickname();
         this.createdAt = user.getCreatedAt();
+        this.profileImageUrl = user.getProfileImageUrl();
         this.registrationId = user.getRegistrationId();
         this.countArticles = countArticles;
         this.countComments = countComments;

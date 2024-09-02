@@ -10,4 +10,6 @@ public interface FileService {
      * @return 저장된 파일의 경로
      */
     String saveFile(MultipartFile file, String dir);
+
+    void deleteFile(String fileName);
 }

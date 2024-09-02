@@ -84,6 +84,18 @@ public class UserService {
         User user = findByEmail(email);
         user.edit(request.getEmail(), request.getNickname());
 
+        String oldImageUrl = user.getProfileImageUrl();
+
+        MultipartFile imageFile = request.getFile();
+
+        if (imageFile != null && StringUtils.hasText(imageFile.getOriginalFilename())) {
+
+            String newImageUrl = fileService.saveFile(imageFile, "user/");
+            user.updateProfileImageUrl(newImageUrl);
+
+            fileService.deleteFile(oldImageUrl);
+        }
+
         return user;
     }
 
