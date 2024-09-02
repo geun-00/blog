@@ -72,10 +72,14 @@ public class UserViewController {
         if (authentication == null) {
             userService.save(request);
         }
-        //OAuth 인증 가입, 별명만 재설정
+        //OAuth 인증 가입, 별명, 프로필 이미지(옵션) 설정
         else {
             PrincipalUser principalUser = getPrincipal(authentication);
-            userService.updateNickname(request.getNickname(), principalUser.providerUser().getEmail());
+            userService.updateOAuthUser(
+                    request.getNickname(),
+                    request.getImageFile(),
+                    principalUser.providerUser().getEmail()
+            );
         }
 
         return "redirect:/login?success";

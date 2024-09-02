@@ -70,6 +70,10 @@ public class User extends BaseEntity {
         this.nickname = nickname;
     }
 
+    public void updateProfileImageUrl(String profileImageUrl) {
+        this.profileImageUrl = profileImageUrl;
+    }
+
     public void edit(String email, String nickname) {
         if (StringUtils.hasText(email)) {
             this.email = email;

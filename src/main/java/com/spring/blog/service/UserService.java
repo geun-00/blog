@@ -16,6 +16,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
+import org.springframework.web.multipart.MultipartFile;
 
 
 @Service
@@ -56,9 +58,15 @@ public class UserService {
     }
 
     @Transactional
-    public void updateNickname(String nickname, String email) {
+    public void updateOAuthUser(String nickname, MultipartFile imageFile, String email) {
         User user = findByEmail(email);
         user.updateNickname(nickname);
+
+        if (imageFile == null || !StringUtils.hasText(imageFile.getOriginalFilename())) {
+            return;
+        }
+
+        user.updateProfileImageUrl(fileService.saveFile(imageFile, "user/"));
     }
 
     @Transactional
