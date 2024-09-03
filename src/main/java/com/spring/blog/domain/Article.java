@@ -45,6 +45,9 @@ public class Article extends BaseEntity {
     @Column(name = "views")
     private long views;
 
+    @Column(name = "likes")
+    private int likes;
+
     @Builder
     public Article(String title, String content) {
         this.title = title;
@@ -68,6 +71,10 @@ public class Article extends BaseEntity {
 
     public void increaseViews() {
         this.views++;
+    }
+
+    public void increaseLikes() {
+        this.likes++;
     }
 
     public void addComment(Comment comment) {

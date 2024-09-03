@@ -78,4 +78,24 @@ public class BlogApiController {
 
         return ResponseEntity.ok().body(new ArticleResponse(updatedArticle));
     }
+
+    @PostMapping("/articles/like/{articleId}")
+    public ResponseEntity<Void> addLike(@PathVariable("articleId") Long articleId,
+                                        @CurrentUser Authentication authentication) {
+
+        PrincipalUser principalUser = (PrincipalUser) authentication.getPrincipal();
+        blogService.addLike(articleId, principalUser.providerUser().getEmail());
+
+        return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/articles/{articleId}/liked")
+    public ResponseEntity<Boolean> isLiked(@PathVariable("articleId") Long articleId,
+                                           @CurrentUser Authentication authentication) {
+
+        PrincipalUser principalUser = (PrincipalUser) authentication.getPrincipal();
+        boolean liked = blogService.isLiked(articleId, principalUser.providerUser().getEmail());
+
+        return ResponseEntity.ok(liked);
+    }
 }

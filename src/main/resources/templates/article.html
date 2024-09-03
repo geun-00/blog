@@ -29,7 +29,8 @@
                     </div>
                     <div>
                         <img th:src="${article.profileImageUrl}" alt="Profile Image"
-                             class="rounded-circle img-fluid">
+                             class="rounded-circle img-fluid"
+                             th:onclick="|location.href='@{/myPage(author=${article.author})}'|">
                         <span class="author-name me-2" th:text="${article.author}"
                               th:onclick="|location.href='@{/myPage(author=${article.author})}'|">
                         </span>
@@ -38,8 +39,15 @@
                         <span class="text-muted fst-italic"
                               th:text="${#temporals.format(article.createdAt, 'yyyy.MM.dd. HH:mm')}">
                         </span>
-                        <img src="/images/views.png" style="width: 20px; height: 20px; margin-left: 10px;">
+
+                        <img src="/images/views.png" class="icon-images">
                         <span th:text="${article.views}"></span>
+
+                        <img src="/images/comment.png" class="icon-images">
+                        <span id="comment-count" th:text="${article.comments.size()}"></span>
+
+                        <img src="/images/icon_like_off.png" class="icon-images" style="cursor: pointer" id="like-icon">
+                        <span id="like-count" th:text="${article.likes}"></span>
                     </div>
                     <hr class="my-3">
                     <p class="fs-5 mb-4" th:text="*{content}"></p>
@@ -71,7 +79,8 @@
                             <div class="comment-header d-flex align-items-start">
                                 <div class="d-flex align-items-start flex-grow-1">
                                     <img th:src="${comment.profileImageUrl}" alt="Profile Image"
-                                         class="rounded-circle img-fluid">
+                                         class="rounded-circle img-fluid"
+                                         th:onclick="|location.href='@{/myPage(author=${comment.author})}'|">
                                     <a class="author-name fw-bold" th:text="${comment.author}"
                                        th:onclick="|location.href='@{/myPage(author=${comment.author})}'|"></a>
                                     <span th:if="${comment.isAuthor()}"
@@ -110,8 +119,8 @@
         </div>
     </div>
 </div>
-<script src="/js/article.js"></script>
+<script type="module" src="/js/article/articleMain.js"></script>
 <script src="/js/editComment.js"></script>
-<script src="/js/addComment.js"></script>
+<script src="/js/article/article.js"></script>
 </body>
 </html>

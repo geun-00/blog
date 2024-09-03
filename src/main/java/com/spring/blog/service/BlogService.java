@@ -1,12 +1,14 @@
 package com.spring.blog.service;
 
 import com.spring.blog.domain.Article;
+import com.spring.blog.domain.ArticleLikes;
 import com.spring.blog.domain.User;
 import com.spring.blog.dto.request.AddArticleRequest;
 import com.spring.blog.dto.response.ArticleListViewResponse;
 import com.spring.blog.dto.request.ArticleSearchRequest;
 import com.spring.blog.dto.response.PageResponse;
 import com.spring.blog.dto.request.UpdateArticleRequest;
+import com.spring.blog.repository.ArticleLikesRepository;
 import com.spring.blog.repository.BlogQueryRepository;
 import com.spring.blog.repository.BlogRepository;
 import com.spring.blog.repository.UserRepository;
@@ -34,6 +36,7 @@ public class BlogService {
     private final ValidationService validationService;
     private final BlogQueryRepository blogQueryRepository;
     private final RedisTemplate<String, Object> redisTemplate;
+    private final ArticleLikesRepository articleLikesRepository;
 
     @Transactional
     public Article save(AddArticleRequest request, String email) {
@@ -92,6 +95,25 @@ public class BlogService {
         return foundArticle;
     }
 
+    @Transactional
+    public void addLike(Long articleId, String email) {
+        User user = userRepository.findByEmail(email).orElseThrow(
+                () -> new EntityNotFoundException("not found user : " + email));
+
+        Article article = blogRepository.findById(articleId).orElseThrow(
+                () -> new EntityNotFoundException("not found article : " + articleId));
+
+        if (!articleLikesRepository.existsByUserAndArticle(user, article)) {
+
+            articleLikesRepository.save(ArticleLikes.builder()
+                    .user(user)
+                    .article(article)
+                    .build());
+
+            article.increaseLikes();
+        }
+    }
+
     public PageResponse<ArticleListViewResponse> findAllByCond(ArticleSearchRequest request, Pageable pageable) {
 
         Page<ArticleListViewResponse> articles = blogQueryRepository.findAllByCond(request, pageable);
@@ -127,5 +149,15 @@ public class BlogService {
                 .pageSize(pageable.getPageSize())
                 .totalCount(articles.getTotalElements())
                 .build();
+    }
+
+    public boolean isLiked(Long articleId, String email) {
+        User user = userRepository.findByEmail(email).orElseThrow(
+                () -> new EntityNotFoundException("not found user : " + email));
+
+        Article article = blogRepository.findById(articleId).orElseThrow(
+                () -> new EntityNotFoundException("not found article : " + articleId));
+
+        return articleLikesRepository.existsByUserAndArticle(user, article);
     }
 }

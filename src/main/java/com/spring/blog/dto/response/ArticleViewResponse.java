@@ -10,22 +10,24 @@ import java.util.List;
 public class ArticleViewResponse {
 
     private Long id;
+    private int likes;
+    private long views;
     private String title;
     private String author;
     private String content;
     private String profileImageUrl;
-    private long views;
     private LocalDateTime createdAt;
     private List<CommentResponse> comments;
 
     public ArticleViewResponse(Article article) {
         this.id = article.getId();
+        this.likes = article.getLikes();
+        this.views = article.getViews();
         this.title = article.getTitle();
+        this.content = article.getContent();
+        this.createdAt = article.getCreatedAt();
         this.author = article.getUser().getNickname();
         this.profileImageUrl = article.getUser().getProfileImageUrl();
-        this.content = article.getContent();
-        this.views = article.getViews();
-        this.createdAt = article.getCreatedAt();
         this.comments = article.getComments()
                 .stream()
                 .map(comment -> {

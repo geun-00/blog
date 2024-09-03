@@ -80,10 +80,18 @@ function deleteComment(element) {
             .then(data => {
                 if (data.ok) {
                     element.closest('.comment-item').remove();
+                    document.querySelector('.comment_inbox_text').value = '';
+                    updateCommentCount(-1);
                 } else {
                     alert('댓글 삭제에 실패했습니다.');
                 }
             })
             .catch(error => console.error('Error:', error));
     }
+}
+
+function updateCommentCount(increment) {
+    const commentCountElement = document.querySelector('#comment-count');
+    const currentCount = parseInt(commentCountElement.textContent);
+    commentCountElement.textContent = currentCount + increment;
 }
