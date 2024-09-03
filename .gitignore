@@ -37,3 +37,4 @@ out/
 .vscode/
 /src/main/generated/
 /src/main/resources/application-aws.yml
+/src/main/resources/static/images/upload/

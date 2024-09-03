@@ -42,6 +42,7 @@ public class SetupData implements ApplicationListener<ContextRefreshedEvent> {
             users.add(User.builder()
                     .email("test" + i + "@email.com")
                     .password(passwordEncoder.encode("rmsdud12@" + i))
+                    .profileImageUrl("/user/defaultImage")
                     .registrationId(SocialType.NONE)
                     .nickname("nickname" + i)
                     .build());
