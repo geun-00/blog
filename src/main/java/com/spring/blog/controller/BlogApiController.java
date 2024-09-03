@@ -6,6 +6,7 @@ import com.spring.blog.dto.request.AddArticleRequest;
 import com.spring.blog.dto.response.ArticleListViewResponse;
 import com.spring.blog.dto.response.ArticleResponse;
 import com.spring.blog.dto.request.ArticleSearchRequest;
+import com.spring.blog.dto.response.LikeResponse;
 import com.spring.blog.dto.response.PageResponse;
 import com.spring.blog.dto.request.UpdateArticleRequest;
 import com.spring.blog.model.PrincipalUser;
@@ -80,22 +81,32 @@ public class BlogApiController {
     }
 
     @PostMapping("/articles/like/{articleId}")
-    public ResponseEntity<Void> addLike(@PathVariable("articleId") Long articleId,
-                                        @CurrentUser Authentication authentication) {
+    public ApiResponse<Integer> addLike(@PathVariable("articleId") Long articleId,
+                                                        @CurrentUser Authentication authentication) {
 
         PrincipalUser principalUser = (PrincipalUser) authentication.getPrincipal();
-        blogService.addLike(articleId, principalUser.providerUser().getEmail());
+        int likesCount = blogService.addLike(articleId, principalUser.providerUser().getEmail());
 
-        return ResponseEntity.ok().build();
+        return ApiResponse.ok(likesCount);
     }
 
-    @GetMapping("/articles/{articleId}/liked")
-    public ResponseEntity<Boolean> isLiked(@PathVariable("articleId") Long articleId,
+    @DeleteMapping("/articles/like/{articleId}")
+    public ApiResponse<Integer> deleteLike(@PathVariable("articleId") Long articleId,
                                            @CurrentUser Authentication authentication) {
 
         PrincipalUser principalUser = (PrincipalUser) authentication.getPrincipal();
-        boolean liked = blogService.isLiked(articleId, principalUser.providerUser().getEmail());
+        int likesCount = blogService.deleteLike(articleId, principalUser.providerUser().getEmail());
 
-        return ResponseEntity.ok(liked);
+        return ApiResponse.ok(likesCount);
+    }
+
+    @GetMapping("/articles/{articleId}/liked")
+    public ResponseEntity<LikeResponse> isLiked(@PathVariable("articleId") Long articleId,
+                                                @CurrentUser Authentication authentication) {
+
+        PrincipalUser principalUser = (PrincipalUser) authentication.getPrincipal();
+        LikeResponse response = blogService.isLiked(articleId, principalUser.providerUser().getEmail());
+
+        return ResponseEntity.ok(response);
     }
 }

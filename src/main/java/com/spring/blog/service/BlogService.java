@@ -6,6 +6,7 @@ import com.spring.blog.domain.User;
 import com.spring.blog.dto.request.AddArticleRequest;
 import com.spring.blog.dto.response.ArticleListViewResponse;
 import com.spring.blog.dto.request.ArticleSearchRequest;
+import com.spring.blog.dto.response.LikeResponse;
 import com.spring.blog.dto.response.PageResponse;
 import com.spring.blog.dto.request.UpdateArticleRequest;
 import com.spring.blog.repository.ArticleLikesRepository;
@@ -96,7 +97,7 @@ public class BlogService {
     }
 
     @Transactional
-    public void addLike(Long articleId, String email) {
+    public int addLike(Long articleId, String email) {
         User user = userRepository.findByEmail(email).orElseThrow(
                 () -> new EntityNotFoundException("not found user : " + email));
 
@@ -112,6 +113,29 @@ public class BlogService {
 
             article.increaseLikes();
         }
+
+        return article.getLikes();
+    }
+
+    @Transactional
+    public int deleteLike(Long articleId, String email) {
+
+        User user = userRepository.findByEmail(email).orElseThrow(
+                () -> new EntityNotFoundException("not found user : " + email));
+
+        Article article = blogRepository.findById(articleId).orElseThrow(
+                () -> new EntityNotFoundException("not found article : " + articleId));
+
+        ArticleLikes articleLikes = articleLikesRepository.findByUserAndArticle(user, article).orElseThrow(
+                () -> new EntityNotFoundException(
+                        "not found likes (userId : " + user.getId() + ") (articleId : " + article.getId() + ")")
+        );
+
+        articleLikesRepository.delete(articleLikes);
+
+        article.decreaseLikes();
+
+        return article.getLikes();
     }
 
     public PageResponse<ArticleListViewResponse> findAllByCond(ArticleSearchRequest request, Pageable pageable) {
@@ -151,13 +175,16 @@ public class BlogService {
                 .build();
     }
 
-    public boolean isLiked(Long articleId, String email) {
+    public LikeResponse isLiked(Long articleId, String email) {
         User user = userRepository.findByEmail(email).orElseThrow(
                 () -> new EntityNotFoundException("not found user : " + email));
 
         Article article = blogRepository.findById(articleId).orElseThrow(
                 () -> new EntityNotFoundException("not found article : " + articleId));
 
-        return articleLikesRepository.existsByUserAndArticle(user, article);
+        boolean isLiked = articleLikesRepository.existsByUserAndArticle(user, article);
+        int likes = article.getLikes();
+
+        return new LikeResponse(isLiked, likes);
     }
 }

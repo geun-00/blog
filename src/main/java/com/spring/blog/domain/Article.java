@@ -77,6 +77,12 @@ public class Article extends BaseEntity {
         this.likes++;
     }
 
+    public void decreaseLikes() {
+        if (this.likes > 0) {
+            this.likes--;
+        }
+    }
+
     public void addComment(Comment comment) {
         this.comments.add(comment);
     }
