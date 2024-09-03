@@ -76,6 +76,8 @@ public class UserService {
         commentRepository.deleteByUserId(user.getId());
         blogRepository.deleteByUserId(user.getId());
 
+        fileService.deleteFile(user.getProfileImageUrl());
+
         userRepository.delete(user);
     }
 
