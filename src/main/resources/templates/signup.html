@@ -23,19 +23,19 @@
     <div class="container-fluid row justify-content-center align-content-center">
         <div class="card bg-dark card-custom" style="border-radius: 1rem;">
             <div class="card-body p-5 text-center" >
-                <h2 class="text-white">회원가입</h2>
+                <h2 class="text-white">회원가입(* 필수)</h2>
 
                 <div class = "mb-2">
                     <form th:action="@{/user}" method="POST" th:object="${addUserRequest}" enctype="multipart/form-data">
                         <div class="mb-3" sec:authorize="isAnonymous()">
-                            <label class="form-label text-white">Email address</label>
+                            <label class="form-label text-white">이메일 주소(*)</label>
                             <input type="email" class="form-control" name="email"
                                    th:value="*{email}"
                                    required placeholder="이메일 형식에 맞춰주세요.">
                             <div th:errors="*{email}" class="text-danger"></div>
                         </div>
                         <div class="mb-3" sec:authorize="isAnonymous()">
-                            <label class="form-label text-white">Password</label>
+                            <label class="form-label text-white">비밀번호(*)</label>
                             <input type="password" class="form-control" name="password"
                                    pattern="^(?=.*[A-Za-z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,16}$"
                                    title="비밀번호 형식에 맞지 않습니다."
@@ -43,7 +43,16 @@
                                    required placeholder="8 ~ 16글자, 특수문자를 포함해주세요.">
                         </div>
                         <div class="mb-3">
-                            <label class="form-label text-white">Nickname</label>
+                            <label class="form-label text-white">전화번호(*)</label>
+                            <input type="text" class="form-control"
+                                   minlength="11" name="phoneNumber"
+                                   pattern="^010\d{8}$"
+                                   th:value="*{phoneNumber}"
+                                   required placeholder="전화번호 입력(- 제외)">
+                            <div th:errors="*{phoneNumber}" class="text-danger"></div>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label text-white">닉네임(*)</label>
                             <input type="text" class="form-control"
                                    minlength="2" maxlength="10" name="nickname"
                                    th:value="*{nickname}"
@@ -51,7 +60,7 @@
                             <div th:errors="*{nickname}" class="text-danger"></div>
                         </div>
                         <div class="mb-3">
-                            <label class="form-label text-white">Profile Image (Option)</label>
+                            <label class="form-label text-white">프로필 사진 등록 (옵션)</label>
                             <input type="file" class="form-control"
                                    name="imageFile"
                                    placeholder="블로그에서 사용하실 프로필 이미지를 정해주세요.(필수 X)">

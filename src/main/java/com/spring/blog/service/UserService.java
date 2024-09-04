@@ -38,6 +38,7 @@ public class UserService {
                 User.builder()
                         .email(request.getEmail())
                         .nickname(request.getNickname())
+                        .phoneNumber(request.getPhoneNumber())
                         .registrationId(SocialType.NONE)
                         .profileImageUrl(fileService.saveFile(request.getImageFile(), "user/"))
                         .password(passwordEncoder.encode(request.getPassword()))
@@ -58,9 +59,11 @@ public class UserService {
     }
 
     @Transactional
-    public void updateOAuthUser(String nickname, MultipartFile imageFile, String email) {
+    public void updateOAuthUser(String nickname, String phoneNumber, MultipartFile imageFile, String email) {
         User user = findByEmail(email);
+
         user.updateNickname(nickname);
+        user.updatePhoneNumber(phoneNumber);
 
         if (imageFile == null || !StringUtils.hasText(imageFile.getOriginalFilename())) {
             return;
@@ -121,5 +124,8 @@ public class UserService {
 
     public boolean existsByEmail(String email) {
         return userRepository.existsByEmail(email);
+    }
+    public boolean existsByPhoneNumber(String phoneNumber) {
+        return userRepository.existsByPhoneNumber(phoneNumber);
     }
 }

@@ -77,6 +77,7 @@ public class UserViewController {
             PrincipalUser principalUser = getPrincipal(authentication);
             userService.updateOAuthUser(
                     request.getNickname(),
+                    request.getPhoneNumber(),
                     request.getImageFile(),
                     principalUser.providerUser().getEmail()
             );

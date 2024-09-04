@@ -33,9 +33,13 @@
                         <label for="password"></label>
                         <input type="password" class="form-control" id="password" name="password" required placeholder="비밀번호">
                     </div>
+                    <div class="form-actions">
+                        <a th:href="@{/signup}" class="link">회원가입</a>
+                        <a th:href="@{/findEmail}" class="link" style="margin-left: 1rem">이메일 찾기</a>
+                        <a th:href="@{/password-reset}" class="link" style="margin-left: 1rem">비밀번호 찾기</a>
+                    </div>
                     <div>
                         <button type="submit" class="btn btn-primary btn-block" id="login-btn">로그인</button>
-                        <a th:href="@{/signup}" class="btn btn-secondary btn-block">회원가입</a>
                         <a th:href="@{/guest}" class="btn btn-secondary btn-block">비회원으로 구경하기</a>
                     </div>
                 </form>

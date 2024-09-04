@@ -29,5 +29,8 @@ public class AddUserValidator implements Validator {
         if (userService.existsByNickname(request.getNickname())) {
             errors.rejectValue("nickname","duplicate",new String[]{"이름"}, null);
         }
+        if (userService.existsByPhoneNumber(request.getPhoneNumber())) {
+            errors.rejectValue("phoneNumber","duplicate",new String[]{"전화번호"}, null);
+        }
     }
 }

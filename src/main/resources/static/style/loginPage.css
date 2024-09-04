@@ -30,6 +30,22 @@
     margin-bottom: 10px;
 }
 
+.form-actions {
+    margin-bottom: 1rem;
+    margin-top: 1rem;
+}
+
+.form-actions .link {
+    display: inline-block;
+    margin-right: 15px;
+    color: #007bff;
+    text-decoration: none;
+}
+
+.link:hover {
+    text-decoration: underline;
+}
+
 #login-btn {
     margin-top: 15px;
 }

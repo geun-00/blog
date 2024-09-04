@@ -11,5 +11,6 @@ public class AddUserRequest {
     private String email;
     private String password;
     private String nickname;
+    private String phoneNumber;
     private MultipartFile imageFile;
 }

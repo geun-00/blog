@@ -46,6 +46,9 @@ public class User extends BaseEntity {
     @Column(name = "profile_image_url")
     private String profileImageUrl;
 
+    @Column(name = "phone_number", length = 11, unique = true)
+    private String phoneNumber;
+
     @OneToMany(mappedBy = "user", orphanRemoval = true)
     private List<Article> articles = new ArrayList<>();
 
@@ -58,10 +61,11 @@ public class User extends BaseEntity {
     }
 
     @Builder
-    public User(String email, String password, String nickname, SocialType registrationId, String profileImageUrl) {
+    public User(String email, String password, String nickname, String phoneNumber, SocialType registrationId, String profileImageUrl) {
         this.email = email;
         this.password = password;
         this.nickname = nickname;
+        this.phoneNumber = phoneNumber;
         this.registrationId = registrationId;
         this.profileImageUrl = profileImageUrl;
     }
@@ -72,6 +76,10 @@ public class User extends BaseEntity {
 
     public void updateProfileImageUrl(String profileImageUrl) {
         this.profileImageUrl = profileImageUrl;
+    }
+
+    public void updatePhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
     }
 
     public void edit(String email, String nickname) {
