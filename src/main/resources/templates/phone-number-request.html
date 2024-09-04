@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>전화번호 입력</title>
+    <link rel="stylesheet" href="/style/phone-number.css">
+</head>
+<body>
+<div class="container">
+    <h2>전화번호로 인증</h2>
+    <div class="form-group">
+        <label for="phoneNumber">가입했던 전화번호:</label>
+        <input type="text" class="form-control" id="phoneNumber" name="phoneNumber"
+               placeholder="전화번호 입력(- 제외)">
+        <small id="error-message" style="color: red"></small>
+    </div>
+
+    <div style="display: flex; justify-content: space-between; padding: 10px;">
+        <button type="submit" id="send-code-btn" class="btn btn-primary">인증번호 전송</button>
+        <a href="/login" class="btn btn-secondary">로그인 화면으로 돌아가기</a>
+    </div>
+
+    <div id="verification-code-container" style="display: none;" class="form-group">
+        <label for="verificationCode">인증번호:</label>
+        <input type="text" class="form-control" id="verificationCode" name="verificationCode"
+               required minlength="6"
+               placeholder="인증번호 입력(6자리)">
+        <button id="verify-code-button" class="btn btn-primary">인증번호 확인</button>
+        <div id="countdown"></div>
+    </div>
+
+    <div id="found-email-container" style="display: none;" class="form-group">
+        <label for="foundEmail">찾은 이메일: </label>
+        <p id="foundEmail"></p>
+    </div>
+</div>
+</body>
+<script>
+    document.getElementById("send-code-btn").addEventListener("click", function () {
+
+        const phoneNumber = document.getElementById("phoneNumber").value;
+        const errorMessage = document.getElementById("error-message");
+
+        const phoneNumberPattern = /^010\d{8}$/;
+        if (!phoneNumberPattern.test(phoneNumber)) {
+            errorMessage.innerText = "전화번호 형식이 올바르지 않습니다.";
+            return;
+        }
+
+        fetch("/api/verify/phoneNumber", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                "phoneNumber": phoneNumber
+            })
+        }).then(response => response.json())
+            .then(data => {
+                if (data.code === 200) {
+                    document.getElementById("verification-code-container").style.display = "block";
+                    startCountdown(5 * 60);
+                } else {
+                    document.getElementById("error-message").innerText = "인증번호 전송에 실패했습니다.";
+                }
+            })
+            .catch(error => {
+                console.error("Error:", error);
+                document.getElementById("error-message").innerText = "오류가 발생했습니다.";
+            })
+
+    });
+
+    function startCountdown(duration) {
+        const display = document.getElementById("countdown");
+        let timer = duration, minutes, seconds;
+
+        const intervalId = setInterval(function () {
+            minutes = parseInt(timer / 60, 10);
+            seconds = parseInt(timer % 60, 10);
+
+            minutes = minutes < 10 ? "0" + minutes : minutes;
+            seconds = seconds < 10 ? "0" + seconds : seconds;
+
+            display.textContent = minutes + ":" + seconds;
+
+            if (--timer < 0) {
+                clearInterval(intervalId);
+                display.textContent = "시간 초과";
+                alert("인증 시간이 초과되었습니다. 로그인 화면으로 이동합니다.");
+                window.location.href = "/login";
+            }
+        }, 1000);
+    }
+
+    document.getElementById("verify-code-button").addEventListener("click", function () {
+
+        const phoneNumber = document.getElementById("phoneNumber").value;
+        const verificationCode = document.getElementById("verificationCode").value;
+
+        fetch("/api/verify/code", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                "phoneNumber": phoneNumber,
+                "verificationCode": verificationCode
+            })
+        }).then(response => response.json())
+            .then(data => {
+                if (data.code === 200) {
+                    document.getElementById("verification-code-container").style.display = "none";
+                    document.getElementById("found-email-container").style.display = "block";
+                    document.getElementById("foundEmail").innerText = data.data;
+                } else {
+                    document.getElementById("error-message").innerText = "인증번호 확인에 실패했습니다.";
+                }
+            })
+            .catch(error => {
+                console.error("Error:", error);
+                document.getElementById("error-message").innerText = "오류가 발생했습니다.";
+            })
+
+    });
+</script>
+</html>

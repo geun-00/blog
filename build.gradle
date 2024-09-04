@@ -41,6 +41,8 @@ dependencies {
 	implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity6'
 	testImplementation 'org.projectlombok:lombok:1.18.28'
 
+	implementation 'net.nurigo:sdk:4.3.0'
+
 	compileOnly 'org.projectlombok:lombok'
 	annotationProcessor 'org.projectlombok:lombok'
 
