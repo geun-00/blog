@@ -39,7 +39,7 @@ public class Article extends BaseEntity {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    @OneToMany(mappedBy = "article", orphanRemoval = true)
+    @OneToMany(mappedBy = "article")
     private List<Comment> comments = new ArrayList<>();
 
     @Column(name = "views")

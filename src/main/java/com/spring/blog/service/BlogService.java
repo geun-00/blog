@@ -12,6 +12,7 @@ import com.spring.blog.dto.request.UpdateArticleRequest;
 import com.spring.blog.repository.ArticleLikesRepository;
 import com.spring.blog.repository.BlogQueryRepository;
 import com.spring.blog.repository.BlogRepository;
+import com.spring.blog.repository.CommentRepository;
 import com.spring.blog.repository.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -38,6 +39,7 @@ public class BlogService {
     private final BlogQueryRepository blogQueryRepository;
     private final RedisTemplate<String, Object> redisTemplate;
     private final ArticleLikesRepository articleLikesRepository;
+    private final CommentRepository commentRepository;
 
     @Transactional
     public Article save(AddArticleRequest request, String email) {
@@ -69,6 +71,9 @@ public class BlogService {
     public void delete(long id) {
         Article article = blogRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("not found : " + id));
+
+        articleLikesRepository.deleteByArticleId(article.getId());
+        commentRepository.deleteByArticleId(article.getId());
 
         blogRepository.delete(article);
     }
