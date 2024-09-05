@@ -1,6 +1,7 @@
 package com.spring.blog.controller;
 
 import com.spring.blog.common.annotation.CurrentUser;
+import com.spring.blog.dto.request.NewPasswordRequest;
 import com.spring.blog.model.PrincipalUser;
 import com.spring.blog.service.UserService;
 import jakarta.servlet.http.Cookie;
@@ -10,6 +11,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -19,6 +22,13 @@ import org.springframework.web.bind.annotation.RestController;
 public class UserApiController {
 
     private final UserService userService;
+
+    @PostMapping("/user/newPassword")
+    public ApiResponse<?> setNewPassword(@RequestBody NewPasswordRequest request) {
+        userService.setNewPassword(request);
+
+        return ApiResponse.ok(null);
+    }
 
     @DeleteMapping("/user")
     public ResponseEntity<Void> deleteUser(@CurrentUser Authentication authentication,

@@ -4,6 +4,7 @@ import com.spring.blog.common.enums.SocialType;
 import com.spring.blog.domain.User;
 import com.spring.blog.dto.request.AddUserRequest;
 import com.spring.blog.dto.request.EditUserRequest;
+import com.spring.blog.dto.request.NewPasswordRequest;
 import com.spring.blog.dto.response.UserInfoResponse;
 import com.spring.blog.model.ProviderUser;
 import com.spring.blog.repository.BlogRepository;
@@ -104,6 +105,12 @@ public class UserService {
         return user;
     }
 
+    @Transactional
+    public void setNewPassword(NewPasswordRequest request) {
+        User user = findByEmail(request.getEmail());
+        user.updatePassword(passwordEncoder.encode(request.getNewPassword()));
+    }
+
     public UserInfoResponse getUserInfo(String name) {
         return userQueryRepository.getUserInfo(name);
     }
@@ -121,10 +128,10 @@ public class UserService {
     public boolean existsByNickname(String nickname) {
         return userRepository.existsByNickname(nickname);
     }
-
     public boolean existsByEmail(String email) {
         return userRepository.existsByEmail(email);
     }
+
     public boolean existsByPhoneNumber(String phoneNumber) {
         return userRepository.existsByPhoneNumber(phoneNumber);
     }

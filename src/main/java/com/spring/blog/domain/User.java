@@ -82,6 +82,10 @@ public class User extends BaseEntity {
         this.phoneNumber = phoneNumber;
     }
 
+    public void updatePassword(String password) {
+        this.password = password;
+    }
+
     public void edit(String email, String nickname) {
         if (StringUtils.hasText(email)) {
             this.email = email;

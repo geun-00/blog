@@ -1,4 +1,17 @@
 spring:
+  mail:
+    host: smtp.naver.com
+    port: 465
+    username: ENC(aODbNtapT7RBuM27QkCDHdgyJORPto7A)
+    password: ENC(ndCavilUFaDNSC/aBDyJlcdL3ySgdOmy)
+    properties:
+      mail:
+        smtp:
+          auth: true
+          ssl:
+            enable: true
+          starttls:
+            enable: true
   security:
     oauth2:
       client:

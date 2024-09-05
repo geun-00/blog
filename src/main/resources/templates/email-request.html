@@ -7,53 +7,56 @@
 </head>
 <body>
 <div class="container">
-    <h1>이메일 찾기</h1>
-    <h2>전화번호로 인증</h2>
+    <h1>비밀번호 재설정</h1>
+    <h2>이메일 인증</h2>
     <div class="form-group">
-        <label for="phoneNumber">가입했던 전화번호:</label>
-        <input type="text" class="form-control" id="phoneNumber" name="phoneNumber"
-               placeholder="전화번호 입력(- 제외)">
+        <label for="email">가입했던 이메일:</label>
+        <input type="email" class="form-control" id="email" name="email"
+               placeholder="이메일 입력">
         <small id="error-message" style="color: red"></small>
     </div>
 
     <button type="submit" id="send-code-btn" class="btn btn-primary">인증번호 전송</button>
-    <a href="/findPassword" class="btn btn-primary">비밀번호 찾기</a>
+    <a href="/findEmail" class="btn btn-primary">이메일 찾기</a>
     <a href="/login" class="btn btn-secondary">로그인</a>
 
-    <div id="verification-code-container" style="display: none;" class="form-group">
+    <div id="verification-code-container" style="display: none; margin-top: 1rem" class="form-group">
         <label for="verificationCode">인증번호:</label>
         <input type="text" class="form-control" id="verificationCode" name="verificationCode"
                required minlength="6"
                placeholder="인증번호 입력(6자리)">
-        <button id="verify-code-button" class="btn btn-primary">인증번호 확인</button>
         <div id="countdown"></div>
+        <button style="margin-top: 1rem" id="verify-code-button" class="btn btn-primary">인증번호 확인</button>
     </div>
 
-    <div id="found-email-container" style="display: none;" class="form-group">
-        <label for="foundEmail">찾은 이메일: </label>
-        <p id="foundEmail"></p>
+    <div id="password-input-container" style="display: none; margin-top: 1rem;" class="form-group">
+        <label for="newPassword">새로운 비밀번호:</label>
+        <input type="password" class="form-control" id="newPassword" name="newPassword"
+               required
+               placeholder="새로운 비밀번호 입력">
+        <button style="margin-top: 1rem" type="button" id="submit-new-password" class="btn btn-primary">비밀번호 재설정</button>
     </div>
 </div>
 </body>
 <script>
     document.getElementById("send-code-btn").addEventListener("click", function () {
 
-        const phoneNumber = document.getElementById("phoneNumber").value;
+        const email = document.getElementById("email").value;
         const errorMessage = document.getElementById("error-message");
 
-        const phoneNumberPattern = /^010\d{8}$/;
-        if (!phoneNumberPattern.test(phoneNumber)) {
-            errorMessage.innerText = "전화번호 형식이 올바르지 않습니다.";
+        const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+        if (!emailPattern.test(email)) {
+            errorMessage.innerText = "이메일 형식이 올바르지 않습니다.";
             return;
         }
 
-        fetch("/api/verify/phoneNumber", {
+        fetch("/api/verify/email", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
             },
             body: JSON.stringify({
-                "phoneNumber": phoneNumber
+                "email": email
             })
         }).then(response => response.json())
             .then(data => {
@@ -71,7 +74,6 @@
             })
 
     });
-
     function startCountdown(duration) {
         const display = document.getElementById("countdown");
         let timer = duration, minutes, seconds;
@@ -96,24 +98,24 @@
 
     document.getElementById("verify-code-button").addEventListener("click", function () {
 
-        const phoneNumber = document.getElementById("phoneNumber").value;
+        const email = document.getElementById("email").value;
         const verificationCode = document.getElementById("verificationCode").value;
 
-        fetch("/api/verify/code/sms", {
+        fetch("/api/verify/code/email", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
             },
             body: JSON.stringify({
-                "phoneNumber": phoneNumber,
+                "email": email,
                 "verificationCode": verificationCode
             })
         }).then(response => response.json())
             .then(data => {
                 if (data.code === 200) {
+                    alert("인증되었습니다.");
                     document.getElementById("verification-code-container").style.display = "none";
-                    document.getElementById("found-email-container").style.display = "block";
-                    document.getElementById("foundEmail").innerText = data.data;
+                    document.getElementById("password-input-container").style.display = "block";
                 } else {
                     document.getElementById("error-message").innerText = "인증번호 확인에 실패했습니다.";
                 }
@@ -123,6 +125,36 @@
                 document.getElementById("error-message").innerText = "오류가 발생했습니다.";
             })
 
+    });
+
+    document.getElementById("submit-new-password").addEventListener("click", function () {
+
+        const email = document.getElementById("email").value;
+        const newPassword = document.getElementById("newPassword").value;
+
+        const errorMessage = document.getElementById("error-message");
+        const pattern = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,16}$/;
+        if (!pattern.test(newPassword)) {
+            errorMessage.innerText = "비밀번호 형식이 올바르지 않습니다.";
+            return;
+        }
+
+        fetch("/api/user/newPassword", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                "email": email,
+                "newPassword": newPassword
+            })
+        }).then(response => response.json())
+            .then(data => {
+                if (data.code === 200) {
+                    alert("변경되었습니다.");
+                    window.location.href = '/login';
+                }
+            })
     });
 </script>
 </html>
