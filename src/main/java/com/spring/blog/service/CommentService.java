@@ -59,8 +59,6 @@ public class CommentService {
         Comment foundComment = commentRepository.findById(commentId).orElseThrow(
                 () -> new EntityNotFoundException("not found comment : " + commentId));
 
-        List<Comment> comments = foundComment.getUser().getComments();
-        List<Comment> comments1 = foundComment.getArticle().getComments();
         commentRepository.delete(foundComment);
         return foundComment;
     }

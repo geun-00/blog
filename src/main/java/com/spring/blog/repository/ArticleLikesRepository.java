@@ -19,4 +19,8 @@ public interface ArticleLikesRepository extends JpaRepository<ArticleLikes, Long
     @Modifying
     @Query("DELETE FROM ArticleLikes a WHERE a.article.id = :articleId")
     void deleteByArticleId(@Param("articleId") Long articleId);
+
+    @Modifying
+    @Query("DELETE FROM ArticleLikes a WHERE a.user.id = :userId")
+    void deleteByUserId(@Param("userId") Long userId);
 }

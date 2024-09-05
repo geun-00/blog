@@ -43,7 +43,6 @@ public class Comment extends BaseEntity {
         this.article = article;
 
         article.addComment(this);
-        user.addComment(this);
     }
 
     public void editComment(String comment) {

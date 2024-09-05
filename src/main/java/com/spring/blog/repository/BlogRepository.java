@@ -19,9 +19,6 @@ public interface BlogRepository extends JpaRepository<Article, Long> {
             "WHERE a.id = :id")
     Optional<Article> findWithUserAndCommentsById(@Param("id") Long id);
 
-    @Query("SELECT COUNT(a) FROM Article a WHERE a.user.id = :userId")
-    long countByUserId(@Param("userId") Long userId);
-
     @EntityGraph(attributePaths = "user")
     Page<Article> findAll(Pageable pageable);
 

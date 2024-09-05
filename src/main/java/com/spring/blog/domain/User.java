@@ -49,11 +49,8 @@ public class User extends BaseEntity {
     @Column(name = "phone_number", length = 11, unique = true)
     private String phoneNumber;
 
-    @OneToMany(mappedBy = "user", orphanRemoval = true)
-    private List<Article> articles = new ArrayList<>();
-
     @OneToMany(mappedBy = "user")
-    private List<Comment> comments = new ArrayList<>();
+    private List<Article> articles = new ArrayList<>();
 
     public void addArticle(Article article) {
         articles.add(article);
@@ -93,9 +90,5 @@ public class User extends BaseEntity {
         if (StringUtils.hasText(nickname)) {
             this.nickname = nickname;
         }
-    }
-
-    public void addComment(Comment comment) {
-        this.comments.add(comment);
     }
 }

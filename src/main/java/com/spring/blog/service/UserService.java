@@ -7,6 +7,8 @@ import com.spring.blog.dto.request.EditUserRequest;
 import com.spring.blog.dto.request.NewPasswordRequest;
 import com.spring.blog.dto.response.UserInfoResponse;
 import com.spring.blog.model.ProviderUser;
+import com.spring.blog.repository.ArticleLikesRepository;
+import com.spring.blog.repository.BlogQueryRepository;
 import com.spring.blog.repository.BlogRepository;
 import com.spring.blog.repository.CommentRepository;
 import com.spring.blog.repository.UserQueryRepository;
@@ -32,6 +34,8 @@ public class UserService {
     private final PasswordEncoder passwordEncoder;
     private final CommentRepository commentRepository;
     private final UserQueryRepository userQueryRepository;
+    private final BlogQueryRepository blogQueryRepository;
+    private final ArticleLikesRepository articleLikesRepository;
 
     @Transactional
     public void save(AddUserRequest request) {
@@ -77,8 +81,13 @@ public class UserService {
     public void deleteUser(String email) {
         User user = findByEmail(email);
 
-        commentRepository.deleteByUserId(user.getId());
-        blogRepository.deleteByUserId(user.getId());
+        Long userId = user.getId();
+
+        blogQueryRepository.decreaseArticleLikesByUserId(userId);
+
+        articleLikesRepository.deleteByUserId(userId);
+        commentRepository.deleteByUserId(userId);
+        blogRepository.deleteByUserId(userId);
 
         fileService.deleteFile(user.getProfileImageUrl());
 

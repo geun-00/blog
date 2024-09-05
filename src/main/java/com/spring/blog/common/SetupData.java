@@ -38,10 +38,11 @@ public class SetupData implements ApplicationListener<ContextRefreshedEvent> {
         int commentCount = 100;
 
         List<User> users = new ArrayList<>();
-        for (int i = 1; i <= userCount; i++) {
+        for (int i = 0; i < userCount; i++) {
             users.add(User.builder()
                     .email("test" + i + "@email.com")
                     .password(passwordEncoder.encode("rmsdud12@" + i))
+                    .phoneNumber("0104016124" + i)
                     .profileImageUrl("/user/defaultImage")
                     .registrationId(SocialType.NONE)
                     .nickname("nickname" + i)

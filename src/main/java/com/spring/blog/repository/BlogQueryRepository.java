@@ -4,8 +4,8 @@ import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import com.spring.blog.dto.response.ArticleListViewResponse;
 import com.spring.blog.dto.request.ArticleSearchRequest;
+import com.spring.blog.dto.response.ArticleListViewResponse;
 import com.spring.blog.dto.response.QArticleListViewResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -17,6 +17,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 import static com.spring.blog.domain.QArticle.article;
+import static com.spring.blog.domain.QArticleLikes.articleLikes;
 import static com.spring.blog.domain.QComment.comment;
 
 @Repository
@@ -24,6 +25,22 @@ import static com.spring.blog.domain.QComment.comment;
 public class BlogQueryRepository {
 
     private final JPAQueryFactory query;
+
+    /**
+     * 사용자 제거할 때 좋아요 눌렀던 게시글들 좋아요 수 1 감소시키기
+     */
+    public void decreaseArticleLikesByUserId(Long userId) {
+        query
+                .update(article)
+                .set(article.likes, article.likes.subtract(1))
+                .where(article.id.in(
+                        JPAExpressions
+                                .select(articleLikes.article.id)
+                                .from(articleLikes)
+                                .where(articleLikes.user.id.eq(userId))
+                ))
+                .execute();
+    }
 
     /**
      * 조회 조건 X
