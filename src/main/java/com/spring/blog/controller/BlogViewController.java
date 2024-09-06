@@ -32,7 +32,7 @@ public class BlogViewController {
 
     @GetMapping("/")
     public String home() {
-        return "redirect:/articles";
+        return "redirect:/guest";
     }
 
     @GetMapping("/guest")

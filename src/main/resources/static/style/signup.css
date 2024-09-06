@@ -217,6 +217,29 @@ form {
             box-shadow: 0 0 0 rgba(233, 30, 99, 0.0);
         }
     }
+
+    .guest_btn {
+        background: #868e96;
+        color: white;
+        display: block;
+        width: 92.5%;
+        max-width: 680px;
+        height: 50px;
+        border-radius: 8px;
+        margin: 1rem auto;
+        border: none;
+        cursor: pointer;
+        font-size: 14px;
+        font-family: 'Montserrat', sans-serif;
+        box-shadow: 0 15px 30px rgba(134, 142, 150, 0.36);
+        transition: .2s linear;
+        text-align: center;
+        line-height: 50px;
+
+        &:hover {
+            box-shadow: 0 0 0 rgba(134, 142, 150, 0.0);
+        }
+    }
 }
 
 .separator {
