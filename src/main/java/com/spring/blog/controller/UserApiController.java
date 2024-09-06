@@ -1,8 +1,9 @@
 package com.spring.blog.controller;
 
 import com.spring.blog.common.annotation.CurrentUser;
+import com.spring.blog.controller.dto.request.FormAddUserRequest;
+import com.spring.blog.controller.dto.request.OAuthAddUserRequest;
 import com.spring.blog.domain.User;
-import com.spring.blog.dto.request.FormAddUserRequest;
 import com.spring.blog.dto.request.EditUserRequest;
 import com.spring.blog.dto.request.NewPasswordRequest;
 import com.spring.blog.model.PrincipalUser;
@@ -33,23 +34,23 @@ public class UserApiController {
 
     private final UserService userService;
 
-//    private final AddUserValidator addUserValidator;
-//    private final EditUserValidator editUserValidator;
-//
-//    @InitBinder("addUserRequest")
-//    public void initAddUserBinder(WebDataBinder dataBinder) {
-//        dataBinder.addValidators(addUserValidator);
-//    }
-//
-//    @InitBinder("editUserRequest")
-//    public void initEditUserBinder(WebDataBinder dataBinder) {
-//        dataBinder.addValidators(editUserValidator);
-//    }
-
     @PostMapping("/formUser")
     public ApiResponse<String> signup(@Validated @RequestBody FormAddUserRequest request) {
 
         String username = userService.save(request.toServiceRequest());
+
+        return ApiResponse.of(
+                HttpStatus.CREATED,
+                username
+        );
+    }
+
+    @PostMapping("/oauthUser")
+    public ApiResponse<String> oauthSignup(@Validated @RequestBody OAuthAddUserRequest request,
+                                           @CurrentUser Authentication authentication) {
+
+        PrincipalUser principalUser = getPrincipal(authentication);
+        String username = userService.updateOAuthUser(request.toServiceRequest(), principalUser.providerUser().getEmail());
 
         return ApiResponse.of(
                 HttpStatus.CREATED,

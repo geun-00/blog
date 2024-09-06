@@ -1,6 +1,7 @@
 package com.spring.blog.controller.advice;
 
 import com.spring.blog.controller.ApiResponse;
+import com.spring.blog.exception.duplicate.DuplicateException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.FieldError;
@@ -32,5 +33,18 @@ public class ApiControllerAdvice {
                 HttpStatus.BAD_REQUEST,
                 "잘못된 입력을 받았습니다.",
                 null);
+    }
+
+    @ResponseStatus(HttpStatus.CONFLICT)
+    @ExceptionHandler(DuplicateException.class)
+    public ApiResponse<Object> handleDuplicateException(DuplicateException ex) {
+
+        log.error("데이터 중복 예외 발생");
+
+        return ApiResponse.of(
+                HttpStatus.CONFLICT,
+                "가입되어 있는 정보가 있습니다.",
+                ex.getMessage()
+        );
     }
 }

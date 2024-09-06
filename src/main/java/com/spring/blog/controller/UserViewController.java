@@ -1,7 +1,7 @@
 package com.spring.blog.controller;
 
 import com.spring.blog.common.annotation.CurrentUser;
-import com.spring.blog.dto.request.FormAddUserRequest;
+import com.spring.blog.controller.dto.request.OAuthAddUserRequest;
 import com.spring.blog.dto.request.EditUserRequest;
 import com.spring.blog.dto.response.UserInfoResponse;
 import com.spring.blog.model.PrincipalUser;
@@ -30,10 +30,10 @@ public class UserViewController {
         return "login";
     }
 
-    @GetMapping("/signup")
-    public String signup(Model model) {
-        model.addAttribute("addUserRequest", new FormAddUserRequest());
-        return "signup";
+    @GetMapping("/oauth")
+    public String oauthSignup(Model model) {
+        model.addAttribute("addUserRequest", new OAuthAddUserRequest());
+        return "oauthSignup";
     }
 
     @GetMapping("/myPage")

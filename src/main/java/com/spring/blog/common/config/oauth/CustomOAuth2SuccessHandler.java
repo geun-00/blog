@@ -21,7 +21,7 @@ public class CustomOAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHa
 
     private final UserService userService;
 
-    private static final String REDIRECT_PATH_NICKNAME_REQUIRED = "/signup";
+    private static final String REDIRECT_PATH_ADDITIONAL_INFO = "/oauth";
     private static final String REDIRECT_PATH_AUTH_SUCCESS = "/articles";
 
     @Override
@@ -34,11 +34,11 @@ public class CustomOAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHa
 
         User user = userService.findByEmail(email);
 
-        //별명 설정이 아직 안 된 경우, 별명 설정하러 이동
+        //처음 가입하는 경우, 추가적인 정보(전화번호, 별명) 입력 페이지로 이동
         if (!StringUtils.hasText(user.getNickname())) {
-            redirectStrategy.sendRedirect(request, response, REDIRECT_PATH_NICKNAME_REQUIRED);
+            redirectStrategy.sendRedirect(request, response, REDIRECT_PATH_ADDITIONAL_INFO);
         }
-        //별명 설정까지 다 된 경우, 세션에서 사용자 정보를 가져올 수 있도록 인증 정보 재정의 후 메인 페이지 이동
+        //기존 가입자인 경우, 세션에서 사용자 정보를 가져올 수 있도록 인증 정보 재정의 후 메인 페이지 이동
         else {
             principalUser = new PrincipalUser(principalUser.providerUser(), user);
 

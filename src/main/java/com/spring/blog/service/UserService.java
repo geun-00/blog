@@ -1,5 +1,6 @@
 package com.spring.blog.service;
 
+import com.spring.blog.common.annotation.DuplicateCheck;
 import com.spring.blog.common.enums.SocialType;
 import com.spring.blog.domain.User;
 import com.spring.blog.dto.request.EditUserRequest;
@@ -13,6 +14,7 @@ import com.spring.blog.repository.CommentRepository;
 import com.spring.blog.repository.UserQueryRepository;
 import com.spring.blog.repository.UserRepository;
 import com.spring.blog.service.dto.request.FormAddUserServiceRequest;
+import com.spring.blog.service.dto.request.OAuthAddUserServiceRequest;
 import com.spring.blog.service.file.FileService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -37,6 +39,7 @@ public class UserService {
     private final BlogQueryRepository blogQueryRepository;
     private final ArticleLikesRepository articleLikesRepository;
 
+    @DuplicateCheck
     @Transactional
     public String save(FormAddUserServiceRequest request) {
         User savedUser = userRepository.save(
@@ -64,18 +67,15 @@ public class UserService {
         );
     }
 
+    @DuplicateCheck
     @Transactional
-    public void updateOAuthUser(String nickname, String phoneNumber, MultipartFile imageFile, String email) {
+    public String updateOAuthUser(OAuthAddUserServiceRequest request, String email) {
         User user = findByEmail(email);
 
-        user.updateNickname(nickname);
-        user.updatePhoneNumber(phoneNumber);
+        user.updateNickname(request.getNickname());
+        user.updatePhoneNumber(request.getPhoneNumber());
 
-        if (imageFile == null || !StringUtils.hasText(imageFile.getOriginalFilename())) {
-            return;
-        }
-
-        user.updateProfileImageUrl(fileService.saveFile(imageFile, "user/"));
+        return user.getNickname();
     }
 
     @Transactional
@@ -133,16 +133,5 @@ public class UserService {
     public User findByEmail(String email) {
         return userRepository.findByEmail(email)
                 .orElseThrow(() -> new EntityNotFoundException("Unexpected User : " + email));
-    }
-
-    public boolean existsByNickname(String nickname) {
-        return userRepository.existsByNickname(nickname);
-    }
-    public boolean existsByEmail(String email) {
-        return userRepository.existsByEmail(email);
-    }
-
-    public boolean existsByPhoneNumber(String phoneNumber) {
-        return userRepository.existsByPhoneNumber(phoneNumber);
     }
 }

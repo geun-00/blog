@@ -129,8 +129,10 @@ function initScreenToggle() {
                     if (data.code === 201) {
                         alert(data.data + ' 님 가입을 환영합니다! 서비스 사용을 위해 로그인을 해주세요');
                         window.location.href = '/login';
+                    } else if (data.code === 409) {
+                        alert(data.data);
                     } else {
-                        alert('정보를 정확하게 입력해주세요');
+                        alert('오류가 발생했습니다. 문의 주세요')
                     }
                 }).catch(error => {
                 console.log(error);

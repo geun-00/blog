@@ -1,4 +1,4 @@
-package com.spring.blog.dto.request;
+package com.spring.blog.controller.dto.request;
 
 import com.spring.blog.service.dto.request.FormAddUserServiceRequest;
 import jakarta.validation.constraints.Email;
@@ -6,6 +6,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.validator.constraints.Length;
 
 @Data
 @NoArgsConstructor
@@ -21,6 +22,7 @@ public class FormAddUserRequest {
     private String password;
 
     @NotBlank
+    @Length(min = 2, max = 20)
     private String nickname;
 
     @NotBlank
