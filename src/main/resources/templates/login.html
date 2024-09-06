@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/style/signup.css">
+</head>
+<body>
+<div class="container">
+    <!-- Heading -->
+    <h1>로그인</h1>
+
+    <!-- Links -->
+    <ul class="links">
+        <li>
+            <a href="#" id="signin">로그인</a>
+        </li>
+        <li>
+            <a href="#" id="signup">회원가입</a>
+        </li>
+        <li>
+            <a href="#" id="reset">초기화</a>
+        </li>
+    </ul>
+
+    <!-- Form -->
+    <form id="authForm" action="/loginProc" method="post">
+        <!-- email input -->
+        <div class="first-input input__block first-input__block">
+            <input type="email" placeholder="이메일" class="input" name="email" id="email"/>
+            <div id="emailError" class="error-message"></div>
+        </div>
+        <!-- password input -->
+        <div class="input__block">
+            <input type="password" placeholder="비밀번호" class="input" name="password" id="password"/>
+            <div id="passwordRequirements" style="margin-left: 1rem" class="password-requirements">
+                <p id="lengthRequirement" class="requirement">8~16자의 영문</p>
+                <p id="numberRequirement" class="requirement">숫자 포함</p>
+                <p id="specialCharRequirement" class="requirement">특수문자 포함</p>
+            </div>
+            <div id="loginError" class="error-message"></div>
+        </div>
+        <!-- repeat password input -->
+        <div class="input__block">
+            <input type="password" placeholder="비밀번호 확인" class="input repeat__password" id="repeat__password"/>
+            <div style="margin-left: 2rem" id="passwordError" class="error-message"></div>
+        </div>
+        <!-- phone number input -->
+        <div class="input__block">
+            <input type="text" placeholder="전화번호" class="input" id="phoneNumber"/>
+            <div id="phoneNumberError" class="error-message"></div>
+        </div>
+        <!-- nickname input -->
+        <div class="input__block">
+            <input type="text" placeholder="닉네임" class="input" id="nickname"/>
+            <div id="nicknameError" class="error-message"></div>
+        </div>
+        <!-- sign in button -->
+        <button class="signin__btn">
+            로그인
+        </button>
+
+        <div class="find_btn">
+            <a href="/findEmail">이메일 찾기</a>
+            <a href="/findPassword">비밀번호 찾기</a>
+        </div>
+    </form>
+
+    <!-- separator -->
+    <div class="separator">
+        <p>OR</p>
+    </div>
+
+    <!-- google button -->
+    <a href="/oauth2/authorization/google" class="google__btn">
+        <i class="fa fa-google"></i>
+        Sign in with Google
+    </a>
+    <!-- kakao button -->
+    <a href="/oauth2/authorization/kakao" class="kakao__btn">
+        <img src="/images/kakao.png" style="width: 30px; height: 30px; margin-right: 5px">
+        Sign in with Kakao
+    </a>
+    <!-- naver button -->
+    <a href="/oauth2/authorization/naver" class="naver__btn">
+        <img src="/images/naver.png" style="width: 30px; height: 30px; margin-right: 5px">
+        Sign in with Naver
+    </a>
+</div>
+
+<footer>
+    <p>
+        Thank you for watching
+        <i class="fa fa-heart"></i>
+        <i class="fa fa-heart"></i>
+        <i class="fa fa-heart"></i>
+    </p>
+</footer>
+</body>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src="/js/login/validation.js"></script>
+<script src="/js/login/screenToggle.js"></script>
+</html>

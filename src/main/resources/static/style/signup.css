@@ -1,0 +1,336 @@
+.error-message {
+    color: red;
+    font-size: 12px;
+    margin-top: 5px;
+}
+
+.password-requirements,
+#phoneNumber,
+#nickname {
+    display: none;
+}
+
+.password-requirements {
+    margin-top: 10px;
+    font-size: 12px;
+    color: #666;
+}
+
+.requirement {
+    margin: 5px 0;
+}
+
+.requirement.valid {
+    color: green;
+}
+
+.requirement.invalid {
+    color: red;
+}
+
+.find_btn {
+    display: flex;
+    justify-content: center; /* 중앙 정렬 */
+    margin-top: 30px; /* 로그인 버튼과의 간격 */
+}
+
+.find_btn a {
+    display: inline-block;
+    padding: 10px 20px; /* 여백 */
+    color: #fff; /* 글자 색상 */
+    background-color: #3498db; /* 배경 색상 */
+    border-radius: 25px; /* 둥근 모서리 */
+    text-decoration: none; /* 밑줄 제거 */
+    font-size: 14px;
+    font-weight: bold;
+    margin: 0 10px;
+    transition: background-color 0.3s ease, box-shadow 0.3s ease; /* 애니메이션 */
+}
+
+.find_btn a:hover {
+    background-color: #2980b9; /* hover 시 배경 색상 */
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); /* hover 시 그림자 */
+}
+
+.find_btn a:active {
+    background-color: #1c6f9f; /* 클릭 시 배경 색상 */
+}
+
+
+body {
+    font-family: 'Montserrat', sans-serif;
+    background: white;
+}
+
+.container {
+    display: block;
+    max-width: 680px;
+    width: 80%;
+    margin: 120px auto;
+}
+
+h1 {
+    color: #e91e63;
+    font-size: 48px;
+    letter-spacing: -3px;
+    text-align: center;
+    margin: 120px 0 80px 0;
+    transition: .2s linear;
+}
+
+.links {
+    list-style-type: none;
+
+    & li {
+        display: inline-block;
+        margin: 0 20px 0 0;
+        transition: .2s linear;
+
+        &:nth-child(2) {
+            opacity: .6;
+
+            &:hover {
+                opacity: 1;
+            }
+        }
+
+        &:nth-child(3) {
+            opacity: .6;
+            float: right;
+
+            &:hover {
+                opacity: 1;
+            }
+        }
+
+        & a {
+            text-decoration: none;
+            color: #0f132a;
+            font-weight: bolder;
+            text-align: center;
+            cursor: pointer;
+        }
+    }
+}
+
+form {
+    width: 100%;
+    max-width: 680px;
+    margin: 40px auto 10px;
+
+    .input__block {
+        margin: 20px auto;
+        display: block;
+        position: relative;
+
+        & .password-requirements {
+            margin-top: 10px; /* Add space between input field and requirements */
+            padding-left: 15px; /* Align with the input padding */
+            color: rgba(15, 19, 42, 0.6);
+            font-size: 12px; /* Adjust size as needed */
+        }
+
+        & .password-requirements .requirement {
+            margin: 5px 0; /* Space between requirements */
+        }
+
+        &.first-input__block {
+            &::before {
+                content: "";
+                position: absolute;
+                top: -15px;
+                left: 50px;
+                display: block;
+                width: 0;
+                height: 0;
+                background: transparent;
+                border-left: 15px solid transparent;
+                border-right: 15px solid transparent;
+                border-bottom: 15px solid rgba(15, 19, 42, 0.1);
+                transition: .2s linear;
+            }
+        }
+
+        &.signup-input__block {
+            &::before {
+                content: "";
+                position: absolute;
+                top: -15px;
+                left: 150px;
+                display: block;
+                width: 0;
+                height: 0;
+                background: transparent;
+                border-left: 15px solid transparent;
+                border-right: 15px solid transparent;
+                border-bottom: 15px solid rgba(15, 19, 42, 0.1);
+                transition: .2s linear;
+            }
+        }
+
+        & input {
+            display: block;
+            width: 100%;
+            max-width: 680px;
+            height: 50px;
+            margin: 0 auto;
+            border-radius: 8px;
+            border: none;
+            background: rgba(15, 19, 42, 0.1);
+            color: rgba(15, 19, 42, 0.3);
+            padding: 0 0 0 15px;
+            font-size: 14px;
+            font-family: 'Montserrat', sans-serif;
+
+            &:focus,
+            &:active {
+                outline: none;
+                border: none;
+                color: rgba(15, 19, 42, 1.0);
+            }
+
+            &.repeat__password {
+                opacity: 0;
+                display: none;
+                transition: .2s linear;
+            }
+        }
+    }
+
+    .signin__btn {
+        background: #e91e63;
+        color: white;
+        display: block;
+        width: 92.5%;
+        max-width: 680px;
+        height: 50px;
+        border-radius: 8px;
+        margin: 0 auto;
+        border: none;
+        cursor: pointer;
+        font-size: 14px;
+        font-family: 'Montserrat', sans-serif;
+        box-shadow: 0 15px 30px rgba(233, 30, 99, 0.36);
+        transition: .2s linear;
+
+        &:hover {
+            box-shadow: 0 0 0 rgba(233, 30, 99, 0.0);
+        }
+    }
+}
+
+.separator {
+    display: block;
+    margin: 30px auto 10px;
+    text-align: center;
+    height: 40px;
+    position: relative;
+    background: transparent;
+    color: rgba(15, 19, 42, 0.4);
+    font-size: 13px;
+    width: 90%;
+    max-width: 680px;
+
+    &::before {
+        content: "";
+        position: absolute;
+        top: 8px;
+        left: 0;
+        background: rgba(15, 19, 42, 0.4);
+        height: 1px;
+        width: 45%;
+    }
+
+    &::after {
+        content: "";
+        position: absolute;
+        top: 8px;
+        right: 0;
+        background: rgba(15, 19, 42, 0.4);
+        height: 1px;
+        width: 45%;
+    }
+}
+.google__btn .fa,
+.kakao__btn img,
+.naver__btn img {
+    vertical-align: middle;
+    margin-right: 5px; /* 아이콘과 텍스트 사이의 간격 */
+}
+
+.google__btn,
+.kakao__btn,
+.naver__btn{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 90%;
+    max-width: 680px;
+    margin: 20px auto;
+    height: 50px;
+    cursor: pointer;
+    font-size: 14px;
+    font-family: 'Montserrat', sans-serif;
+    border-radius: 8px;
+    border: none;
+    line-height: 40px;
+    text-decoration: none;
+
+    &.google__btn {
+        background: #5b90f0;
+        color: white;
+        box-shadow: 0 15px 30px rgba(91, 144, 240, 0.36);
+        transition: .2s linear;
+
+        .fa {
+            font-size: 20px;
+            padding: 0 5px 0 0;
+        }
+
+        &:hover {
+            box-shadow: 0 0 0 rgba(91, 144, 240, 0.0);
+        }
+    }
+
+    &.kakao__btn {
+        background: #F6C62E;
+        color: white;
+        box-shadow: 0 15px 30px rgba(37, 40, 45, 0.36);
+        transition: .2s linear;
+
+        .img {
+            font-size: 20px;
+            padding: 0 5px 0 0;
+        }
+
+        &:hover {
+            box-shadow: 0 0 0 rgba(37, 40, 45, 0.0);
+        }
+    }
+
+    &.naver__btn {
+        background: #03C75A;
+        color: white;
+        box-shadow: 0 15px 30px rgba(37, 40, 45, 0.36);
+        transition: .2s linear;
+
+        .img {
+            font-size: 20px;
+            padding: 0 5px 0 0;
+        }
+
+        &:hover {
+            box-shadow: 0 0 0 rgba(37, 40, 45, 0.0);
+        }
+    }
+}
+
+footer {
+    & p {
+        text-align: center;
+
+        .fa {
+            color: #e91e63;
+        }
+    }
+}

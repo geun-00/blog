@@ -44,7 +44,7 @@ public class WebOAuthSecurityConfig {
 
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
-                        .invalidSessionUrl("/login?invalid-session")
+                        .invalidSessionUrl("/login")
                         .maximumSessions(1)
                         .expiredUrl("/login")
                 )
@@ -54,7 +54,7 @@ public class WebOAuthSecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/css/**", "/js/**", "/images/*", "/webjars/**", "/favicon.*", "/*/icon-*", "/h2-console/**").permitAll()
                         .requestMatchers("/", "/signup", "/login*").permitAll()
-                        .requestMatchers("/api/**").authenticated()
+//                        .requestMatchers("/api/**").authenticated()
                         .anyRequest().permitAll())
 
                 .formLogin(
@@ -62,6 +62,7 @@ public class WebOAuthSecurityConfig {
                                 .loginPage("/login")
                                 .loginProcessingUrl("/loginProc")
                                 .usernameParameter("email")
+                                .defaultSuccessUrl("/articles")
                                 .failureHandler(new LoginFailureHandler())
                 )
 

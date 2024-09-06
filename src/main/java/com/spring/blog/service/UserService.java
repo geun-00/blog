@@ -2,7 +2,6 @@ package com.spring.blog.service;
 
 import com.spring.blog.common.enums.SocialType;
 import com.spring.blog.domain.User;
-import com.spring.blog.dto.request.AddUserRequest;
 import com.spring.blog.dto.request.EditUserRequest;
 import com.spring.blog.dto.request.NewPasswordRequest;
 import com.spring.blog.dto.response.UserInfoResponse;
@@ -13,6 +12,7 @@ import com.spring.blog.repository.BlogRepository;
 import com.spring.blog.repository.CommentRepository;
 import com.spring.blog.repository.UserQueryRepository;
 import com.spring.blog.repository.UserRepository;
+import com.spring.blog.service.dto.request.FormAddUserServiceRequest;
 import com.spring.blog.service.file.FileService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -38,17 +38,18 @@ public class UserService {
     private final ArticleLikesRepository articleLikesRepository;
 
     @Transactional
-    public void save(AddUserRequest request) {
-        userRepository.save(
+    public String save(FormAddUserServiceRequest request) {
+        User savedUser = userRepository.save(
                 User.builder()
                         .email(request.getEmail())
                         .nickname(request.getNickname())
                         .phoneNumber(request.getPhoneNumber())
                         .registrationId(SocialType.NONE)
-                        .profileImageUrl(fileService.saveFile(request.getImageFile(), "user/"))
                         .password(passwordEncoder.encode(request.getPassword()))
                         .build()
         );
+
+        return savedUser.getNickname();
     }
 
     @Transactional

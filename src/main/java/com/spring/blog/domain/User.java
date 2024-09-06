@@ -14,6 +14,8 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.annotations.DynamicInsert;
 import org.springframework.util.StringUtils;
 
 import java.util.ArrayList;
@@ -22,6 +24,7 @@ import java.util.List;
 @Entity
 @Getter
 @Table(name = "users")
+@DynamicInsert
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class User extends BaseEntity {
 
@@ -44,6 +47,7 @@ public class User extends BaseEntity {
     private String nickname;
 
     @Column(name = "profile_image_url")
+    @ColumnDefault("https://geunblog.s3.ap-northeast-2.amazonaws.com/user/default-user-image.jpg")
     private String profileImageUrl;
 
     @Column(name = "phone_number", length = 11, unique = true)
