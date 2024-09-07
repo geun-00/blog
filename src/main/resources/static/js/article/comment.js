@@ -80,10 +80,10 @@ function addCommentToList(data) {
 
     const authorElement = newComment.querySelector('.author-name');
     authorElement.onclick = function() {
-        window.location.href = `/myPage?author=${data.author}`;
+        window.location.href = `/userPage?username=${data.author}`;
     };
     const profileImage = newComment.querySelector('.img-fluid');
     profileImage.onclick = function() {
-        window.location.href = `/myPage?author=${data.author}`;
+        window.location.href = `/userPage?username=${data.author}`;
     };
 }

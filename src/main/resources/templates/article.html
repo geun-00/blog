@@ -30,9 +30,9 @@
                     <div>
                         <img th:src="${article.profileImageUrl}" alt="Profile Image"
                              class="rounded-circle img-fluid"
-                             th:onclick="|location.href='@{/myPage(author=${article.author})}'|">
+                             th:onclick="|location.href='@{/userPage(username=${article.author})}'|">
                         <span class="author-name me-2" th:text="${article.author}"
-                              th:onclick="|location.href='@{/myPage(author=${article.author})}'|">
+                              th:onclick="|location.href='@{/userPage(username=${article.author})}'|">
                         </span>
                     </div>
                     <div>
@@ -80,9 +80,9 @@
                                 <div class="d-flex align-items-start flex-grow-1">
                                     <img th:src="${comment.profileImageUrl}" alt="Profile Image"
                                          class="rounded-circle img-fluid"
-                                         th:onclick="|location.href='@{/myPage(author=${comment.author})}'|">
+                                         th:onclick="|location.href='@{/userPage(username=${comment.author})}'|">
                                     <a class="author-name fw-bold" th:text="${comment.author}"
-                                       th:onclick="|location.href='@{/myPage(author=${comment.author})}'|"></a>
+                                       th:onclick="|location.href='@{/userPage(username=${comment.author})}'|"></a>
                                     <span th:if="${comment.isAuthor()}"
                                           class="badge bg-success ms-2">작성자</span>
                                 </div>

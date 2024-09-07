@@ -122,7 +122,11 @@ public class UserService {
     }
 
     public UserInfoResponse getUserInfo(String name) {
-        return userQueryRepository.getUserInfo(name);
+        UserInfoResponse userInfo = userQueryRepository.getUserInfo(name);
+        if (userInfo == null) {
+            throw new EntityNotFoundException("not found user from " + name);
+        }
+        return userInfo;
     }
 
     public User findById(Long userId) {

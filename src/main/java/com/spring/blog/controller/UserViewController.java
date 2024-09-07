@@ -10,7 +10,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -36,15 +35,25 @@ public class UserViewController {
         return "oauthSignup";
     }
 
+    @GetMapping("/userPage")
+    public String myPage(@RequestParam("username") String username,
+                         Model model) {
+
+        UserInfoResponse response = userService.getUserInfo(username);
+
+        model.addAttribute("user", response);
+
+        return "myPage";
+    }
+
     @GetMapping("/myPage")
-    public String myPage(@RequestParam(value = "author", required = false) String nickname,
-                         @CurrentUser Authentication authentication, Model model) {
+    public String myPage(@CurrentUser Authentication authentication,
+                         Model model) {
 
-        String targetName = StringUtils.hasText(nickname)
-                ? nickname
-                : getPrincipal(authentication).getUsername();
+        PrincipalUser principalUser = getPrincipal(authentication);
+        String username = principalUser.getUsername();
 
-        UserInfoResponse response = userService.getUserInfo(targetName);
+        UserInfoResponse response = userService.getUserInfo(username);
 
         model.addAttribute("user", response);
 
