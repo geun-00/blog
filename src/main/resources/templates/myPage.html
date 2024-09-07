@@ -11,6 +11,9 @@
         .user-info .card {
             padding: 20px;
         }
+        #edit-form {
+            display: none; /* Initially hidden */
+        }
     </style>
 </head>
 <body>
@@ -30,7 +33,7 @@
                             <dd class="col-sm-8" th:text="*{email}"></dd>
 
                             <dt class="col-sm-4">이름 :</dt>
-                            <dd class="col-sm-8" th:text="*{username}"></dd>
+                            <dd class="col-sm-8" id="user-username" th:text="*{username}"></dd>
 
                             <dt class="col-sm-4">가입일 :</dt>
                             <dd class="col-sm-8" th:text="${#temporals.format(user.createdAt, 'yyyy-MM-dd')}"></dd>
@@ -55,16 +58,107 @@
 
                     <div class="col-md-4 text-center">
                         <img th:src="${user.profileImageUrl}" alt="Profile Image"
-                             class="rounded-circle img-fluid" style="max-width: 250px; height: 200px;">
+                             class="rounded-circle img-fluid" style="max-width: 250px; height: 200px;" id="user-profile-image">
                     </div>
                 </div>
                 <div class="text-center mt-3">
-                    <a th:if="${#authentication.getName().equals(user.username)}"
-                       href="myPage/edit" id="edit-btn" class="btn btn-secondary">수정하기</a>
+                    <a href="#" id="edit-btn" class="btn btn-secondary">수정하기</a>
                 </div>
+
+                <!-- Edit Form -->
+                <form id="edit-form" class="mt-4">
+                    <div class="form-group">
+                        <label for="nickname">이름</label>
+                        <input type="text" class="form-control" id="nickname" name="nickname"
+                               th:value="${user.username}" placeholder="이름을 입력하세요.">
+                        <span id="nicknameError" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label for="image">프로필 이미지</label>
+                        <input type="file" class="form-control-file" id="image" name="file">
+                        <span id="imageError" class="text-danger"></span>
+                    </div>
+                    <button type="button" id="save-btn" class="btn btn-primary">저장</button>
+                    <button type="button" id="cancel-btn" class="btn btn-secondary">취소</button>
+                </form>
             </div>
         </div>
     </div>
 </div>
+
+<script>
+    document.getElementById('edit-btn').addEventListener('click', function(e) {
+        e.preventDefault();
+        document.getElementById('edit-form').style.display = 'block';
+    });
+
+    document.getElementById('cancel-btn').addEventListener('click', function() {
+        document.getElementById('edit-form').style.display = 'none';
+    });
+
+    document.getElementById('save-btn').addEventListener('click', function() {
+
+        document.getElementById('nicknameError').textContent = '';
+        document.getElementById('imageError').textContent = '';
+
+        const nickname = document.getElementById('nickname').value.trim();
+        const imageFile = document.getElementById('image').files[0];
+
+        let isValid = true;
+
+        if (nickname && (nickname.length < 2 || nickname.length > 20)) {
+            document.getElementById('nicknameError').textContent = '닉네임은 2~20자까지 가능합니다.';
+            isValid = false;
+        }
+
+        // 파일 유효성 검사
+        if (imageFile) {
+            const maxSize = 1024 * 1024; // 1MB
+            const validTypes = [
+                "image/png",
+                "image/jpeg",
+                "image/gif",
+                "image/webp"
+            ];
+            if (!validTypes.includes(imageFile.type)) {
+                document.getElementById('imageError').textContent = '이미지 파일만 업로드 가능합니다.';
+                isValid = false;
+            }
+
+            if (imageFile.size > maxSize) {
+                document.getElementById('imageError').textContent = '파일 크기가 너무 큽니다. 최대 1MB까지 업로드 가능합니다.';
+                isValid = false;
+            }
+        }
+
+        if (!isValid) {
+            return;
+        }
+
+        const form = document.getElementById('edit-form');
+
+        const formData = new FormData(form);
+
+        fetch('/api/user', {
+            method: 'PATCH',
+            body: formData
+        })
+            .then(response => response.json())
+            .then(data => {
+                if (data.code === 200) {
+                    alert('수정되었습니다.');
+                    window.location.href = '/myPage';
+                } else if (data.code === 409) {
+                    alert(data.data);
+                } else {
+                    alert('오류가 발생했습니다.');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('오류가 발생했습니다.');
+            });
+    });
+</script>
 </body>
 </html>

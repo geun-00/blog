@@ -9,6 +9,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.multipart.MaxUploadSizeExceededException;
 
 import java.util.List;
 
@@ -18,7 +19,7 @@ public class ApiControllerAdvice {
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ApiResponse<Object> handleBindException (MethodArgumentNotValidException ex) {
+    public ApiResponse<Object> handleBindException(MethodArgumentNotValidException ex) {
 
         List<FieldError> fieldErrors = ex.getBindingResult().getFieldErrors();
 
@@ -46,5 +47,17 @@ public class ApiControllerAdvice {
                 "가입되어 있는 정보가 있습니다.",
                 ex.getMessage()
         );
+    }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(MaxUploadSizeExceededException.class)
+    public ApiResponse<Object> handleConstraintViolationException(MaxUploadSizeExceededException ex) {
+
+        log.error(ex.getMessage());
+
+        return ApiResponse.of(
+                HttpStatus.BAD_REQUEST,
+                "잘못된 입력을 받았습니다.",
+                null);
     }
 }

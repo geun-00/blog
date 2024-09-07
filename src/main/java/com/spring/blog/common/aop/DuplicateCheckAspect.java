@@ -9,7 +9,6 @@ import com.spring.blog.service.dto.request.OAuthAddUserServiceRequest;
 import lombok.RequiredArgsConstructor;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
-import org.aspectj.lang.annotation.Pointcut;
 import org.springframework.stereotype.Component;
 
 @Aspect
@@ -19,36 +18,35 @@ public class DuplicateCheckAspect {
 
     private final DuplicateCheckService duplicateCheckService;
 
-    @Pointcut("@annotation(com.spring.blog.common.annotation.DuplicateCheck)")
-    private void duplicateCheck(){}
-
-    @Pointcut("duplicateCheck() && args(request)")
-    private void formUser(FormAddUserServiceRequest request){}
-
-    @Pointcut(value = "duplicateCheck() && args(request, email)", argNames = "request,email")
-    private void oauthUser(OAuthAddUserServiceRequest request, String email){}
-
-    @Before(value = "formUser(request)", argNames = "request")
+    @Before(value = "Pointcuts.formUser(request)", argNames = "request")
     public void checkDuplicateFormUser(FormAddUserServiceRequest request) {
 
-        if (duplicateCheckService.isEmailDuplicate(request.getEmail())) {
+        checkEmail(request.getEmail());
+        checkPhoneNumber(request.getPhoneNumber());
+        checkNickname(request.getNickname());
+    }
+
+    @Before(value = "Pointcuts.oauthUser(request, email)", argNames = "request,email")
+    public void checkDuplicateOauthUser(OAuthAddUserServiceRequest request, String email) {
+
+        checkPhoneNumber(request.getPhoneNumber());
+        checkNickname(request.getNickname());
+    }
+
+    private void checkEmail(String request) {
+        if (duplicateCheckService.isEmailDuplicate(request)) {
             throw new EmailDuplicateException();
-        }
-        if (duplicateCheckService.isPhoneNumberDuplicate(request.getPhoneNumber())) {
-            throw new PhoneNumberDuplicateException();
-        }
-        if (duplicateCheckService.isNicknameDuplicate(request.getNickname())) {
-            throw new NicknameDuplicateException();
         }
     }
 
-    @Before(value = "oauthUser(request, email)", argNames = "request,email")
-    public void checkDuplicateOauthUser(OAuthAddUserServiceRequest request, String email) {
-
-        if (duplicateCheckService.isPhoneNumberDuplicate(request.getPhoneNumber())) {
+    private void checkPhoneNumber(String request) {
+        if (duplicateCheckService.isPhoneNumberDuplicate(request)) {
             throw new PhoneNumberDuplicateException();
         }
-        if (duplicateCheckService.isNicknameDuplicate(request.getNickname())) {
+    }
+
+    private void checkNickname(String request) {
+        if (duplicateCheckService.isNicknameDuplicate(request)) {
             throw new NicknameDuplicateException();
         }
     }

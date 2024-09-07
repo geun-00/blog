@@ -2,7 +2,6 @@ package com.spring.blog.controller;
 
 import com.spring.blog.common.annotation.CurrentUser;
 import com.spring.blog.controller.dto.request.OAuthAddUserRequest;
-import com.spring.blog.dto.request.EditUserRequest;
 import com.spring.blog.dto.response.UserInfoResponse;
 import com.spring.blog.model.PrincipalUser;
 import com.spring.blog.service.UserService;
@@ -58,14 +57,6 @@ public class UserViewController {
         model.addAttribute("user", response);
 
         return "myPage";
-    }
-
-    @GetMapping("/myPage/edit")
-    public String editProfile(Model model) {
-
-        model.addAttribute("editUserRequest", new EditUserRequest());
-
-        return "myPageEdit";
     }
 
     private PrincipalUser getPrincipal(Authentication authentication) {

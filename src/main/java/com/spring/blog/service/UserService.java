@@ -3,9 +3,9 @@ package com.spring.blog.service;
 import com.spring.blog.common.annotation.DuplicateCheck;
 import com.spring.blog.common.enums.SocialType;
 import com.spring.blog.domain.User;
-import com.spring.blog.dto.request.EditUserRequest;
 import com.spring.blog.dto.request.NewPasswordRequest;
 import com.spring.blog.dto.response.UserInfoResponse;
+import com.spring.blog.exception.duplicate.NicknameDuplicateException;
 import com.spring.blog.model.ProviderUser;
 import com.spring.blog.repository.ArticleLikesRepository;
 import com.spring.blog.repository.BlogQueryRepository;
@@ -13,6 +13,7 @@ import com.spring.blog.repository.BlogRepository;
 import com.spring.blog.repository.CommentRepository;
 import com.spring.blog.repository.UserQueryRepository;
 import com.spring.blog.repository.UserRepository;
+import com.spring.blog.service.dto.request.EditUserServiceRequest;
 import com.spring.blog.service.dto.request.FormAddUserServiceRequest;
 import com.spring.blog.service.dto.request.OAuthAddUserServiceRequest;
 import com.spring.blog.service.file.FileService;
@@ -96,9 +97,15 @@ public class UserService {
     }
 
     @Transactional
-    public User editUser(String email, EditUserRequest request) {
+    public User editUser(EditUserServiceRequest request, String email) {
         User user = findByEmail(email);
-        user.edit(request.getEmail(), request.getNickname());
+
+        if (!user.getNickname().equals(request.getNickname()) &&
+                userRepository.existsByNickname(request.getNickname())) {
+            throw new NicknameDuplicateException();
+        }
+
+        user.updateNickname(request.getNickname());
 
         String oldImageUrl = user.getProfileImageUrl();
 
@@ -131,11 +138,11 @@ public class UserService {
 
     public User findById(Long userId) {
         return userRepository.findById(userId)
-                .orElseThrow(() -> new EntityNotFoundException("Unexpected User : " + userId));
+                .orElseThrow(() -> new EntityNotFoundException("not found user from " + userId));
     }
 
     public User findByEmail(String email) {
         return userRepository.findByEmail(email)
-                .orElseThrow(() -> new EntityNotFoundException("Unexpected User : " + email));
+                .orElseThrow(() -> new EntityNotFoundException("not found user from " + email));
     }
 }

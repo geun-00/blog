@@ -1,14 +1,13 @@
-package com.spring.blog.dto.request;
+package com.spring.blog.service.dto.request;
 
+import lombok.Builder;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 import org.springframework.web.multipart.MultipartFile;
 
 @Data
-@NoArgsConstructor
-public class EditUserRequest {
+@Builder
+public class EditUserServiceRequest {
 
-    private String email;
     private String nickname;
     private MultipartFile file;
 }
