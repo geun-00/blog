@@ -102,3 +102,9 @@ coolsms:
   apiKey: ENC(v1jvmgKPcv63UJXsl+ybJ/DwBT09Cau9bi7n2KbkOoA=)
   secretKey: ENC(QGTqNLt/LFyHXtYCYmm9oPysZGOkeOIbFML6MieOKqp6dPdwsF6F9BOUVohIWUgd)
   from: ENC(hVxmAVUhFdZP6I6r+RKMN7XbDHWaszOs)
+
+kakao:
+  logout:
+    uri: https://kauth.kakao.com/oauth/logout
+    client-id: ENC(n4OSe67MumM65r8zdpky0BlZp3uX9rGq9DRVcW3P1DxGi341wC3bD0vgsikha15g)
+    redirect-uri: http://localhost:8080/login

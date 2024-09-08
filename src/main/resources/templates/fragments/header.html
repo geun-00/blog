@@ -21,9 +21,9 @@
             회원 탈퇴
         </button>
         <div>
-            <button type="button" class="btn btn-secondary" sec:authorize="isAuthenticated()" onclick="location.href='/logout'">
+            <a type="button" class="btn btn-secondary" sec:authorize="isAuthenticated()" href='/logout'>
                 로그아웃
-            </button>
+            </a>
             <button type="button" class="btn btn-secondary" sec:authorize="isAnonymous()" onclick="location.href='/login'">
                 로그인
             </button>

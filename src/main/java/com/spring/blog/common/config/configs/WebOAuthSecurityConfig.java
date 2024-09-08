@@ -1,8 +1,11 @@
 package com.spring.blog.common.config.configs;
 
 import com.spring.blog.common.config.authority.CustomAuthorityMapper;
+import com.spring.blog.common.config.oauth.logoutHandler.CustomLogoutSuccessHandler;
 import com.spring.blog.common.config.oauth.CustomOAuth2SuccessHandler;
 import com.spring.blog.common.config.oauth.LoginFailureHandler;
+import com.spring.blog.common.config.oauth.logoutHandler.KakaoProperties;
+import com.spring.blog.common.converters.DelegatingOAuth2LogoutHandler;
 import com.spring.blog.service.CustomUserDetailsService;
 import com.spring.blog.service.UserService;
 import com.spring.blog.service.oauth.CustomOAuth2UserService;
@@ -20,6 +23,7 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.authority.mapping.GrantedAuthoritiesMapper;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.oauth2.client.OAuth2AuthorizedClientService;
 import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
@@ -29,10 +33,13 @@ import org.springframework.security.web.SecurityFilterChain;
 public class WebOAuthSecurityConfig {
 
     private final UserService userService;
+    private final KakaoProperties kakaoProperties;
     private final PasswordEncoder passwordEncoder;
     private final CustomOidcUserService customOidcUserService;
     private final CustomOAuth2UserService customOAuth2UserService;
     private final CustomUserDetailsService customUserDetailsService;
+    private final OAuth2AuthorizedClientService auth2AuthorizedClientService;
+    private final DelegatingOAuth2LogoutHandler delegatingOAuth2LogoutHandler;
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -57,8 +64,7 @@ public class WebOAuthSecurityConfig {
 //                        .requestMatchers("/api/**").authenticated()
                         .anyRequest().permitAll())
 
-                .formLogin(
-                        formLogin -> formLogin
+                .formLogin(formLogin -> formLogin
                                 .loginPage("/login")
                                 .loginProcessingUrl("/loginProc")
                                 .usernameParameter("email")
@@ -78,10 +84,11 @@ public class WebOAuthSecurityConfig {
 
                 .logout(logout -> logout
                         .logoutUrl("/logout")
-                        .logoutSuccessUrl("/login")
+                        .logoutSuccessHandler(customLogoutSuccessHandler())
                         .deleteCookies("JSESSIONID")
                         .invalidateHttpSession(true)
                         .clearAuthentication(true)
+                        .permitAll()
                 )
         ;
 
@@ -100,6 +107,11 @@ public class WebOAuthSecurityConfig {
         builder.authenticationProvider(provider);
 
         return builder.build();
+    }
+
+    @Bean
+    public CustomLogoutSuccessHandler customLogoutSuccessHandler() {
+        return new CustomLogoutSuccessHandler(auth2AuthorizedClientService, delegatingOAuth2LogoutHandler, kakaoProperties);
     }
 
     @Bean
