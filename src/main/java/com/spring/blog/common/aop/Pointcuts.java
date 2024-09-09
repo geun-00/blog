@@ -15,9 +15,6 @@ public class Pointcuts {
     @Pointcut(value = "duplicateCheck() && args(request, email)", argNames = "request,email")
     protected void oauthUser(OAuthAddUserServiceRequest request, String email){}
 
-    @Pointcut("execution(* com.spring.blog.service.UserService.editUser(..))")
-    protected void afterEditUser(){}
-
     @Pointcut("@annotation(org.springframework.transaction.annotation.Transactional)")
     protected void transactionalMethods(){}
 }

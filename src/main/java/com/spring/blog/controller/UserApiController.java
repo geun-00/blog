@@ -7,7 +7,6 @@ import com.spring.blog.controller.dto.request.OAuthAddUserRequest;
 import com.spring.blog.dto.request.NewPasswordRequest;
 import com.spring.blog.model.PrincipalUser;
 import com.spring.blog.service.UserService;
-import com.spring.blog.service.oauth.unlink.OAuth2UnlinkService;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -29,7 +28,6 @@ import org.springframework.web.bind.annotation.RestController;
 public class UserApiController {
 
     private final UserService userService;
-    private final OAuth2UnlinkService oAuth2UnlinkService;
 
     @PostMapping("/formUser")
     public ApiResponse<String> signup(@Validated @RequestBody FormAddUserRequest request) {
@@ -57,7 +55,7 @@ public class UserApiController {
 
     @PatchMapping("/user")
     public ApiResponse<String> userEdit(@Validated @ModelAttribute EditUserRequest request,
-                                                    @CurrentUser Authentication authentication) {
+                                        @CurrentUser Authentication authentication) {
 
         PrincipalUser principalUser = getPrincipal(authentication);
         userService.editUser(request.toServiceRequest(), principalUser.providerUser().getEmail());
