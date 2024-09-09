@@ -1,6 +1,7 @@
 package com.spring.blog.controller.advice;
 
 import com.spring.blog.controller.ApiResponse;
+import com.spring.blog.exception.ResponseStatusException;
 import com.spring.blog.exception.duplicate.DuplicateException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -59,5 +60,17 @@ public class ApiControllerAdvice {
                 HttpStatus.BAD_REQUEST,
                 "잘못된 입력을 받았습니다.",
                 null);
+    }
+
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    @ExceptionHandler(ResponseStatusException.class)
+    public ApiResponse<Object> handleResponseStatusException(ResponseStatusException ex) {
+        log.error(ex.getMessage());
+        ex.printStackTrace(System.out);
+
+        return ApiResponse.of(
+                HttpStatus.INTERNAL_SERVER_ERROR,
+                "오류가 발생했습니다."
+        );
     }
 }

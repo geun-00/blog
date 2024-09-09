@@ -17,9 +17,12 @@ import com.spring.blog.service.dto.request.EditUserServiceRequest;
 import com.spring.blog.service.dto.request.FormAddUserServiceRequest;
 import com.spring.blog.service.dto.request.OAuthAddUserServiceRequest;
 import com.spring.blog.service.file.FileService;
+import com.spring.blog.service.oauth.unlink.OAuth2UnlinkService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
@@ -38,6 +41,7 @@ public class UserService {
     private final CommentRepository commentRepository;
     private final UserQueryRepository userQueryRepository;
     private final BlogQueryRepository blogQueryRepository;
+    private final OAuth2UnlinkService oAuth2UnlinkService;
     private final ArticleLikesRepository articleLikesRepository;
 
     @DuplicateCheck
@@ -80,7 +84,7 @@ public class UserService {
     }
 
     @Transactional
-    public void deleteUser(String email) {
+    public void deleteUser(String email, Authentication authentication) {
         User user = findByEmail(email);
 
         Long userId = user.getId();
@@ -94,6 +98,13 @@ public class UserService {
         fileService.deleteFile(user.getProfileImageUrl());
 
         userRepository.delete(user);
+
+        if (authentication instanceof OAuth2AuthenticationToken oAuth2AuthenticationToken) {
+            String registrationId = oAuth2AuthenticationToken.getAuthorizedClientRegistrationId();
+            String name = oAuth2AuthenticationToken.getPrincipal().getName();
+
+            oAuth2UnlinkService.unlink(registrationId, name);
+        }
     }
 
     @Transactional

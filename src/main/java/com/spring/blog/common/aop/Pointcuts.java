@@ -17,4 +17,7 @@ public class Pointcuts {
 
     @Pointcut("execution(* com.spring.blog.service.UserService.editUser(..))")
     protected void afterEditUser(){}
+
+    @Pointcut("@annotation(org.springframework.transaction.annotation.Transactional)")
+    protected void transactionalMethods(){}
 }

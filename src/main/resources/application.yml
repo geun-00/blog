@@ -93,6 +93,9 @@ jasypt:
 logging:
   level:
     org:
+      springframework:
+        transaction:
+          interceptor: trace
       hibernate:
         orm:
           jdbc:

@@ -45,25 +45,27 @@
             if (confirm("정말 탈퇴하시겠습니까?")) {
 
                 fetch('/api/user', {
-                    method: 'delete',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                }).then(response => {
-                    if (response.status === 200 || response.status === 201) {
-                        return success();
-                    } else {
-                        return fail();
-                    }
-                }).catch(error => fail());
+                    method: 'DELETE'
+                }).then(response => response.json())
+                    .then(data => {
+                        if (data.code === 200) {
+                            success();
+                        } else if (data.code === 500) {
+                            fail();
+                        }
+                    })
+                    .catch(error => {
+                        console.error(error);
+                        fail();
+                    })
 
                 function success() {
                     alert('탈퇴 되었습니다.');
                     location.replace('/login');
                 }
                 function fail() {
+                    location.replace('/error/500');
                     alert('오류가 발생했습니다.');
-                    location.replace('/articles');
                 }
             }
         });
