@@ -3,17 +3,16 @@ package com.spring.blog.service;
 import com.spring.blog.domain.Article;
 import com.spring.blog.domain.ArticleLikes;
 import com.spring.blog.domain.User;
-import com.spring.blog.dto.response.ArticleListViewResponse;
 import com.spring.blog.dto.request.ArticleSearchRequest;
+import com.spring.blog.dto.response.ArticleListViewResponse;
 import com.spring.blog.dto.response.LikeResponse;
 import com.spring.blog.dto.response.PageResponse;
-import com.spring.blog.dto.request.UpdateArticleRequest;
 import com.spring.blog.repository.ArticleLikesRepository;
 import com.spring.blog.repository.BlogQueryRepository;
 import com.spring.blog.repository.BlogRepository;
 import com.spring.blog.repository.CommentRepository;
 import com.spring.blog.repository.UserRepository;
-import com.spring.blog.service.dto.request.AddArticleServiceRequest;
+import com.spring.blog.service.dto.request.ArticleServiceRequest;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -36,13 +35,12 @@ public class BlogService {
     private final BlogRepository blogRepository;
     private final UserRepository userRepository;
     private final CommentRepository commentRepository;
-    private final ValidationService validationService;
     private final BlogQueryRepository blogQueryRepository;
     private final RedisTemplate<String, Object> redisTemplate;
     private final ArticleLikesRepository articleLikesRepository;
 
     @Transactional
-    public Article save(AddArticleServiceRequest request, String email, String sessionId) {
+    public Article save(ArticleServiceRequest request, String email) {
 
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new EntityNotFoundException("not found user from : " + email));
@@ -50,21 +48,14 @@ public class BlogService {
         Article article = request.toEntity();
         user.addArticle(article);
 
-        Set<Object> urls = redisTemplate.opsForSet().members(sessionId);
-        if (urls != null) {
-            redisTemplate.delete(sessionId);
-        }
-
         return blogRepository.save(article);
     }
 
     @Transactional
-    public Article update(long id, UpdateArticleRequest request) {
+    public Article update(ArticleServiceRequest request, long articleId) {
 
-        validationService.checkValid(request);
-
-        Article article = blogRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("not found : " + id));
+        Article article = blogRepository.findById(articleId)
+                .orElseThrow(() -> new EntityNotFoundException("not found article from : " + articleId));
 
         article.update(request.getTitle(), request.getContent());
 

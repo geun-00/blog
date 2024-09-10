@@ -6,7 +6,7 @@ import lombok.Data;
 
 @Data
 @Builder
-public class AddArticleServiceRequest {
+public class ArticleServiceRequest {
 
     private String title;
     private String content;

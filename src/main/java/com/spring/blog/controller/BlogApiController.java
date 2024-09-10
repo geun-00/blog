@@ -2,9 +2,8 @@ package com.spring.blog.controller;
 
 import com.spring.blog.common.annotation.CurrentUser;
 import com.spring.blog.domain.Article;
-import com.spring.blog.controller.dto.request.AddArticleRequest;
+import com.spring.blog.controller.dto.request.ArticleRequest;
 import com.spring.blog.dto.request.ArticleSearchRequest;
-import com.spring.blog.dto.request.UpdateArticleRequest;
 import com.spring.blog.dto.response.ArticleListViewResponse;
 import com.spring.blog.dto.response.ArticleResponse;
 import com.spring.blog.dto.response.LikeResponse;
@@ -19,7 +18,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -37,19 +35,27 @@ public class BlogApiController {
     private final BlogService blogService;
 
     @PostMapping("/articles")
-    public ApiResponse<ArticleResponse> addArticle(@Validated @RequestBody AddArticleRequest request,
-                                                   @CurrentUser Authentication authentication,
-                                                   @CookieValue("JSESSIONID") String sessionID) {
+    public ApiResponse<ArticleResponse> addArticle(@Validated @RequestBody ArticleRequest request,
+                                                   @CurrentUser Authentication authentication) {
 
         PrincipalUser principalUser = (PrincipalUser) authentication.getPrincipal();
         Article savedArticle = blogService.save(
                 request.toServiceRequest(),
-                principalUser.providerUser().getEmail(),
-                sessionID);
+                principalUser.providerUser().getEmail());
 
         return ApiResponse.of(
                 HttpStatus.CREATED,
                 new ArticleResponse(savedArticle));
+    }
+
+    @PutMapping("/articles/{articleId}")
+    public ApiResponse<ArticleResponse> updateArticle(@Validated @RequestBody ArticleRequest request,
+                                                      @PathVariable("articleId") long articleId) {
+        Article updatedArticle = blogService.update(request.toServiceRequest(), articleId);
+
+        return ApiResponse.of(
+                HttpStatus.CREATED,
+                new ArticleResponse(updatedArticle));
     }
 
     @PostMapping("/articles/search")
@@ -76,14 +82,6 @@ public class BlogApiController {
         blogService.delete(id);
 
         return ResponseEntity.ok().build();
-    }
-
-    @PutMapping("/articles/{id}")
-    public ResponseEntity<ArticleResponse> updateArticle(@PathVariable("id") long id,
-                                                         @RequestBody UpdateArticleRequest request) {
-        Article updatedArticle = blogService.update(id, request);
-
-        return ResponseEntity.ok().body(new ArticleResponse(updatedArticle));
     }
 
     @PostMapping("/articles/like/{articleId}")

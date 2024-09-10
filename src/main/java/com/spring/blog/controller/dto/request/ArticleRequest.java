@@ -1,16 +1,14 @@
 package com.spring.blog.controller.dto.request;
 
 import com.spring.blog.common.annotation.NotBlankContent;
-import com.spring.blog.service.dto.request.AddArticleServiceRequest;
+import com.spring.blog.service.dto.request.ArticleServiceRequest;
 import jakarta.validation.constraints.NotBlank;
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
-public class AddArticleRequest {
+public class ArticleRequest {
 
     @NotBlank
     private String title;
@@ -18,8 +16,8 @@ public class AddArticleRequest {
     @NotBlankContent
     private String content;
 
-    public AddArticleServiceRequest toServiceRequest() {
-        return AddArticleServiceRequest.builder()
+    public ArticleServiceRequest toServiceRequest() {
+        return ArticleServiceRequest.builder()
                 .title(title)
                 .content(content)
                 .build();
