@@ -1,12 +1,14 @@
 package com.spring.blog.service;
 
 import com.spring.blog.domain.Article;
+import com.spring.blog.domain.ArticleImages;
 import com.spring.blog.domain.ArticleLikes;
 import com.spring.blog.domain.User;
 import com.spring.blog.dto.request.ArticleSearchRequest;
 import com.spring.blog.dto.response.ArticleListViewResponse;
 import com.spring.blog.dto.response.LikeResponse;
 import com.spring.blog.dto.response.PageResponse;
+import com.spring.blog.repository.ArticleImagesRepository;
 import com.spring.blog.repository.ArticleLikesRepository;
 import com.spring.blog.repository.BlogQueryRepository;
 import com.spring.blog.repository.BlogRepository;
@@ -38,15 +40,31 @@ public class BlogService {
     private final BlogQueryRepository blogQueryRepository;
     private final RedisTemplate<String, Object> redisTemplate;
     private final ArticleLikesRepository articleLikesRepository;
+    private final ArticleImagesRepository articleImagesRepository;
 
     @Transactional
-    public Article save(ArticleServiceRequest request, String email) {
+    public Article save(ArticleServiceRequest request, String email, String sessionId) {
 
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new EntityNotFoundException("not found user from : " + email));
 
         Article article = request.toEntity();
         user.addArticle(article);
+
+        Set<Object> imageUrls = redisTemplate.opsForSet().members(sessionId);
+
+        if (imageUrls != null && !imageUrls.isEmpty()) {
+
+            List<ArticleImages> articleImages = imageUrls.stream()
+                    .map(url -> (String) url)
+                    .map(url -> ArticleImages.builder()
+                            .imageUrl(url)
+                            .article(article)
+                            .build())
+                    .toList();
+
+            articleImagesRepository.saveAll(articleImages);
+        }
 
         return blogRepository.save(article);
     }
@@ -63,9 +81,9 @@ public class BlogService {
     }
 
     @Transactional
-    public void delete(long id) {
-        Article article = blogRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("not found : " + id));
+    public void delete(long articleId) {
+        Article article = blogRepository.findById(articleId)
+                .orElseThrow(() -> new EntityNotFoundException("not found article from : " + articleId));
 
         articleLikesRepository.deleteByArticleId(article.getId());
         commentRepository.deleteByArticleId(article.getId());

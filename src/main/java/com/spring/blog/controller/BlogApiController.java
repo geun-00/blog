@@ -18,6 +18,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -36,12 +37,14 @@ public class BlogApiController {
 
     @PostMapping("/articles")
     public ApiResponse<ArticleResponse> addArticle(@Validated @RequestBody ArticleRequest request,
-                                                   @CurrentUser Authentication authentication) {
+                                                   @CurrentUser Authentication authentication,
+                                                   @CookieValue("JSESSIONID") String sessionId) {
 
         PrincipalUser principalUser = (PrincipalUser) authentication.getPrincipal();
         Article savedArticle = blogService.save(
                 request.toServiceRequest(),
-                principalUser.providerUser().getEmail());
+                principalUser.providerUser().getEmail(),
+                sessionId);
 
         return ApiResponse.of(
                 HttpStatus.CREATED,
@@ -56,6 +59,13 @@ public class BlogApiController {
         return ApiResponse.of(
                 HttpStatus.CREATED,
                 new ArticleResponse(updatedArticle));
+    }
+
+    @DeleteMapping("/articles/{articleId}")
+    public ResponseEntity<Void> deleteArticle(@PathVariable("articleId") long articleId) {
+        blogService.delete(articleId);
+
+        return ResponseEntity.ok().build();
     }
 
     @PostMapping("/articles/search")
@@ -77,12 +87,7 @@ public class BlogApiController {
         return ResponseEntity.ok().body(articles);
     }
 
-    @DeleteMapping("/articles/{id}")
-    public ResponseEntity<Void> deleteArticle(@PathVariable("id") long id) {
-        blogService.delete(id);
 
-        return ResponseEntity.ok().build();
-    }
 
     @PostMapping("/articles/like/{articleId}")
     public ApiResponse<Integer> addLike(@PathVariable("articleId") Long articleId,
