@@ -1,19 +1,14 @@
-package com.spring.blog.dto.request;
+package com.spring.blog.service.dto.request;
 
 import com.spring.blog.domain.Article;
-import jakarta.validation.constraints.NotBlank;
-import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 @Data
-@AllArgsConstructor
-@NoArgsConstructor
-public class AddArticleRequest {
+@Builder
+public class AddArticleServiceRequest {
 
-    @NotBlank
     private String title;
-    @NotBlank
     private String content;
 
     public Article toEntity() {

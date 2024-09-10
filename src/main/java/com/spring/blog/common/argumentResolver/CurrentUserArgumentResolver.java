@@ -1,7 +1,10 @@
 package com.spring.blog.common.argumentResolver;
 
 import com.spring.blog.common.annotation.CurrentUser;
+import com.spring.blog.model.PrincipalUser;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.core.MethodParameter;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.support.WebDataBinderFactory;
 import org.springframework.web.context.request.NativeWebRequest;
@@ -21,6 +24,12 @@ public class CurrentUserArgumentResolver implements HandlerMethodArgumentResolve
                                   NativeWebRequest webRequest,
                                   WebDataBinderFactory binderFactory) throws Exception {
 
-        return SecurityContextHolder.getContextHolderStrategy().getContext().getAuthentication();
+        Authentication authentication = SecurityContextHolder.getContextHolderStrategy().getContext().getAuthentication();
+
+        if (authentication == null || !(authentication.getPrincipal() instanceof PrincipalUser)) {
+            throw new EntityNotFoundException("현재 사용자를 찾을 수 없습니다.");
+        }
+
+        return authentication;
     }
 }

@@ -2,13 +2,13 @@ package com.spring.blog.controller;
 
 import com.spring.blog.common.annotation.CurrentUser;
 import com.spring.blog.domain.Article;
-import com.spring.blog.dto.request.AddArticleRequest;
+import com.spring.blog.controller.dto.request.AddArticleRequest;
+import com.spring.blog.dto.request.ArticleSearchRequest;
+import com.spring.blog.dto.request.UpdateArticleRequest;
 import com.spring.blog.dto.response.ArticleListViewResponse;
 import com.spring.blog.dto.response.ArticleResponse;
-import com.spring.blog.dto.request.ArticleSearchRequest;
 import com.spring.blog.dto.response.LikeResponse;
 import com.spring.blog.dto.response.PageResponse;
-import com.spring.blog.dto.request.UpdateArticleRequest;
 import com.spring.blog.model.PrincipalUser;
 import com.spring.blog.service.BlogService;
 import lombok.RequiredArgsConstructor;
@@ -17,8 +17,9 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -35,15 +36,20 @@ public class BlogApiController {
 
     private final BlogService blogService;
 
-    @PreAuthorize("hasAuthority('ROLE_USER')")
     @PostMapping("/articles")
-    public ResponseEntity<ArticleResponse> addArticle(@RequestBody AddArticleRequest request,
-                                                      @CurrentUser Authentication authentication) {
+    public ApiResponse<ArticleResponse> addArticle(@Validated @RequestBody AddArticleRequest request,
+                                                   @CurrentUser Authentication authentication,
+                                                   @CookieValue("JSESSIONID") String sessionID) {
 
         PrincipalUser principalUser = (PrincipalUser) authentication.getPrincipal();
-        Article savedArticle = blogService.save(request, principalUser.providerUser().getEmail());
+        Article savedArticle = blogService.save(
+                request.toServiceRequest(),
+                principalUser.providerUser().getEmail(),
+                sessionID);
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(new ArticleResponse(savedArticle));
+        return ApiResponse.of(
+                HttpStatus.CREATED,
+                new ArticleResponse(savedArticle));
     }
 
     @PostMapping("/articles/search")

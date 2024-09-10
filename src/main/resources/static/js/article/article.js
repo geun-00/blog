@@ -29,9 +29,11 @@ if (modifyButton != null) {
         let params = new URLSearchParams(location.search);
         let id = params.get('id');
 
-        body = JSON.stringify({
+        const content = quill.root.innerHTML;
+
+        const body = JSON.stringify({
             title: document.getElementById('title').value,
-            content: document.getElementById('content').value
+            content: content
         })
 
         function success() {
@@ -52,22 +54,43 @@ if (modifyButton != null) {
 const createButton = document.getElementById('create-btn');
 
 if (createButton != null) {
-    // 등록 버튼을 클릭하면 /api/articles로 요청을 보낸다
     createButton.addEventListener('click', event => {
-        body = JSON.stringify({
-            title: document.getElementById('title').value,
-            content: document.getElementById('content').value
-        });
-        function success() {
-            alert('등록 완료되었습니다.');
-            location.replace('/articles');
-        };
-        function fail() {
-            alert('입력이 올바르지 않습니다.');
-            location.replace('/new-article');
-        };
 
-        httpRequest('POST','/api/articles', body, success, fail)
+        const content = quill.root.innerHTML.trim();
+        const title = document.getElementById('title').value;
+
+        const cleanedContent = content.replace(/<p>\s*<\/p>/g, "")
+                                             .replace(/<p><br><\/p>/g, "")
+                                             .replace(/<p><\/p>/g, "")
+                                             .trim();
+        if (title === '') {
+            alert('제목을 작성해주세요.');
+            return;
+        }
+        if (cleanedContent === '') {
+            alert('내용을 작성해주세요.');
+            return;
+        }
+
+        fetch('/api/articles', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                title: title,
+                content: content
+            })
+        }).then(response => response.json())
+            .then(data => {
+                if (data.code === 201) {
+                    alert('등록되었습니다.');
+                    location.replace('/articles');
+                } else {
+                    alert('오류가 발생했습니다.');
+                    location.replace('/new-article');
+                }
+            })
     });
 }
 

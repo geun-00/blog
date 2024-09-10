@@ -3,36 +3,150 @@
 <head>
     <meta charset="UTF-8">
     <title>블로그 글</title>
+    <link rel="stylesheet" href="https://cdn.quilljs.com/1.3.6/quill.snow.css">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+        .card {
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        .form-label {
+            font-weight: bold;
+            color: #495057;
+        }
+        #create-btn, #modify-btn {
+            width: 100%;
+            font-size: 1.1rem;
+            padding: 10px;
+        }
+        header, section {
+            margin-bottom: 20px;
+        }
+    </style>
 </head>
 <body>
 
 <div th:replace="~{fragments/header :: common_header}"></div>
-
 <div class="container mt-5">
-    <div class="row">
+    <div class="row justify-content-center">
         <div class="col-lg-8">
-            <form id="article-form" th:action="@{api/articles}" th:method="POST" th:object="${article}">
-                <input type="hidden" id="article-id" th:field="*{id}"/>
+            <div class="card p-4">
+                <h2 class="text-center mb-4">게시글 작성</h2>
+                <form id="article-form" th:object="${article}">
+                    <input type="hidden" id="article-id" th:field="*{id}"/>
 
-                <header class="mb-4">
-                    <label for="title" class="form-label"><b>제목</b></label>
-                    <input type="text" class="form-control" placeholder="제목" id="title" required
-                           name="title" th:field="*{title}"/>
-                </header>
+                    <header>
+                        <label for="title" class="form-label">제목</label>
+                        <input type="text" class="form-control" placeholder="제목을 입력하세요" id="title" required
+                               name="title" th:field="*{title}"/>
+                    </header>
 
-                <section class="mb-5">
-                    <label for="content" class="form-label"><b>내용</b></label>
-                    <textarea class="form-control h-25" rows="10" placeholder="내용" id="content" required
-                              name="content" th:field="*{content}"></textarea>
-                </section>
+                    <section>
+                        <label for="content" class="form-label">내용</label>
+                        <div id="editor-container" style="height: 1000px;"></div>
+                        <input type="hidden" id="content" name="content" th:field="*{content}" />
+                        <input type="file" id="image-upload" style="display: none;" />
+                    </section>
 
-                <button th:if="${article.id == null}" type="button" id="create-btn" class="btn btn-primary btn-sm">등록</button>
-                <button th:if="${article.id != null}" type="button" id="modify-btn" class="btn btn-primary btn-sm">수정</button>
-            </form>
+                    <button th:if="${article.id == null}" type="button" id="create-btn" class="btn btn-primary">등록</button>
+                    <button th:if="${article.id != null}" type="button" id="modify-btn" class="btn btn-success">수정</button>
+                </form>
+            </div>
         </div>
     </div>
 </div>
 <script type="module" src="/js/article/articleMain.js"></script>
 <script src="/js/article/article.js"></script>
+<script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
+<script th:inline="javascript">
+    const quill = new Quill('#editor-container', {
+        theme: 'snow',
+        modules: {
+            toolbar: [
+                [{ 'font': [] }],
+                [{ 'size': ['small', 'medium', 'large', 'huge'] }],
+                ['bold', 'italic', 'underline', 'strike'],
+                [{ 'color': [] }, { 'background': [] }],
+                [{ 'header': 1 }, { 'header': 2 }],
+                [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+                [{ 'align': [] }],
+                ['link', 'image'],
+                ['clean']
+            ]
+        }
+    });
+
+    const savedContent = /*[[${article.content}]]*/ '';
+    if (savedContent) {
+        quill.root.innerHTML = savedContent;
+    }
+
+    const fileInput = document.createElement('input');
+    fileInput.setAttribute('type', 'file');
+    fileInput.setAttribute('accept', 'image/*');
+    fileInput.style.display = 'none';
+    document.body.appendChild(fileInput);
+
+    quill.getModule('toolbar').addHandler('image', () => {
+        fileInput.click();
+    });
+
+    fileInput.addEventListener('change', (event) => {
+        const file = event.target.files[0];
+        if (file) {
+            uploadImage(file).then(url => {
+                const range = quill.getSelection();
+                quill.insertEmbed(range.index, 'image', url);
+            }).catch(error => console.error('Image upload failed:', error));
+        }
+    });
+
+    function getPreSignedUrl(file) {
+        const formData = new FormData();
+        formData.append('file', file);
+
+        return fetch('/api/s3-upload-url', {
+            method: 'POST',
+            body: formData
+        })
+            .then(response => response.json())
+            .then(data => data.data);
+    }
+
+    function uploadImage(file) {
+        return getPreSignedUrl(file).then(url => {
+            return fetch(url, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': file.type
+                },
+                body: file
+            }).then(response => {
+                if (response.ok) {
+                    return url.split('?')[0];
+                } else {
+                    throw new Error('Upload failed');
+                }
+            }).catch(error => {
+                console.error('Upload error:', error);
+            });
+        });
+    }
+
+    function handleFileSelect(event) {
+        const files = event.target.files;
+        const filePromises = Array.from(files).map(file => uploadImage(file));
+
+        Promise.all(filePromises).then(urls => {
+            urls.forEach(url => {
+                const range = quill.getSelection();
+                quill.insertEmbed(range.index, 'image', url);
+            });
+        }).catch(error => console.error('Image upload failed:', error));
+    }
+
+    document.getElementById('image-upload').addEventListener('change', handleFileSelect);
+</script>
 </body>

@@ -3,7 +3,6 @@ package com.spring.blog.service;
 import com.spring.blog.domain.Article;
 import com.spring.blog.domain.ArticleLikes;
 import com.spring.blog.domain.User;
-import com.spring.blog.dto.request.AddArticleRequest;
 import com.spring.blog.dto.response.ArticleListViewResponse;
 import com.spring.blog.dto.request.ArticleSearchRequest;
 import com.spring.blog.dto.response.LikeResponse;
@@ -14,6 +13,7 @@ import com.spring.blog.repository.BlogQueryRepository;
 import com.spring.blog.repository.BlogRepository;
 import com.spring.blog.repository.CommentRepository;
 import com.spring.blog.repository.UserRepository;
+import com.spring.blog.service.dto.request.AddArticleServiceRequest;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -35,21 +35,25 @@ public class BlogService {
 
     private final BlogRepository blogRepository;
     private final UserRepository userRepository;
+    private final CommentRepository commentRepository;
     private final ValidationService validationService;
     private final BlogQueryRepository blogQueryRepository;
     private final RedisTemplate<String, Object> redisTemplate;
     private final ArticleLikesRepository articleLikesRepository;
-    private final CommentRepository commentRepository;
 
     @Transactional
-    public Article save(AddArticleRequest request, String email) {
-
-        validationService.checkValid(request);
+    public Article save(AddArticleServiceRequest request, String email, String sessionId) {
 
         User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new EntityNotFoundException("not found : " + email));
+                .orElseThrow(() -> new EntityNotFoundException("not found user from : " + email));
+
         Article article = request.toEntity();
         user.addArticle(article);
+
+        Set<Object> urls = redisTemplate.opsForSet().members(sessionId);
+        if (urls != null) {
+            redisTemplate.delete(sessionId);
+        }
 
         return blogRepository.save(article);
     }

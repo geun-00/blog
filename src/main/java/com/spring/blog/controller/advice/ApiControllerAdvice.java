@@ -3,6 +3,8 @@ package com.spring.blog.controller.advice;
 import com.spring.blog.controller.ApiResponse;
 import com.spring.blog.exception.ResponseStatusException;
 import com.spring.blog.exception.duplicate.DuplicateException;
+import jakarta.persistence.EntityNotFoundException;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.FieldError;
@@ -20,7 +22,10 @@ public class ApiControllerAdvice {
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ApiResponse<Object> handleBindException(MethodArgumentNotValidException ex) {
+    public ApiResponse<Object> handleBindException(MethodArgumentNotValidException ex,
+                                                   HttpServletRequest request) {
+
+        request.setAttribute("cleanup", true);
 
         List<FieldError> fieldErrors = ex.getBindingResult().getFieldErrors();
 
@@ -52,7 +57,7 @@ public class ApiControllerAdvice {
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(MaxUploadSizeExceededException.class)
-    public ApiResponse<Object> handleConstraintViolationException(MaxUploadSizeExceededException ex) {
+    public ApiResponse<Object> handleMaxUploadSizeExceededException(MaxUploadSizeExceededException ex) {
 
         log.error(ex.getMessage());
 
@@ -67,6 +72,19 @@ public class ApiControllerAdvice {
     public ApiResponse<Object> handleResponseStatusException(ResponseStatusException ex) {
         log.error(ex.getMessage());
         ex.printStackTrace(System.out);
+
+        return ApiResponse.of(
+                HttpStatus.INTERNAL_SERVER_ERROR,
+                "오류가 발생했습니다."
+        );
+    }
+
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    @ExceptionHandler(EntityNotFoundException.class)
+    public ApiResponse<Object> handleEntityNotFoundException(EntityNotFoundException ex,
+                                                             HttpServletRequest request) {
+        request.setAttribute("cleanup", true);
+        log.error(ex.getMessage());
 
         return ApiResponse.of(
                 HttpStatus.INTERNAL_SERVER_ERROR,
