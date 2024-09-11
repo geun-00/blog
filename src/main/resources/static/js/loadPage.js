@@ -59,11 +59,13 @@ function renderArticles(data, pageNumber, pageSize) {
         const articleTimeString = articleDate.toTimeString().split(' ')[0].substring(0, 5);
 
         articleElement.innerHTML = `
-                <td>${count++}</td>
                 <td>
-                    <div class="article-container">
-                        <a href="/articles/${article.id}">${article.title}</a>
-                        <span>[${article.countComment}]</span> <!-- 댓글 수 표시 -->
+                    <div class="article-number-title">
+                    <span>${count++}</span>
+                        <div class="article-container">
+                            <a href="/articles/${article.id}">${article.title}</a>
+                            <span>[${article.countComment}]</span> <!-- 댓글 수 표시 -->
+                        </div>
                     </div>
                 </td>
                 <td>

@@ -41,12 +41,14 @@
         </thead>
         <tbody id="article-list">
             <tr th:each="article, iter : ${articles}">
-                <td th:text="${iter.count}"></td> <!--번호-->
+                <!-- 번호와 제목 병합된 열 -->
                 <td>
-                    <div class="article-container">
-                        <a th:href="@{/articles/{id}(id=${article.id})}"
-                           th:text="${article.title}"></a>
-                        <span th:text="|[${article.countComment}]|"></span>
+                    <div class="article-number-title">
+                        <span th:text="${iter.count}"></span> <!-- 번호 -->
+                        <div class="article-container">
+                            <a th:href="@{/articles/{id}(id=${article.id})}" th:text="${article.title}"></a>
+                            <span th:text="|[${article.countComment}]|"></span>
+                        </div>
                     </div>
                 </td>
                 <td> <!--작성일-->
