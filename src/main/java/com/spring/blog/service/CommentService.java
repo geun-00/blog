@@ -3,13 +3,11 @@ package com.spring.blog.service;
 import com.spring.blog.domain.Article;
 import com.spring.blog.domain.Comment;
 import com.spring.blog.domain.User;
-import com.spring.blog.controller.dto.request.CommentRequest;
 import com.spring.blog.dto.response.CommentResponse;
 import com.spring.blog.repository.BlogRepository;
 import com.spring.blog.repository.CommentRepository;
 import com.spring.blog.repository.UserRepository;
 import com.spring.blog.service.dto.request.CommentServiceRequest;
-import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -24,7 +22,6 @@ public class CommentService {
     private final UserRepository userRepository;
     private final BlogRepository blogRepository;
     private final CommentRepository commentRepository;
-    private final EntityManager em;
 
     @Transactional
     public CommentResponse addComment(Long articleId, CommentServiceRequest request, String email) {
@@ -55,11 +52,10 @@ public class CommentService {
     }
 
     @Transactional
-    public Comment deleteComment(Long commentId) {
+    public void deleteComment(Long commentId) {
         Comment foundComment = commentRepository.findById(commentId).orElseThrow(
                 () -> new EntityNotFoundException("not found comment : " + commentId));
 
         commentRepository.delete(foundComment);
-        return foundComment;
     }
 }
