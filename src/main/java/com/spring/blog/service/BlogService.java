@@ -207,10 +207,10 @@ public class BlogService {
 
     public LikeResponse isLiked(Long articleId, String email) {
         User user = userRepository.findByEmail(email).orElseThrow(
-                () -> new EntityNotFoundException("not found user : " + email));
+                () -> new EntityNotFoundException("not found user from " + email));
 
         Article article = blogRepository.findById(articleId).orElseThrow(
-                () -> new EntityNotFoundException("not found article : " + articleId));
+                () -> new EntityNotFoundException("not found article from " + articleId));
 
         boolean isLiked = articleLikesRepository.existsByUserAndArticle(user, article);
         int likes = article.getLikes();

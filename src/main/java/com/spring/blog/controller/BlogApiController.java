@@ -108,12 +108,12 @@ public class BlogApiController {
     }
 
     @GetMapping("/articles/{articleId}/liked")
-    public ResponseEntity<LikeResponse> isLiked(@PathVariable("articleId") Long articleId,
+    public ApiResponse<LikeResponse> isLiked(@PathVariable("articleId") Long articleId,
                                                 @CurrentUser Authentication authentication) {
 
         PrincipalUser principalUser = (PrincipalUser) authentication.getPrincipal();
         LikeResponse response = blogService.isLiked(articleId, principalUser.providerUser().getEmail());
 
-        return ResponseEntity.ok(response);
+        return ApiResponse.ok(response);
     }
 }

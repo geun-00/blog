@@ -6,8 +6,13 @@ export function handleIsLiked() {
     fetch(`/api/articles/${articleId}/liked`)
         .then(response => response.json())
         .then(data => {
-            isLiked = data.liked;
-            updateLikeUI(isLiked, data.likesCount);
+            if (data.code === 200) {
+                isLiked = data.data.liked;
+                updateLikeUI(isLiked, data.data.likesCount);
+            } else {
+                console.log(data);
+                alert('오류가 발생했습니다.');
+            }
         })
         .catch(error => {
             console.error('Error fetching like status:', error);
@@ -28,6 +33,7 @@ export function handleLike() {
                 isLiked = !isLiked;
                 updateLikeUI(isLiked, data.data);
             } else {
+                console.log(data);
                 alert('오류가 발생했습니다.');
             }
         })
