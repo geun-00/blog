@@ -2,13 +2,14 @@ package com.spring.blog.controller;
 
 import com.spring.blog.common.annotation.CurrentUser;
 import com.spring.blog.domain.Comment;
-import com.spring.blog.dto.request.CommentRequest;
+import com.spring.blog.controller.dto.request.CommentRequest;
 import com.spring.blog.dto.response.CommentResponse;
 import com.spring.blog.model.PrincipalUser;
 import com.spring.blog.service.CommentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -25,15 +26,15 @@ public class CommentController {
     private final CommentService commentService;
 
     @PostMapping("/comments/{articleId}")
-    public ResponseEntity<CommentResponse> addComment(@PathVariable("articleId") Long articleId,
-                                                      @RequestBody CommentRequest request,
-                                                      @CurrentUser Authentication authentication) {
+    public ApiResponse<CommentResponse> addComment(@PathVariable("articleId") Long articleId,
+                                                   @Validated @RequestBody CommentRequest request,
+                                                   @CurrentUser Authentication authentication) {
 
         PrincipalUser principalUser = (PrincipalUser) authentication.getPrincipal();
         String email = principalUser.providerUser().getEmail();
-        CommentResponse comment = commentService.addComment(articleId, request, email);
+        CommentResponse response = commentService.addComment(articleId, request.toServiceRequest(), email);
 
-        return ResponseEntity.ok().body(comment);
+        return ApiResponse.ok(response);
     }
 
     @PutMapping("/comments/{commentId}")

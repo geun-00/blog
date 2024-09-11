@@ -3,18 +3,18 @@ package com.spring.blog.service;
 import com.spring.blog.domain.Article;
 import com.spring.blog.domain.Comment;
 import com.spring.blog.domain.User;
-import com.spring.blog.dto.request.CommentRequest;
+import com.spring.blog.controller.dto.request.CommentRequest;
 import com.spring.blog.dto.response.CommentResponse;
 import com.spring.blog.repository.BlogRepository;
 import com.spring.blog.repository.CommentRepository;
 import com.spring.blog.repository.UserRepository;
+import com.spring.blog.service.dto.request.CommentServiceRequest;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
+import org.thymeleaf.util.StringUtils;
 
 @Service
 @Transactional(readOnly = true)
@@ -27,13 +27,13 @@ public class CommentService {
     private final EntityManager em;
 
     @Transactional
-    public CommentResponse addComment(Long articleId, CommentRequest request, String email) {
+    public CommentResponse addComment(Long articleId, CommentServiceRequest request, String email) {
 
         Article foundArticle = blogRepository.findByIdWithUser(articleId).orElseThrow(
-                () -> new EntityNotFoundException("not found article: " + articleId));
+                () -> new EntityNotFoundException("not found article from " + articleId));
 
         User foundUser = userRepository.findByEmail(email).orElseThrow(
-                () -> new EntityNotFoundException("not found user: " + email));
+                () -> new EntityNotFoundException("not found user from " + email));
 
         Comment savedCommend = commentRepository.save(Comment.builder()
                 .content(request.getComment())
@@ -41,7 +41,7 @@ public class CommentService {
                 .article(foundArticle)
                 .build());
 
-        boolean isAuthor = foundUser.getNickname().equals(foundArticle.getUser().getNickname());
+        boolean isAuthor = StringUtils.equals(foundUser.getNickname(), foundArticle.getUser().getNickname());
 
         return new CommentResponse(savedCommend, isAuthor);
     }

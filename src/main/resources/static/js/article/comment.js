@@ -25,9 +25,15 @@ export function setupCommentSubmit() {
         })
             .then(response => response.json())
             .then(data => {
-                addCommentToList(data);
-                document.querySelector('.comment_inbox_text').value = '';
-                updateCommentCount(1);
+                if (data.code === 200) {
+                    addCommentToList(data.data);
+                    document.querySelector('.comment_inbox_text').value = '';
+                    updateCommentCount(1);
+                } else {
+                    console.log(data);
+                    alert('오류가 발생했습니다.')
+                }
+
             })
             .catch(error => {
                 console.error('Error:', error.message);
