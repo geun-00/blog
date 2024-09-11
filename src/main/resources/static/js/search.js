@@ -4,7 +4,6 @@ function submitForm() {
     const searchTitle = document.getElementById('searchTitle').value;
     const searchContent = document.getElementById('searchContent').value;
     const searchAuthor = document.getElementById('searchAuthor').value;
-    const searchViews = document.getElementById('searchViews').value;
     const searchTitleWithContent = document.getElementById('searchTitleWithContent').value;
     const searchContentWithTitle = document.getElementById('searchContentWithTitle').value;
     const searchDateStart = document.getElementById('search-date-start').value;
@@ -66,7 +65,6 @@ function submitForm() {
         title: searchTitle,
         content: searchContent,
         author: searchAuthor,
-        views: searchViews,
         titleContent: {
             title: searchTitleWithContent,
             content: searchContentWithTitle

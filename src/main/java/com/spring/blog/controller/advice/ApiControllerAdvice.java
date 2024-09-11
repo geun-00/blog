@@ -91,4 +91,17 @@ public class ApiControllerAdvice {
                 "오류가 발생했습니다."
         );
     }
+
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    @ExceptionHandler(Exception.class)
+    public ApiResponse<Object> handleException(Exception ex, HttpServletRequest request) {
+
+        request.setAttribute("cleanup", true);
+        log.error("예상하지 못한 오류가 발생했습니다. 내용 : {}", ex.getMessage());
+
+        return ApiResponse.of(
+                HttpStatus.INTERNAL_SERVER_ERROR,
+                "오류가 발생했습니다."
+        );
+    }
 }

@@ -1,8 +1,8 @@
 package com.spring.blog.controller;
 
 import com.spring.blog.common.annotation.CurrentUser;
-import com.spring.blog.domain.Article;
 import com.spring.blog.controller.dto.request.ArticleRequest;
+import com.spring.blog.domain.Article;
 import com.spring.blog.dto.request.ArticleSearchRequest;
 import com.spring.blog.dto.response.ArticleListViewResponse;
 import com.spring.blog.dto.response.ArticleResponse;
@@ -69,22 +69,22 @@ public class BlogApiController {
     }
 
     @PostMapping("/articles/search")
-    public ResponseEntity<PageResponse<ArticleListViewResponse>> findAllArticlesByCond(
-            @RequestBody ArticleSearchRequest request,
+    public ApiResponse<PageResponse<ArticleListViewResponse>> findAllArticlesByCond(
+            @Validated @RequestBody ArticleSearchRequest request,
             @PageableDefault Pageable pageable) {
 
-        PageResponse<ArticleListViewResponse> articles = blogService.findAllByCond(request, pageable);
+        PageResponse<ArticleListViewResponse> articles = blogService.findAllByCond(request.toServiceRequest(), pageable);
 
-        return ResponseEntity.ok().body(articles);
+        return ApiResponse.ok(articles);
     }
 
     @GetMapping("/articles/page")
-    public ResponseEntity<PageResponse<ArticleListViewResponse>> getPagingArticles(
+    public ApiResponse<PageResponse<ArticleListViewResponse>> getPagingArticles(
             @PageableDefault(direction = Sort.Direction.DESC, sort = "createdAt") Pageable pageable) {
 
         PageResponse<ArticleListViewResponse> articles = blogService.findAll(pageable);
 
-        return ResponseEntity.ok().body(articles);
+        return ApiResponse.ok(articles);
     }
 
     @PostMapping("/articles/like/{articleId}")

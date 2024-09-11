@@ -16,7 +16,6 @@ document.addEventListener('DOMContentLoaded', function () {
         title: document.getElementById('search-title'),
         author: document.getElementById('search-author'),
         content: document.getElementById('search-content'),
-        views: document.getElementById('search-views'),
         'title-content': document.getElementById('search-title-content')
     };
 
@@ -24,7 +23,6 @@ document.addEventListener('DOMContentLoaded', function () {
         searchTitleInput: document.getElementById('searchTitle'),
         searchContentInput: document.getElementById('searchContent'),
         searchAuthorInput: document.getElementById('searchAuthor'),
-        searchViewsInput: document.getElementById('searchViews'),
         searchTitleWithContentInput: document.getElementById('searchTitleWithContent'),
         searchContentWithTitleInput: document.getElementById('searchContentWithTitle'),
         searchDateStartInput: document.getElementById('search-date-start'),
@@ -39,7 +37,6 @@ document.addEventListener('DOMContentLoaded', function () {
             title: searchInputs.searchTitleInput.value,
             content: searchInputs.searchContentInput.value,
             author: searchInputs.searchAuthorInput.value,
-            views: searchInputs.searchViewsInput.value,
             titleContent: {
                 title: searchInputs.searchTitleWithContentInput.value,
                 content: searchInputs.searchContentWithTitleInput.value

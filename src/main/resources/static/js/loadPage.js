@@ -18,9 +18,16 @@ function loadPage(pageNumber) {
 function loadAllData(pageNumber, pageSize) {
 
     fetch(`/api/articles/page?page=${pageNumber - 1}&size=${pageSize}`, {
-        method: 'get'
+        method: 'GET'
     }).then(response => response.json())
-        .then(data => renderArticles(data, pageNumber, pageSize))
+        .then(data => {
+            if (data.code === 200) {
+                renderArticles(data.data, pageNumber, pageSize);
+            } else {
+                alert('오류가 발생했습니다.')
+                console.log(data);
+            }
+        })
         .catch(error => {
             console.log(error);
             alert('오류가 발생했습니다.');
@@ -31,13 +38,20 @@ function loadAllData(pageNumber, pageSize) {
 function loadAllBySearchData(pageNumber, pageSize, body) {
 
     fetch(`/api/articles/search?page=${pageNumber - 1}&size=${pageSize}`, {
-        method: 'post',
+        method: 'POST',
         headers: {
             'Content-type': 'application/json'
         },
         body: body
     }).then(response => response.json())
-        .then(data => renderArticles(data, pageNumber, pageSize))
+        .then(data => {
+            if (data.code === 200) {
+                renderArticles(data.data, pageNumber, pageSize);
+            } else {
+                alert('오류가 발생했습니다.')
+                console.log(data);
+            }
+        })
         .catch(error => {
             console.log(error);
             alert('오류가 발생했습니다.');

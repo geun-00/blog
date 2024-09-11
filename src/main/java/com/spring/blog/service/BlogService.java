@@ -5,7 +5,6 @@ import com.spring.blog.domain.Article;
 import com.spring.blog.domain.ArticleImages;
 import com.spring.blog.domain.ArticleLikes;
 import com.spring.blog.domain.User;
-import com.spring.blog.dto.request.ArticleSearchRequest;
 import com.spring.blog.dto.response.ArticleListViewResponse;
 import com.spring.blog.dto.response.LikeResponse;
 import com.spring.blog.dto.response.PageResponse;
@@ -16,6 +15,7 @@ import com.spring.blog.repository.BlogRepository;
 import com.spring.blog.repository.BulkInsertRepository;
 import com.spring.blog.repository.CommentRepository;
 import com.spring.blog.repository.UserRepository;
+import com.spring.blog.service.dto.request.ArticleSearchServiceRequest;
 import com.spring.blog.service.dto.request.ArticleServiceRequest;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -168,7 +168,7 @@ public class BlogService {
         return article.getLikes();
     }
 
-    public PageResponse<ArticleListViewResponse> findAllByCond(ArticleSearchRequest request, Pageable pageable) {
+    public PageResponse<ArticleListViewResponse> findAllByCond(ArticleSearchServiceRequest request, Pageable pageable) {
 
         Page<ArticleListViewResponse> articles = blogQueryRepository.findAllByCond(request, pageable);
 

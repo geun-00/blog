@@ -44,6 +44,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
 
         registry.addInterceptor(new FileCleanUpInterceptor(fileService, redisTemplate))
                 .addPathPatterns("/api/articles/**")
+                .excludePathPatterns("/api/articles/like/**", "/api/articles/search")
                 .excludePathPatterns(EXCLUDE_PATTERNS);
     }
 }

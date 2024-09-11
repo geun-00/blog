@@ -4,9 +4,9 @@ import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import com.spring.blog.dto.request.ArticleSearchRequest;
 import com.spring.blog.dto.response.ArticleListViewResponse;
 import com.spring.blog.dto.response.QArticleListViewResponse;
+import com.spring.blog.service.dto.request.ArticleSearchServiceRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -52,11 +52,11 @@ public class BlogQueryRepository {
     /**
      * 조회 조건 O
      **/
-    public Page<ArticleListViewResponse> findAllByCond(ArticleSearchRequest request, Pageable pageable) {
+    public Page<ArticleListViewResponse> findAllByCond(ArticleSearchServiceRequest request, Pageable pageable) {
         return findArticlesByCond(request, pageable);
     }
 
-    private Page<ArticleListViewResponse> findArticlesByCond(ArticleSearchRequest request, Pageable pageable) {
+    private Page<ArticleListViewResponse> findArticlesByCond(ArticleSearchServiceRequest request, Pageable pageable) {
 
         List<ArticleListViewResponse> content = query
                 .select(new QArticleListViewResponse(
@@ -82,7 +82,7 @@ public class BlogQueryRepository {
         return PageableExecutionUtils.getPage(content, pageable, countQuery::fetchOne);
     }
 
-    private BooleanExpression getCondByRequest(ArticleSearchRequest request) {
+    private BooleanExpression getCondByRequest(ArticleSearchServiceRequest request) {
 
         if (request == null) {
             return null;
@@ -107,12 +107,9 @@ public class BlogQueryRepository {
                 return betweenPeriod(request.getPeriod().getStartDate(),
                                      request.getPeriod().getEndDate());
             }
-            case VIEWS -> { //조회수로 조회
-                return goeViews(request.getViews());
-            }
         }
 
-        throw new IllegalArgumentException("예외 발생");
+        throw new IllegalArgumentException("검색 조건 예외 발생");
     }
 
     private BooleanExpression containsTitle(String title) {
@@ -130,9 +127,5 @@ public class BlogQueryRepository {
     private BooleanExpression betweenPeriod(LocalDate startDate, LocalDate endDate) {
         return article.createdAt.between(startDate.atStartOfDay(),
                 endDate.atStartOfDay().plusHours(23).plusMinutes(59).plusSeconds(59));
-    }
-
-    private BooleanExpression goeViews(Long views) {
-        return article.views.goe(views);
     }
 }
