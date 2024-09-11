@@ -51,11 +51,6 @@ public class Article extends BaseEntity {
     private int likes;
 
     @Builder
-    public Article(String title, String content) {
-        this.title = title;
-        this.content = content;
-    }
-
     public Article(String title, String content, User user) {
         this.title = title;
         this.content = content;

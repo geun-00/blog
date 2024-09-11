@@ -7,12 +7,12 @@ if (deleteButton != null) {
         if (confirm('정말 삭제하시겠습니까?')) {
             let id = document.getElementById('article-id').value;
             function success() {
-                alert('삭제가 완료되었습니다.');
+                alert('삭제 되었습니다.');
                 location.replace('/articles');
             }
 
             function fail() {
-                alert('삭제 실패했습니다.');
+                alert('오류가 발생했습니다.');
                 location.replace('/articles');
             }
 

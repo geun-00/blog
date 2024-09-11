@@ -5,7 +5,7 @@ spring:
     import: application-aws.yml
 
   datasource:
-    url: jdbc:mysql://localhost:3306/blog
+    url: jdbc:mysql://localhost:3306/blog?rewriteBatchedStatements=true
     username: root
     password: 1234
     driver-class-name: com.mysql.cj.jdbc.Driver
@@ -15,6 +15,7 @@ spring:
       hibernate:
         hbm2ddl:
           auto: none
+        dialect: org.hibernate.dialect.MySQLDialect
 
 profile:
   default:

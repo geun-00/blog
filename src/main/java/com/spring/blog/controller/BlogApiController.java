@@ -62,10 +62,10 @@ public class BlogApiController {
     }
 
     @DeleteMapping("/articles/{articleId}")
-    public ResponseEntity<Void> deleteArticle(@PathVariable("articleId") long articleId) {
+    public ApiResponse<Void> deleteArticle(@PathVariable("articleId") long articleId) {
         blogService.delete(articleId);
 
-        return ResponseEntity.ok().build();
+        return ApiResponse.ok(null);
     }
 
     @PostMapping("/articles/search")
@@ -86,8 +86,6 @@ public class BlogApiController {
 
         return ResponseEntity.ok().body(articles);
     }
-
-
 
     @PostMapping("/articles/like/{articleId}")
     public ApiResponse<Integer> addLike(@PathVariable("articleId") Long articleId,

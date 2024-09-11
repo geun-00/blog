@@ -77,6 +77,11 @@ spring:
         format_sql: true
         highlight_sql: true
 
+        order_updates: true
+        order_inserts: true
+        jdbc:
+          batch_size: 100
+
 server:
   servlet:
     session:
@@ -93,9 +98,6 @@ jasypt:
 logging:
   level:
     org:
-      springframework:
-        transaction:
-          interceptor: trace
       hibernate:
         orm:
           jdbc:

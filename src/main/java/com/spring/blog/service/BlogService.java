@@ -1,5 +1,6 @@
 package com.spring.blog.service;
 
+import com.spring.blog.common.events.ArticleDeletedEvent;
 import com.spring.blog.domain.Article;
 import com.spring.blog.domain.ArticleImages;
 import com.spring.blog.domain.ArticleLikes;
@@ -12,11 +13,13 @@ import com.spring.blog.repository.ArticleImagesRepository;
 import com.spring.blog.repository.ArticleLikesRepository;
 import com.spring.blog.repository.BlogQueryRepository;
 import com.spring.blog.repository.BlogRepository;
+import com.spring.blog.repository.BulkInsertRepository;
 import com.spring.blog.repository.CommentRepository;
 import com.spring.blog.repository.UserRepository;
 import com.spring.blog.service.dto.request.ArticleServiceRequest;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -38,9 +41,13 @@ public class BlogService {
     private final UserRepository userRepository;
     private final CommentRepository commentRepository;
     private final BlogQueryRepository blogQueryRepository;
-    private final RedisTemplate<String, Object> redisTemplate;
     private final ArticleLikesRepository articleLikesRepository;
     private final ArticleImagesRepository articleImagesRepository;
+
+    private final BulkInsertRepository bulkInsertRepository;
+
+    private final ApplicationEventPublisher eventPublisher;
+    private final RedisTemplate<String, Object> redisTemplate;
 
     @Transactional
     public Article save(ArticleServiceRequest request, String email, String sessionId) {
@@ -48,8 +55,8 @@ public class BlogService {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new EntityNotFoundException("not found user from : " + email));
 
-        Article article = request.toEntity();
-        user.addArticle(article);
+        Article savedArticle = blogRepository.save(request.toEntity(user));
+        user.addArticle(savedArticle);
 
         Set<Object> imageUrls = redisTemplate.opsForSet().members(sessionId);
 
@@ -59,14 +66,14 @@ public class BlogService {
                     .map(url -> (String) url)
                     .map(url -> ArticleImages.builder()
                             .imageUrl(url)
-                            .article(article)
+                            .article(savedArticle)
                             .build())
                     .toList();
 
-            articleImagesRepository.saveAll(articleImages);
+            bulkInsertRepository.saveArticleImages(articleImages);
         }
 
-        return blogRepository.save(article);
+        return savedArticle;
     }
 
     @Transactional
@@ -85,10 +92,15 @@ public class BlogService {
         Article article = blogRepository.findById(articleId)
                 .orElseThrow(() -> new EntityNotFoundException("not found article from : " + articleId));
 
-        articleLikesRepository.deleteByArticleId(article.getId());
-        commentRepository.deleteByArticleId(article.getId());
+        List<ArticleImages> articleImages = articleImagesRepository.getArticleImagesByArticle(article);
+
+        articleImagesRepository.deleteByArticleId(articleId);
+        articleLikesRepository.deleteByArticleId(articleId);
+        commentRepository.deleteByArticleId(articleId);
 
         blogRepository.delete(article);
+
+        eventPublisher.publishEvent(new ArticleDeletedEvent(articleImages));
     }
 
     @Transactional
