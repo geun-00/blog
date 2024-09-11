@@ -38,12 +38,12 @@ public class CommentController {
     }
 
     @PutMapping("/comments/{commentId}")
-    public ResponseEntity<Void> editComment(@PathVariable("commentId") Long commentId,
-                                            @RequestBody CommentRequest request) {
+    public ApiResponse<Void> editComment(@PathVariable("commentId") Long commentId,
+                                         @Validated @RequestBody CommentRequest request) {
 
-        commentService.editComment(commentId, request);
+        commentService.editComment(commentId, request.toServiceRequest());
 
-        return ResponseEntity.ok().build();
+        return ApiResponse.ok(null);
     }
 
     @DeleteMapping("/comments/{commentId}")

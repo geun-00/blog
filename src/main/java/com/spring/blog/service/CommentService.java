@@ -47,9 +47,9 @@ public class CommentService {
     }
 
     @Transactional
-    public void editComment(Long commentId, CommentRequest request) {
+    public void editComment(Long commentId, CommentServiceRequest request) {
         Comment foundComment = commentRepository.findById(commentId).orElseThrow(
-                () -> new EntityNotFoundException("not found comment : " + commentId));
+                () -> new EntityNotFoundException("not found comment from " + commentId));
 
         foundComment.editComment(request.getComment());
     }

@@ -38,22 +38,29 @@ function saveEdit(button) {
     const editButtons = commentDiv.querySelector('.edit-buttons');
     const commentId = commentDiv.closest('.comment-item').querySelector('#comment-id').value;
 
+    const comment = inputField.value;
+    if (comment === '') {
+        alert('댓글을 입력해주세요.')
+        return;
+    }
+
     fetch(`/api/comments/${commentId}`, {
         method: 'PUT',
         headers: {
             'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ comment: inputField.value }),
+        body: JSON.stringify({ comment: comment }),
     })
-        .then(response => {
-            if (response.ok) {
-                // 서버 응답이 성공적이면 화면에 반영
+        .then(response => response.json())
+        .then(data => {
+            if (data.code === 200) {
                 commentTextDiv.textContent = inputField.value;
                 inputField.classList.add('d-none');
                 commentTextDiv.classList.remove('d-none');
                 editButtons.classList.add('d-none');
             } else {
-                alert('댓글을 수정하는 중에 문제가 발생했습니다.');
+                console.log(data);
+                alert('오류가 발생했습니다.');
             }
         });
 }
