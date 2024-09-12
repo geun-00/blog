@@ -6,7 +6,6 @@ import com.spring.blog.dto.response.CommentResponse;
 import com.spring.blog.model.PrincipalUser;
 import com.spring.blog.service.CommentService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.Authentication;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -26,9 +25,8 @@ public class CommentApiController {
     @PostMapping("/comments/{articleId}")
     public ApiResponse<CommentResponse> addComment(@PathVariable("articleId") Long articleId,
                                                    @Validated @RequestBody CommentRequest request,
-                                                   @CurrentUser Authentication authentication) {
+                                                   @CurrentUser PrincipalUser principalUser) {
 
-        PrincipalUser principalUser = (PrincipalUser) authentication.getPrincipal();
         String email = principalUser.providerUser().getEmail();
         CommentResponse response = commentService.addComment(articleId, request.toServiceRequest(), email);
 

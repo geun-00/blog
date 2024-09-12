@@ -15,7 +15,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.core.Authentication;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -36,10 +35,9 @@ public class BlogApiController {
 
     @PostMapping("/articles")
     public ApiResponse<ArticleResponse> addArticle(@Validated @RequestBody ArticleRequest request,
-                                                   @CurrentUser Authentication authentication,
+                                                   @CurrentUser PrincipalUser principalUser,
                                                    @CookieValue("JSESSIONID") String sessionId) {
 
-        PrincipalUser principalUser = (PrincipalUser) authentication.getPrincipal();
         Article savedArticle = blogService.save(
                 request.toServiceRequest(),
                 principalUser.providerUser().getEmail(),
@@ -88,9 +86,8 @@ public class BlogApiController {
 
     @PostMapping("/articles/like/{articleId}")
     public ApiResponse<Integer> addLike(@PathVariable("articleId") Long articleId,
-                                                        @CurrentUser Authentication authentication) {
+                                        @CurrentUser PrincipalUser principalUser) {
 
-        PrincipalUser principalUser = (PrincipalUser) authentication.getPrincipal();
         int likesCount = blogService.addLike(articleId, principalUser.providerUser().getEmail());
 
         return ApiResponse.ok(likesCount);
@@ -98,9 +95,8 @@ public class BlogApiController {
 
     @DeleteMapping("/articles/like/{articleId}")
     public ApiResponse<Integer> deleteLike(@PathVariable("articleId") Long articleId,
-                                           @CurrentUser Authentication authentication) {
+                                           @CurrentUser PrincipalUser principalUser) {
 
-        PrincipalUser principalUser = (PrincipalUser) authentication.getPrincipal();
         int likesCount = blogService.deleteLike(articleId, principalUser.providerUser().getEmail());
 
         return ApiResponse.ok(likesCount);
@@ -108,9 +104,8 @@ public class BlogApiController {
 
     @GetMapping("/articles/{articleId}/liked")
     public ApiResponse<LikeResponse> isLiked(@PathVariable("articleId") Long articleId,
-                                                @CurrentUser Authentication authentication) {
+                                             @CurrentUser PrincipalUser principalUser) {
 
-        PrincipalUser principalUser = (PrincipalUser) authentication.getPrincipal();
         LikeResponse response = blogService.isLiked(articleId, principalUser.providerUser().getEmail());
 
         return ApiResponse.ok(response);

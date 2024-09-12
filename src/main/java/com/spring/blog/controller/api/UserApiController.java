@@ -12,7 +12,6 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.core.Authentication;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -42,10 +41,12 @@ public class UserApiController {
 
     @PostMapping("/oauthUser")
     public ApiResponse<String> oauthSignup(@Validated @RequestBody OAuthAddUserRequest request,
-                                           @CurrentUser Authentication authentication) {
+                                           @CurrentUser PrincipalUser principalUser) {
 
-        PrincipalUser principalUser = getPrincipal(authentication);
-        String username = userService.updateOAuthUser(request.toServiceRequest(), principalUser.providerUser().getEmail());
+        String username = userService.updateOAuthUser(
+                request.toServiceRequest(),
+                principalUser.providerUser().getEmail()
+        );
 
         return ApiResponse.of(
                 HttpStatus.CREATED,
@@ -55,10 +56,12 @@ public class UserApiController {
 
     @PatchMapping("/user")
     public ApiResponse<String> userEdit(@Validated @ModelAttribute EditUserRequest request,
-                                        @CurrentUser Authentication authentication) {
+                                        @CurrentUser PrincipalUser principalUser) {
 
-        PrincipalUser principalUser = getPrincipal(authentication);
-        userService.editUser(request.toServiceRequest(), principalUser.providerUser().getEmail());
+        userService.editUser(
+                request.toServiceRequest(),
+                principalUser.providerUser().getEmail()
+        );
 
         return ApiResponse.ok("수정 완료");
     }
@@ -71,12 +74,11 @@ public class UserApiController {
     }
 
     @DeleteMapping("/user")
-    public ApiResponse<Void> deleteUser(@CurrentUser Authentication authentication,
+    public ApiResponse<Void> deleteUser(@CurrentUser PrincipalUser principalUser,
                                         HttpServletRequest request, HttpServletResponse response) {
 
         //사용자 제거
-        PrincipalUser principalUser = (PrincipalUser) authentication.getPrincipal();
-        userService.deleteUser(principalUser.providerUser().getEmail(), authentication);
+        userService.deleteUser(principalUser);
 
         //세션, 쿠키 무효화
         invalidateSessionAndCookie(request, response);
@@ -95,9 +97,5 @@ public class UserApiController {
                 response.addCookie(cookie);
             }
         }
-    }
-
-    private PrincipalUser getPrincipal(Authentication authentication) {
-        return (PrincipalUser) authentication.getPrincipal();
     }
 }

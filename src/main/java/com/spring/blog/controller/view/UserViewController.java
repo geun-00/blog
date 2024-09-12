@@ -6,7 +6,6 @@ import com.spring.blog.dto.response.UserInfoResponse;
 import com.spring.blog.model.PrincipalUser;
 import com.spring.blog.service.UserService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -46,10 +45,9 @@ public class UserViewController {
     }
 
     @GetMapping("/myPage")
-    public String myPage(@CurrentUser Authentication authentication,
+    public String myPage(@CurrentUser PrincipalUser principalUser,
                          Model model) {
 
-        PrincipalUser principalUser = getPrincipal(authentication);
         String username = principalUser.getUsername();
 
         UserInfoResponse response = userService.getUserInfo(username);
@@ -57,9 +55,5 @@ public class UserViewController {
         model.addAttribute("user", response);
 
         return "myPage";
-    }
-
-    private PrincipalUser getPrincipal(Authentication authentication) {
-        return (PrincipalUser) authentication.getPrincipal();
     }
 }

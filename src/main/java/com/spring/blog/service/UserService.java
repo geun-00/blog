@@ -6,6 +6,7 @@ import com.spring.blog.domain.User;
 import com.spring.blog.dto.request.NewPasswordRequest;
 import com.spring.blog.dto.response.UserInfoResponse;
 import com.spring.blog.exception.duplicate.NicknameDuplicateException;
+import com.spring.blog.model.OAuth2ProviderUser;
 import com.spring.blog.model.PrincipalUser;
 import com.spring.blog.model.ProviderUser;
 import com.spring.blog.repository.ArticleLikesRepository;
@@ -88,7 +89,10 @@ public class UserService {
     }
 
     @Transactional
-    public void deleteUser(String email, Authentication authentication) {
+    public void deleteUser(PrincipalUser principalUser) {
+
+        String email = principalUser.providerUser().getEmail();
+
         User user = findByEmail(email);
 
         Long userId = user.getId();
@@ -103,7 +107,10 @@ public class UserService {
 
         userRepository.delete(user);
 
-        if (authentication instanceof OAuth2AuthenticationToken oAuth2AuthenticationToken) {
+        if (principalUser.providerUser() instanceof OAuth2ProviderUser) {
+            OAuth2AuthenticationToken oAuth2AuthenticationToken =
+                    (OAuth2AuthenticationToken) SecurityContextHolder.getContextHolderStrategy().getContext().getAuthentication();
+
             String registrationId = oAuth2AuthenticationToken.getAuthorizedClientRegistrationId();
             String name = oAuth2AuthenticationToken.getPrincipal().getName();
 

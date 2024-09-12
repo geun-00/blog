@@ -15,11 +15,12 @@ public class CurrentUserArgumentResolver implements HandlerMethodArgumentResolve
 
     @Override
     public boolean supportsParameter(MethodParameter parameter) {
-        return parameter.getMethodAnnotation(CurrentUser.class) != null;
+        return parameter.getParameterType().equals(PrincipalUser.class) &&
+                parameter.hasParameterAnnotation(CurrentUser.class);
     }
 
     @Override
-    public Object resolveArgument(MethodParameter parameter,
+    public PrincipalUser resolveArgument(MethodParameter parameter,
                                   ModelAndViewContainer mavContainer,
                                   NativeWebRequest webRequest,
                                   WebDataBinderFactory binderFactory) throws Exception {
@@ -30,6 +31,6 @@ public class CurrentUserArgumentResolver implements HandlerMethodArgumentResolve
             throw new EntityNotFoundException("현재 사용자를 찾을 수 없습니다.");
         }
 
-        return authentication;
+        return (PrincipalUser) authentication.getPrincipal();
     }
 }
