@@ -1,6 +1,6 @@
 package com.spring.blog.controller.advice;
 
-import com.spring.blog.controller.ApiResponse;
+import com.spring.blog.controller.api.ApiResponse;
 import com.spring.blog.exception.EmailSendException;
 import com.spring.blog.exception.ResponseStatusException;
 import com.spring.blog.exception.SmsException;

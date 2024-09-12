@@ -1,4 +1,4 @@
-package com.spring.blog.controller;
+package com.spring.blog.controller.api;
 
 import com.spring.blog.service.file.FileService;
 import lombok.RequiredArgsConstructor;

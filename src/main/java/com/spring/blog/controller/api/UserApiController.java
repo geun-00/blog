@@ -1,4 +1,4 @@
-package com.spring.blog.controller;
+package com.spring.blog.controller.api;
 
 import com.spring.blog.common.annotation.CurrentUser;
 import com.spring.blog.controller.dto.request.EditUserRequest;

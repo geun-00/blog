@@ -1,4 +1,4 @@
-package com.spring.blog.controller;
+package com.spring.blog.controller.view;
 
 import com.spring.blog.common.annotation.UserKey;
 import com.spring.blog.common.enums.SearchType;

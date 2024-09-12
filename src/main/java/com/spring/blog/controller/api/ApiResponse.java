@@ -1,4 +1,4 @@
-package com.spring.blog.controller;
+package com.spring.blog.controller.api;
 
 import lombok.Data;
 import org.springframework.http.HttpStatus;
