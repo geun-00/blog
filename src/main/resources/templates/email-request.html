@@ -23,7 +23,6 @@
     <div id="verification-code-container" style="display: none; margin-top: 1rem" class="form-group">
         <label for="verificationCode">인증번호:</label>
         <input type="text" class="form-control" id="verificationCode" name="verificationCode"
-               required minlength="6"
                placeholder="인증번호 입력(6자리)">
         <div id="countdown"></div>
         <button style="margin-top: 1rem" id="verify-code-button" class="btn btn-primary">인증번호 확인</button>
@@ -64,7 +63,8 @@
                     document.getElementById("error-message").style.display = "none";
                     document.getElementById("verification-code-container").style.display = "block";
                     startCountdown(5 * 60);
-                } else {
+                } else if (data.code === 500) {
+                    window.location.href = '/error/500'
                     document.getElementById("error-message").innerText = "인증번호 전송에 실패했습니다.";
                 }
             })
@@ -101,6 +101,15 @@
         const email = document.getElementById("email").value;
         const verificationCode = document.getElementById("verificationCode").value;
 
+        if (!verificationCode) {
+            alert('인증번호를 입력해주세요');
+            return;
+        }
+        if (verificationCode.length !== 6) {
+            alert('인증번호는 6자리 숫자입니다.');
+            return;
+        }
+
         fetch("/api/verify/code/email", {
             method: "POST",
             headers: {
@@ -123,7 +132,7 @@
             .catch(error => {
                 console.error("Error:", error);
                 document.getElementById("error-message").innerText = "오류가 발생했습니다.";
-            })
+            });
 
     });
 

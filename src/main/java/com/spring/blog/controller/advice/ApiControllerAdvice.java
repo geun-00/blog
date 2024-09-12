@@ -1,7 +1,10 @@
 package com.spring.blog.controller.advice;
 
 import com.spring.blog.controller.ApiResponse;
+import com.spring.blog.exception.EmailSendException;
 import com.spring.blog.exception.ResponseStatusException;
+import com.spring.blog.exception.SmsException;
+import com.spring.blog.exception.VerificationException;
 import com.spring.blog.exception.duplicate.DuplicateException;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -90,6 +93,30 @@ public class ApiControllerAdvice {
                 HttpStatus.INTERNAL_SERVER_ERROR,
                 "오류가 발생했습니다."
         );
+    }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(VerificationException.class)
+    public ApiResponse<Object> handleVerificationException(VerificationException ex) {
+
+        log.error(ex.getMessage());
+
+        return ApiResponse.of(
+                HttpStatus.BAD_REQUEST,
+                "인증에 실패했습니다.",
+                null);
+    }
+
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    @ExceptionHandler({SmsException.class, EmailSendException.class})
+    public ApiResponse<Object> handleSmsException(Exception ex) {
+
+        log.error(ex.getMessage());
+
+        return ApiResponse.of(
+                HttpStatus.INTERNAL_SERVER_ERROR,
+                "인증번호 전송에 실패했습니다.",
+                null);
     }
 
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)

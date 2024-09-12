@@ -1,8 +1,7 @@
 package com.spring.blog.service;
 
 import com.spring.blog.domain.User;
-import com.spring.blog.dto.request.EmailVerifyCodeRequest;
-import com.spring.blog.dto.request.SmsVerifyCodeRequest;
+import com.spring.blog.exception.EmailSendException;
 import com.spring.blog.exception.SmsException;
 import com.spring.blog.exception.VerificationException;
 import com.spring.blog.repository.UserRepository;
@@ -16,6 +15,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.thymeleaf.util.StringUtils;
 
@@ -42,6 +42,7 @@ public class VerificationService {
      * 해당 번호로 인증번호 전송
      * @param to 전송할 번호
      */
+    @Async
     public void sendVerificationCodeBySms(String to) {
 
         String verificationCode = generateCode();
@@ -66,10 +67,7 @@ public class VerificationService {
      * SMS로 받은 인증번호로 인증이 되면 찾은 이메일 반환
      * @return 찾은 이메일
      */
-    public String verifyCodeBySms(SmsVerifyCodeRequest request) {
-
-        String requestCode = request.getVerificationCode();
-        String phoneNumber = request.getPhoneNumber();
+    public String verifyCodeBySms(String requestCode, String phoneNumber) {
 
         String verificationCode = getAndDelVerificationCodeFromRedis(phoneNumber);
 
@@ -80,17 +78,19 @@ public class VerificationService {
         }
 
         User user = userRepository.findByPhoneNumber(phoneNumber).orElseThrow(
-                () -> new EntityNotFoundException("not found user : " + phoneNumber));
+                () -> new EntityNotFoundException("not found user from " + phoneNumber));
 
-        return user.getEmail();
+        return maskEmail(user.getEmail());
     }
 
     /**
      * 해당 이메일로 인증번호 전송
      * @param to 전송할 이메일
      */
+    @Async
     public void sendVerificationCodeByEmail(String to) {
 
+        log.info(Thread.currentThread().toString());
         String verificationCode = generateCode();
 
         saveVerificationCodeToRedis(to, verificationCode);
@@ -101,17 +101,19 @@ public class VerificationService {
         message.setSubject("[Blog] 이메일 인증을 위한 인증번호를 안내 드립니다.");
         message.setText("이메일 인증 화면으로 돌아가 다음 인증번호를 입력하세요.\n\n" + "인증번호 : " + verificationCode);
 
-        mailSender.send(message);
+        try {
+            mailSender.send(message);
+        } catch (Exception ex) {
+            log.error("이메일 전송 중 알 수 없는 오류 발생");
+            throw new EmailSendException("이메일 전송 중 오류 발생", ex);
+        }
     }
 
     /**
      * 이메일로 받은 인증번호로 인증이 되면 프론트에서 새로운 비밀번호 입력 받는 화면으로 이동
      * @return 인증 여부
      */
-    public boolean verifyCodeByEmail(EmailVerifyCodeRequest request) {
-
-        String requestCode = request.getVerificationCode();
-        String email = request.getEmail();
+    public boolean verifyCodeByEmail(String requestCode, String email) {
 
         String verificationCode = getAndDelVerificationCodeFromRedis(email);
 
@@ -142,5 +144,23 @@ public class VerificationService {
         String verificationCode = vo.get(key);
         vo.getOperations().delete(key);
         return verificationCode;
+    }
+
+    //이메일 중간 부분을 숨긴 후 반환
+    private String maskEmail(String email) {
+        int atIndex = email.indexOf('@');
+
+        if (atIndex <= 1) {
+            return email;
+        }
+
+        String localPart = email.substring(0, atIndex);
+        String domainPart = email.substring(atIndex);
+
+        String middle = localPart.substring(1, localPart.length() - 1);
+
+        String maskedLocalPart = localPart.charAt(0) + "*".repeat(middle.length()) + localPart.charAt(localPart.length() - 1);
+
+        return maskedLocalPart + domainPart;
     }
 }
