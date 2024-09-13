@@ -8,7 +8,6 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -17,9 +16,6 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.DynamicInsert;
 import org.springframework.util.StringUtils;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @Entity
 @Getter
@@ -52,14 +48,6 @@ public class User extends BaseEntity {
 
     @Column(name = "phone_number", length = 11, unique = true)
     private String phoneNumber;
-
-    @OneToMany(mappedBy = "user")
-    private List<Article> articles = new ArrayList<>();
-
-    public void addArticle(Article article) {
-        articles.add(article);
-        article.setUser(this);
-    }
 
     @Builder
     public User(String email, String password, String nickname, String phoneNumber, SocialType registrationId, String profileImageUrl) {

@@ -8,6 +8,7 @@ import com.spring.blog.domain.User;
 import com.spring.blog.dto.response.ArticleListViewResponse;
 import com.spring.blog.dto.response.LikeResponse;
 import com.spring.blog.dto.response.PageResponse;
+import com.spring.blog.mapper.ArticleMapper;
 import com.spring.blog.repository.ArticleImagesRepository;
 import com.spring.blog.repository.ArticleLikesRepository;
 import com.spring.blog.repository.BlogQueryRepository;
@@ -41,11 +42,11 @@ public class BlogService {
     private final UserRepository userRepository;
     private final CommentRepository commentRepository;
     private final BlogQueryRepository blogQueryRepository;
+    private final BulkInsertRepository bulkInsertRepository;
     private final ArticleLikesRepository articleLikesRepository;
     private final ArticleImagesRepository articleImagesRepository;
 
-    private final BulkInsertRepository bulkInsertRepository;
-
+    private final ArticleMapper articleMapper;
     private final ApplicationEventPublisher eventPublisher;
     private final RedisTemplate<String, Object> redisTemplate;
 
@@ -55,8 +56,7 @@ public class BlogService {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new EntityNotFoundException("not found user from : " + email));
 
-        Article savedArticle = blogRepository.save(request.toEntity(user));
-        user.addArticle(savedArticle);
+        Article savedArticle = blogRepository.save(articleMapper.toEntity(request, user));
 
         Set<Object> imageUrls = redisTemplate.opsForSet().members(sessionId);
 
@@ -82,7 +82,7 @@ public class BlogService {
         Article article = blogRepository.findById(articleId)
                 .orElseThrow(() -> new EntityNotFoundException("not found article from : " + articleId));
 
-        article.update(request.getTitle(), request.getContent());
+        article.update(request.title(), request.content());
 
         return article;
     }

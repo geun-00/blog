@@ -8,6 +8,7 @@ import com.spring.blog.dto.response.ArticleListViewResponse;
 import com.spring.blog.dto.response.ArticleResponse;
 import com.spring.blog.dto.response.LikeResponse;
 import com.spring.blog.dto.response.PageResponse;
+import com.spring.blog.mapper.ArticleMapper;
 import com.spring.blog.model.PrincipalUser;
 import com.spring.blog.service.BlogService;
 import lombok.RequiredArgsConstructor;
@@ -32,6 +33,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class BlogApiController {
 
     private final BlogService blogService;
+    private final ArticleMapper articleMapper;
 
     @PostMapping("/articles")
     public ApiResponse<ArticleResponse> addArticle(@Validated @RequestBody ArticleRequest request,
@@ -39,7 +41,7 @@ public class BlogApiController {
                                                    @CookieValue("JSESSIONID") String sessionId) {
 
         Article savedArticle = blogService.save(
-                request.toServiceRequest(),
+                articleMapper.toServiceRequest(request),
                 principalUser.providerUser().getEmail(),
                 sessionId);
 
@@ -51,7 +53,9 @@ public class BlogApiController {
     @PutMapping("/articles/{articleId}")
     public ApiResponse<ArticleResponse> updateArticle(@Validated @RequestBody ArticleRequest request,
                                                       @PathVariable("articleId") long articleId) {
-        Article updatedArticle = blogService.update(request.toServiceRequest(), articleId);
+        Article updatedArticle = blogService.update(
+                articleMapper.toServiceRequest(request),
+                articleId);
 
         return ApiResponse.of(
                 HttpStatus.CREATED,
@@ -70,7 +74,9 @@ public class BlogApiController {
             @Validated @RequestBody ArticleSearchRequest request,
             @PageableDefault Pageable pageable) {
 
-        PageResponse<ArticleListViewResponse> articles = blogService.findAllByCond(request.toServiceRequest(), pageable);
+        PageResponse<ArticleListViewResponse> articles = blogService.findAllByCond(
+                articleMapper.toServiceRequest(request),
+                pageable);
 
         return ApiResponse.ok(articles);
     }

@@ -89,24 +89,24 @@ public class BlogQueryRepository {
             return null;
         }
 
-        switch (request.getSearchType()) {
+        switch (request.searchType()) {
             case TITLE -> { //제목으로 조회
-                return containsTitle(request.getTitle());
+                return containsTitle(request.title());
             }
             case CONTENT -> { //내용으로 조회
-                return containsContent(request.getContent());
+                return containsContent(request.content());
             }
             case AUTHOR -> { //작성자로 조회
-                return containsAuthor(request.getAuthor());
+                return containsAuthor(request.author());
             }
             case TITLE_CONTENT -> { //제목+내용으로 조회
-                return containsTitle(request.getTitleContent().getTitle())
+                return containsTitle(request.titleContent().title())
                         .and
-                      (containsContent(request.getTitleContent().getContent()));
+                      (containsContent(request.titleContent().content()));
             }
             case PERIOD -> { //기간으로 조회
-                return betweenPeriod(request.getPeriod().getStartDate(),
-                                     request.getPeriod().getEndDate());
+                return betweenPeriod(request.period().startDate(),
+                                     request.period().endDate());
             }
         }
 
