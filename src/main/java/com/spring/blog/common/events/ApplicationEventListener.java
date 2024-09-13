@@ -29,4 +29,26 @@ public class ApplicationEventListener {
             }
         }
     }
+
+    @Async
+    @TransactionalEventListener
+    public void userDeletedEvent(UserDeletedEvent event) {
+        log.info("사용자 삭제 트랜잭션 커밋 후 이벤트 수행");
+
+        try {
+            fileService.deleteFile(event.getProfileImageUrl());
+            log.info("파일 삭제 성공: {}", event.getProfileImageUrl());
+        } catch (Exception e) {
+            log.error("파일 삭제 실패: {}", event.getProfileImageUrl(), e);
+        }
+
+        for (ArticleImages articleImage : event.getArticleImages()) {
+            try {
+                fileService.deleteFile(articleImage.getImageUrl());
+                log.info("파일 삭제 성공: {}", articleImage.getImageUrl());
+            } catch (Exception e) {
+                log.error("파일 삭제 실패: {}", articleImage.getImageUrl(), e);
+            }
+        }
+    }
 }

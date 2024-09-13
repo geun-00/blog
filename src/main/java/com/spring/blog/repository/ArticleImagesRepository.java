@@ -15,5 +15,12 @@ public interface ArticleImagesRepository extends JpaRepository<ArticleImages, Lo
     @Query("DELETE FROM ArticleImages a WHERE a.article.id = :articleId")
     void deleteByArticleId(@Param("articleId") Long articleId);
 
+    @Modifying
+    @Query("DELETE FROM ArticleImages a WHERE a.article IN :articles")
+    void deleteByArticles(@Param("articles") List<Article> articles);
+
     List<ArticleImages> getArticleImagesByArticle(Article article);
+
+    @Query("SELECT a FROM ArticleImages a WHERE a.article IN :articles")
+    List<ArticleImages> findAllByArticles(@Param("articles") List<Article> articles);
 }

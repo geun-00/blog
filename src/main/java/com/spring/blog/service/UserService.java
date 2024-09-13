@@ -2,13 +2,18 @@ package com.spring.blog.service;
 
 import com.spring.blog.common.annotation.DuplicateCheck;
 import com.spring.blog.common.enums.SocialType;
+import com.spring.blog.common.events.UserDeletedEvent;
+import com.spring.blog.domain.Article;
+import com.spring.blog.domain.ArticleImages;
 import com.spring.blog.domain.User;
 import com.spring.blog.dto.request.NewPasswordRequest;
 import com.spring.blog.dto.response.UserInfoResponse;
+import com.spring.blog.exception.ResponseStatusException;
 import com.spring.blog.exception.duplicate.NicknameDuplicateException;
 import com.spring.blog.model.OAuth2ProviderUser;
 import com.spring.blog.model.PrincipalUser;
 import com.spring.blog.model.ProviderUser;
+import com.spring.blog.repository.ArticleImagesRepository;
 import com.spring.blog.repository.ArticleLikesRepository;
 import com.spring.blog.repository.BlogQueryRepository;
 import com.spring.blog.repository.BlogRepository;
@@ -23,6 +28,7 @@ import com.spring.blog.service.oauth.unlink.OAuth2UnlinkService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -33,21 +39,28 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.List;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
+
 @Slf4j
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class UserService {
 
-    private final FileService fileService;
     private final BlogRepository blogRepository;
     private final UserRepository userRepository;
-    private final PasswordEncoder passwordEncoder;
     private final CommentRepository commentRepository;
     private final UserQueryRepository userQueryRepository;
     private final BlogQueryRepository blogQueryRepository;
-    private final OAuth2UnlinkService oAuth2UnlinkService;
     private final ArticleLikesRepository articleLikesRepository;
+    private final ArticleImagesRepository articleImagesRepository;
+
+    private final FileService fileService;
+    private final PasswordEncoder passwordEncoder;
+    private final OAuth2UnlinkService oAuth2UnlinkService;
+    private final ApplicationEventPublisher eventPublisher;
 
     @DuplicateCheck
     @Transactional
@@ -91,30 +104,27 @@ public class UserService {
     @Transactional
     public void deleteUser(PrincipalUser principalUser) {
 
-        String email = principalUser.providerUser().getEmail();
+        CompletableFuture<Void> unlinkFuture = null;
+        if (principalUser.providerUser() instanceof OAuth2ProviderUser) {
+            unlinkFuture = sendUnlinkRequest();
+        }
 
+        String email = principalUser.providerUser().getEmail();
         User user = findByEmail(email);
 
-        Long userId = user.getId();
+        List<Article> articles = blogRepository.findByUser(user);
+        List<ArticleImages> articleImages = articleImagesRepository.findAllByArticles(articles);
 
-        blogQueryRepository.decreaseArticleLikesByUserId(userId);
+        deleteAndUpdateEntities(articles, user);
 
-        articleLikesRepository.deleteByUserId(userId);
-        commentRepository.deleteByUserId(userId);
-        blogRepository.deleteByUserId(userId);
+        eventPublisher.publishEvent(new UserDeletedEvent(user.getProfileImageUrl(), articleImages));
 
-        fileService.deleteFile(user.getProfileImageUrl());
-
-        userRepository.delete(user);
-
-        if (principalUser.providerUser() instanceof OAuth2ProviderUser) {
-            OAuth2AuthenticationToken oAuth2AuthenticationToken =
-                    (OAuth2AuthenticationToken) SecurityContextHolder.getContextHolderStrategy().getContext().getAuthentication();
-
-            String registrationId = oAuth2AuthenticationToken.getAuthorizedClientRegistrationId();
-            String name = oAuth2AuthenticationToken.getPrincipal().getName();
-
-            oAuth2UnlinkService.unlink(registrationId, name);
+        if (unlinkFuture != null) {
+            try {
+                unlinkFuture.get();
+            } catch (InterruptedException | ExecutionException e) {
+                throw new ResponseStatusException(e);
+            }
         }
     }
 
@@ -166,6 +176,29 @@ public class UserService {
     public User findByEmail(String email) {
         return userRepository.findByEmail(email)
                 .orElseThrow(() -> new EntityNotFoundException("not found user from " + email));
+    }
+
+    private CompletableFuture<Void> sendUnlinkRequest() {
+        OAuth2AuthenticationToken oAuth2AuthenticationToken =
+                (OAuth2AuthenticationToken) SecurityContextHolder.getContextHolderStrategy().getContext().getAuthentication();
+
+        String registrationId = oAuth2AuthenticationToken.getAuthorizedClientRegistrationId();
+        String name = oAuth2AuthenticationToken.getPrincipal().getName();
+        return oAuth2UnlinkService.unlink(registrationId, name);
+    }
+
+    private void deleteAndUpdateEntities(List<Article> articles, User user) {
+        articleImagesRepository.deleteByArticles(articles);
+        articleLikesRepository.deleteByArticles(articles);
+        commentRepository.deleteByArticles(articles);
+
+        blogQueryRepository.decreaseArticleLikesByUser(user);
+
+        articleLikesRepository.deleteByUser(user);
+        commentRepository.deleteByUser(user);
+        blogRepository.deleteByUser(user);
+
+        userRepository.delete(user);
     }
 
     private void updateContext(User updatedUser) {

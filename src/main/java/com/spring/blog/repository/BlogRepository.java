@@ -1,6 +1,7 @@
 package com.spring.blog.repository;
 
 import com.spring.blog.domain.Article;
+import com.spring.blog.domain.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.EntityGraph;
@@ -9,6 +10,7 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface BlogRepository extends JpaRepository<Article, Long> {
@@ -28,6 +30,8 @@ public interface BlogRepository extends JpaRepository<Article, Long> {
     Optional<Article> findByIdWithUser(@Param("id") Long articleId);
 
     @Modifying
-    @Query("DELETE FROM Article a WHERE a.user.id = :userId")
-    void deleteByUserId(@Param("userId") Long userId);
+    @Query("DELETE FROM Article a WHERE a.user = :user")
+    void deleteByUser(@Param("user") User user);
+
+    List<Article> findByUser(User user);
 }

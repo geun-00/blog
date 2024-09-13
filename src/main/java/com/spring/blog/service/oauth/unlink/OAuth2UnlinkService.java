@@ -4,20 +4,26 @@ import com.spring.blog.exception.ResponseStatusException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.security.oauth2.client.OAuth2AuthorizedClient;
 import org.springframework.security.oauth2.client.OAuth2AuthorizedClientService;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
+
+import java.util.concurrent.CompletableFuture;
 
 @Slf4j
 @Service
 @RequiredArgsConstructor
 public class OAuth2UnlinkService {
 
-    private final OAuth2AuthorizedClientService auth2AuthorizedClientService;
     private final DelegatingOAuth2UnlinkHandler oAuth2UnlinkHandler;
+    private final OAuth2AuthorizedClientService auth2AuthorizedClientService;
 
-    public void unlink(String registrationId, String name) {
+    @Async
+    public CompletableFuture<Void> unlink(String registrationId, String name) {
+
+        log.info("소셜 연동 해제 요청 시작, Thread : {}", Thread.currentThread());
 
         try {
             AbstractOAuthUnlinkService unlinkHandler = oAuth2UnlinkHandler.getUnlinkHandler(registrationId);
@@ -37,5 +43,7 @@ public class OAuth2UnlinkService {
         } catch (Exception ex) {
             throw new ResponseStatusException(registrationId + " 연동 해제 중 예상하지 못한 오류 발생", ex);
         }
+
+        return CompletableFuture.completedFuture(null);
     }
 }

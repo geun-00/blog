@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface ArticleLikesRepository extends JpaRepository<ArticleLikes, Long> {
@@ -21,6 +22,10 @@ public interface ArticleLikesRepository extends JpaRepository<ArticleLikes, Long
     void deleteByArticleId(@Param("articleId") Long articleId);
 
     @Modifying
-    @Query("DELETE FROM ArticleLikes a WHERE a.user.id = :userId")
-    void deleteByUserId(@Param("userId") Long userId);
+    @Query("DELETE FROM ArticleLikes a WHERE a.article IN :articles")
+    void deleteByArticles(@Param("articles") List<Article> articles);
+
+    @Modifying
+    @Query("DELETE FROM ArticleLikes a WHERE a.user = :user")
+    void deleteByUser(@Param("user") User user);
 }
