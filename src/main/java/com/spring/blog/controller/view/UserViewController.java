@@ -29,7 +29,7 @@ public class UserViewController {
 
     @GetMapping("/oauth")
     public String oauthSignup(Model model) {
-        model.addAttribute("addUserRequest", new OAuthAddUserRequest());
+        model.addAttribute("addUserRequest", new OAuthAddUserRequest(null, null));
         return "oauthSignup";
     }
 

@@ -3,7 +3,7 @@ package com.spring.blog.controller.api;
 import com.spring.blog.common.annotation.CurrentUser;
 import com.spring.blog.controller.dto.request.ArticleRequest;
 import com.spring.blog.domain.Article;
-import com.spring.blog.dto.request.ArticleSearchRequest;
+import com.spring.blog.controller.dto.request.ArticleSearchRequest;
 import com.spring.blog.dto.response.ArticleListViewResponse;
 import com.spring.blog.dto.response.ArticleResponse;
 import com.spring.blog.dto.response.LikeResponse;

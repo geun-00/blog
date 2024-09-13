@@ -1,7 +1,7 @@
 package com.spring.blog.controller.validator;
 
 import com.spring.blog.common.annotation.ValidArticleSearchRequest;
-import com.spring.blog.dto.request.ArticleSearchRequest;
+import com.spring.blog.controller.dto.request.ArticleSearchRequest;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 import org.springframework.util.StringUtils;

@@ -1,16 +1,8 @@
 package com.spring.blog.service.dto.request;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-
-@Data
-@Builder
-@AllArgsConstructor
-public class FormAddUserServiceRequest {
-
-    private String email;
-    private String password;
-    private String nickname;
-    private String phoneNumber;
+public record FormAddUserServiceRequest(
+        String email,
+        String password,
+        String nickname,
+        String phoneNumber) {
 }

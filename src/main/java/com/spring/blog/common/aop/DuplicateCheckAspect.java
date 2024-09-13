@@ -21,16 +21,16 @@ public class DuplicateCheckAspect {
     @Before(value = "Pointcuts.formUser(request)", argNames = "request")
     public void checkDuplicateFormUser(FormAddUserServiceRequest request) {
 
-        checkEmail(request.getEmail());
-        checkPhoneNumber(request.getPhoneNumber());
-        checkNickname(request.getNickname());
+        checkEmail(request.email());
+        checkPhoneNumber(request.phoneNumber());
+        checkNickname(request.nickname());
     }
 
     @Before(value = "Pointcuts.oauthUser(request, email)", argNames = "request,email")
     public void checkDuplicateOauthUser(OAuthAddUserServiceRequest request, String email) {
 
-        checkPhoneNumber(request.getPhoneNumber());
-        checkNickname(request.getNickname());
+        checkPhoneNumber(request.phoneNumber());
+        checkNickname(request.nickname());
     }
 
     private void checkEmail(String request) {

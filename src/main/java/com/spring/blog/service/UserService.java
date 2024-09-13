@@ -6,10 +6,10 @@ import com.spring.blog.common.events.UserDeletedEvent;
 import com.spring.blog.domain.Article;
 import com.spring.blog.domain.ArticleImages;
 import com.spring.blog.domain.User;
-import com.spring.blog.dto.request.NewPasswordRequest;
 import com.spring.blog.dto.response.UserInfoResponse;
 import com.spring.blog.exception.ResponseStatusException;
 import com.spring.blog.exception.duplicate.NicknameDuplicateException;
+import com.spring.blog.mapper.UserMapper;
 import com.spring.blog.model.OAuth2ProviderUser;
 import com.spring.blog.model.PrincipalUser;
 import com.spring.blog.model.ProviderUser;
@@ -22,6 +22,7 @@ import com.spring.blog.repository.UserQueryRepository;
 import com.spring.blog.repository.UserRepository;
 import com.spring.blog.service.dto.request.EditUserServiceRequest;
 import com.spring.blog.service.dto.request.FormAddUserServiceRequest;
+import com.spring.blog.service.dto.request.NewPasswordServiceRequest;
 import com.spring.blog.service.dto.request.OAuthAddUserServiceRequest;
 import com.spring.blog.service.file.FileService;
 import com.spring.blog.service.oauth.unlink.OAuth2UnlinkService;
@@ -57,6 +58,7 @@ public class UserService {
     private final ArticleLikesRepository articleLikesRepository;
     private final ArticleImagesRepository articleImagesRepository;
 
+    private final UserMapper userMapper;
     private final FileService fileService;
     private final PasswordEncoder passwordEncoder;
     private final OAuth2UnlinkService oAuth2UnlinkService;
@@ -66,13 +68,7 @@ public class UserService {
     @Transactional
     public String save(FormAddUserServiceRequest request) {
         User savedUser = userRepository.save(
-                User.builder()
-                        .email(request.getEmail())
-                        .nickname(request.getNickname())
-                        .phoneNumber(request.getPhoneNumber())
-                        .registrationId(SocialType.NONE)
-                        .password(passwordEncoder.encode(request.getPassword()))
-                        .build()
+                userMapper.toEntity(request, SocialType.NONE)
         );
 
         return savedUser.getNickname();
@@ -81,12 +77,7 @@ public class UserService {
     @Transactional
     public void save(ProviderUser providerUser, SocialType socialType) {
         userRepository.save(
-            User.builder()
-                    .registrationId(socialType)
-                    .email(providerUser.getEmail())
-                    .profileImageUrl(providerUser.getProfileImageUrl())
-                    .password(passwordEncoder.encode(providerUser.getPassword()))
-                    .build()
+                userMapper.toEntity(providerUser, socialType)
         );
     }
 
@@ -95,8 +86,8 @@ public class UserService {
     public String updateOAuthUser(OAuthAddUserServiceRequest request, String email) {
         User user = findByEmail(email);
 
-        user.updateNickname(request.getNickname());
-        user.updatePhoneNumber(request.getPhoneNumber());
+        user.updateNickname(request.nickname());
+        user.updatePhoneNumber(request.phoneNumber());
 
         return user.getNickname();
     }
@@ -132,16 +123,16 @@ public class UserService {
     public void editUser(EditUserServiceRequest request, String email) {
         User user = findByEmail(email);
 
-        if (!user.getNickname().equals(request.getNickname()) &&
-                userRepository.existsByNickname(request.getNickname())) {
+        if (!user.getNickname().equals(request.nickname()) &&
+                userRepository.existsByNickname(request.nickname())) {
             throw new NicknameDuplicateException();
         }
 
-        user.updateNickname(request.getNickname());
+        user.updateNickname(request.nickname());
 
         String oldImageUrl = user.getProfileImageUrl();
 
-        MultipartFile imageFile = request.getFile();
+        MultipartFile imageFile = request.file();
 
         if (imageFile != null && StringUtils.hasText(imageFile.getOriginalFilename())) {
 
@@ -155,9 +146,9 @@ public class UserService {
     }
 
     @Transactional
-    public void setNewPassword(NewPasswordRequest request) {
-        User user = findByEmail(request.getEmail());
-        user.updatePassword(passwordEncoder.encode(request.getNewPassword()));
+    public void setNewPassword(NewPasswordServiceRequest request) {
+        User user = findByEmail(request.email());
+        user.updatePassword(passwordEncoder.encode(request.newPassword()));
     }
 
     public UserInfoResponse getUserInfo(String name) {

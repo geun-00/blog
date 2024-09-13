@@ -24,8 +24,8 @@ public class ConditionalValidator implements ConstraintValidator<ConditionalVali
 
         boolean isValid = true;
 
-        if (StringUtils.hasText(request.getNickname()) &&
-                (request.getNickname().length() < 2 || request.getNickname().length() > 20)) {
+        if (StringUtils.hasText(request.nickname()) &&
+                (request.nickname().length() < 2 || request.nickname().length() > 20)) {
 
             context.buildConstraintViolationWithTemplate("별명은 2~20글자 사이만 가능합니다.")
                     .addPropertyNode("nickname")
@@ -33,7 +33,7 @@ public class ConditionalValidator implements ConstraintValidator<ConditionalVali
             isValid = false;
         }
 
-        MultipartFile file = request.getFile();
+        MultipartFile file = request.file();
         if (file != null &&
                 StringUtils.hasText(file.getOriginalFilename()) &&
                 !ALLOW_FILE_TYPES.contains(file.getContentType())

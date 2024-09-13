@@ -1,4 +1,4 @@
-package com.spring.blog.dto.request;
+package com.spring.blog.controller.dto.request;
 
 import com.spring.blog.common.annotation.ValidArticleSearchRequest;
 import com.spring.blog.common.enums.SearchType;
