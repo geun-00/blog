@@ -5,7 +5,7 @@ import com.spring.blog.common.enums.SearchType;
 import com.spring.blog.domain.Article;
 import com.spring.blog.dto.response.ArticleListViewResponse;
 import com.spring.blog.dto.response.AddArticleViewResponse;
-import com.spring.blog.dto.response.ArticleViewResponse;
+import com.spring.blog.service.dto.response.ArticleViewResponse;
 import com.spring.blog.dto.response.PageResponse;
 import com.spring.blog.service.BlogService;
 import jakarta.servlet.http.Cookie;
@@ -71,8 +71,8 @@ public class BlogViewController {
                              @UserKey String userKey,
                              Model model) {
 
-        Article article = blogService.getArticleAndIncreaseViews(id, userKey);
-        model.addAttribute("article", new ArticleViewResponse(article));
+        ArticleViewResponse response = blogService.getArticleAndIncreaseViews(id, userKey);
+        model.addAttribute("article", response);
 
         return "article";
     }

@@ -3,7 +3,8 @@ package com.spring.blog.service;
 import com.spring.blog.domain.Article;
 import com.spring.blog.domain.Comment;
 import com.spring.blog.domain.User;
-import com.spring.blog.dto.response.CommentResponse;
+import com.spring.blog.service.dto.response.CommentResponse;
+import com.spring.blog.mapper.CommentMapper;
 import com.spring.blog.repository.BlogRepository;
 import com.spring.blog.repository.CommentRepository;
 import com.spring.blog.repository.UserRepository;
@@ -19,6 +20,7 @@ import org.thymeleaf.util.StringUtils;
 @RequiredArgsConstructor
 public class CommentService {
 
+    private final CommentMapper commentMapper;
     private final UserRepository userRepository;
     private final BlogRepository blogRepository;
     private final CommentRepository commentRepository;
@@ -32,15 +34,11 @@ public class CommentService {
         User foundUser = userRepository.findByEmail(email).orElseThrow(
                 () -> new EntityNotFoundException("not found user from " + email));
 
-        Comment savedCommend = commentRepository.save(Comment.builder()
-                .content(request.getComment())
-                .user(foundUser)
-                .article(foundArticle)
-                .build());
+        Comment savedCommend = commentRepository.save(commentMapper.toEntity(request, foundUser, foundArticle));
 
         boolean isAuthor = StringUtils.equals(foundUser.getNickname(), foundArticle.getUser().getNickname());
 
-        return new CommentResponse(savedCommend, isAuthor);
+        return commentMapper.toResponse(savedCommend, isAuthor);
     }
 
     @Transactional
@@ -48,7 +46,7 @@ public class CommentService {
         Comment foundComment = commentRepository.findById(commentId).orElseThrow(
                 () -> new EntityNotFoundException("not found comment from " + commentId));
 
-        foundComment.editComment(request.getComment());
+        foundComment.editComment(request.content());
     }
 
     @Transactional

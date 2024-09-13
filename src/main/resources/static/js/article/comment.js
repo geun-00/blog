@@ -13,7 +13,7 @@ export function setupCommentSubmit() {
         }
 
         const body = JSON.stringify({
-            comment: commentText
+            content: commentText
         });
 
         fetch(`/api/comments/${articleId}`, {

@@ -2,9 +2,10 @@ package com.spring.blog.controller.api;
 
 import com.spring.blog.common.annotation.CurrentUser;
 import com.spring.blog.controller.dto.request.CommentRequest;
-import com.spring.blog.dto.response.CommentResponse;
+import com.spring.blog.mapper.CommentMapper;
 import com.spring.blog.model.PrincipalUser;
 import com.spring.blog.service.CommentService;
+import com.spring.blog.service.dto.response.CommentResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -20,6 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class CommentApiController {
 
+    private final CommentMapper commentMapper;
     private final CommentService commentService;
 
     @PostMapping("/comments/{articleId}")
@@ -28,7 +30,10 @@ public class CommentApiController {
                                                    @CurrentUser PrincipalUser principalUser) {
 
         String email = principalUser.providerUser().getEmail();
-        CommentResponse response = commentService.addComment(articleId, request.toServiceRequest(), email);
+        CommentResponse response = commentService.addComment(
+                articleId,
+                commentMapper.toServiceRequest(request),
+                email);
 
         return ApiResponse.ok(response);
     }
@@ -37,7 +42,7 @@ public class CommentApiController {
     public ApiResponse<Void> editComment(@PathVariable("commentId") Long commentId,
                                          @Validated @RequestBody CommentRequest request) {
 
-        commentService.editComment(commentId, request.toServiceRequest());
+        commentService.editComment(commentId, commentMapper.toServiceRequest(request));
 
         return ApiResponse.ok(null);
     }

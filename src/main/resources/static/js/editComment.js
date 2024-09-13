@@ -49,7 +49,7 @@ function saveEdit(button) {
         headers: {
             'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ comment: comment }),
+        body: JSON.stringify({ content: comment }),
     })
         .then(response => response.json())
         .then(data => {

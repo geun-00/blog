@@ -18,6 +18,7 @@ import com.spring.blog.repository.CommentRepository;
 import com.spring.blog.repository.UserRepository;
 import com.spring.blog.service.dto.request.ArticleSearchServiceRequest;
 import com.spring.blog.service.dto.request.ArticleServiceRequest;
+import com.spring.blog.service.dto.response.ArticleViewResponse;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationEventPublisher;
@@ -104,7 +105,7 @@ public class BlogService {
     }
 
     @Transactional
-    public Article getArticleAndIncreaseViews(Long id, String userKey) {
+    public ArticleViewResponse getArticleAndIncreaseViews(Long id, String userKey) {
 
         Article foundArticle = findWithUserAndCommentsById(id);
 
@@ -123,7 +124,7 @@ public class BlogService {
             redisTemplate.expire(userKey, Duration.between(now, nextDay));
         }
 
-        return foundArticle;
+        return articleMapper.toResponse(foundArticle);
     }
 
     @Transactional
