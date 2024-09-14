@@ -12,6 +12,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
+import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import java.util.List;
@@ -21,7 +22,7 @@ import java.util.List;
 public class WebMvcConfig implements WebMvcConfigurer {
 
     private static final String[] EXCLUDE_PATTERNS = {
-            "/images/**", "/css/**", "/js/**", "/style/**", "/*.ico", "/error"
+            "/images/**", "/style/**", "/js/**", "/style/**", "/*.ico", "/error"
     };
 
     private final FileService fileService;
@@ -46,5 +47,14 @@ public class WebMvcConfig implements WebMvcConfigurer {
                 .addPathPatterns("/api/articles/**")
                 .excludePathPatterns("/api/articles/like/**", "/api/articles/search")
                 .excludePathPatterns(EXCLUDE_PATTERNS);
+    }
+
+    @Override
+    public void addViewControllers(ViewControllerRegistry registry) {
+        registry.addViewController("/error/500").setViewName("error/500");
+        registry.addViewController("/findEmail").setViewName("phone-number-request");
+        registry.addViewController("/findPassword").setViewName("email-request");
+
+        registry.addRedirectViewController("/", "/guest");
     }
 }
