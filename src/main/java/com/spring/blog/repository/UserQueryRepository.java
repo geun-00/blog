@@ -2,8 +2,8 @@ package com.spring.blog.repository;
 
 import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import com.spring.blog.dto.response.QUserInfoResponse;
-import com.spring.blog.dto.response.UserInfoResponse;
+import com.spring.blog.service.dto.response.QUserInfo;
+import com.spring.blog.service.dto.response.UserInfo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
@@ -17,10 +17,10 @@ public class UserQueryRepository {
 
     private final JPAQueryFactory query;
 
-    public UserInfoResponse getUserInfo(String name) {
+    public UserInfo getUserInfo(String name) {
 
         return query
-                .select(new QUserInfoResponse(
+                .select(new QUserInfo(
                         user,
                         JPAExpressions
                                 .select(article.count())

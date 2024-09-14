@@ -2,7 +2,7 @@ package com.spring.blog.controller.view;
 
 import com.spring.blog.common.annotation.CurrentUser;
 import com.spring.blog.controller.dto.request.OAuthAddUserRequest;
-import com.spring.blog.dto.response.UserInfoResponse;
+import com.spring.blog.service.dto.response.UserInfoResponse;
 import com.spring.blog.model.PrincipalUser;
 import com.spring.blog.service.UserService;
 import lombok.RequiredArgsConstructor;

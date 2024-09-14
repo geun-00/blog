@@ -6,7 +6,7 @@ import com.spring.blog.common.events.UserDeletedEvent;
 import com.spring.blog.domain.Article;
 import com.spring.blog.domain.ArticleImages;
 import com.spring.blog.domain.User;
-import com.spring.blog.dto.response.UserInfoResponse;
+import com.spring.blog.service.dto.response.UserInfoResponse;
 import com.spring.blog.exception.ResponseStatusException;
 import com.spring.blog.exception.duplicate.NicknameDuplicateException;
 import com.spring.blog.mapper.UserMapper;
@@ -24,6 +24,7 @@ import com.spring.blog.service.dto.request.EditUserServiceRequest;
 import com.spring.blog.service.dto.request.FormAddUserServiceRequest;
 import com.spring.blog.service.dto.request.NewPasswordServiceRequest;
 import com.spring.blog.service.dto.request.OAuthAddUserServiceRequest;
+import com.spring.blog.service.dto.response.UserInfo;
 import com.spring.blog.service.file.FileService;
 import com.spring.blog.service.oauth.unlink.OAuth2UnlinkService;
 import jakarta.persistence.EntityNotFoundException;
@@ -152,16 +153,11 @@ public class UserService {
     }
 
     public UserInfoResponse getUserInfo(String name) {
-        UserInfoResponse userInfo = userQueryRepository.getUserInfo(name);
+        UserInfo userInfo = userQueryRepository.getUserInfo(name);
         if (userInfo == null) {
             throw new EntityNotFoundException("not found user from " + name);
         }
-        return userInfo;
-    }
-
-    public User findById(Long userId) {
-        return userRepository.findById(userId)
-                .orElseThrow(() -> new EntityNotFoundException("not found user from " + userId));
+        return userMapper.toUserInfoResponse(userInfo);
     }
 
     public User findByEmail(String email) {
