@@ -2,11 +2,10 @@ package com.spring.blog.controller.api;
 
 import com.spring.blog.common.annotation.CurrentUser;
 import com.spring.blog.controller.dto.request.ArticleRequest;
-import com.spring.blog.domain.Article;
 import com.spring.blog.controller.dto.request.ArticleSearchRequest;
 import com.spring.blog.dto.response.ArticleListViewResponse;
-import com.spring.blog.dto.response.ArticleResponse;
-import com.spring.blog.dto.response.LikeResponse;
+import com.spring.blog.service.dto.response.ArticleResponse;
+import com.spring.blog.service.dto.response.LikeResponse;
 import com.spring.blog.dto.response.PageResponse;
 import com.spring.blog.mapper.ArticleMapper;
 import com.spring.blog.model.PrincipalUser;
@@ -40,26 +39,26 @@ public class BlogApiController {
                                                    @CurrentUser PrincipalUser principalUser,
                                                    @CookieValue("JSESSIONID") String sessionId) {
 
-        Article savedArticle = blogService.save(
+        ArticleResponse response = blogService.save(
                 articleMapper.toServiceRequest(request),
                 principalUser.providerUser().getEmail(),
                 sessionId);
 
         return ApiResponse.of(
                 HttpStatus.CREATED,
-                new ArticleResponse(savedArticle));
+                response);
     }
 
     @PutMapping("/articles/{articleId}")
     public ApiResponse<ArticleResponse> updateArticle(@Validated @RequestBody ArticleRequest request,
                                                       @PathVariable("articleId") long articleId) {
-        Article updatedArticle = blogService.update(
+        ArticleResponse response = blogService.update(
                 articleMapper.toServiceRequest(request),
                 articleId);
 
         return ApiResponse.of(
                 HttpStatus.CREATED,
-                new ArticleResponse(updatedArticle));
+                response);
     }
 
     @DeleteMapping("/articles/{articleId}")

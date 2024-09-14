@@ -2,9 +2,8 @@ package com.spring.blog.controller.view;
 
 import com.spring.blog.common.annotation.UserKey;
 import com.spring.blog.common.enums.SearchType;
-import com.spring.blog.domain.Article;
 import com.spring.blog.dto.response.ArticleListViewResponse;
-import com.spring.blog.dto.response.AddArticleViewResponse;
+import com.spring.blog.service.dto.response.AddArticleViewResponse;
 import com.spring.blog.service.dto.response.ArticleViewResponse;
 import com.spring.blog.dto.response.PageResponse;
 import com.spring.blog.service.BlogService;
@@ -81,10 +80,10 @@ public class BlogViewController {
     public String newArticle(@RequestParam(name = "id", required = false) Long id, Model model) {
 
         if (id == null) {
-            model.addAttribute("article", new AddArticleViewResponse());
+            model.addAttribute("article", AddArticleViewResponse.of());
         } else {
-            Article article = blogService.findById(id);
-            model.addAttribute("article", new AddArticleViewResponse(article));
+            AddArticleViewResponse article = blogService.getAddArticleViewResponse(id);
+            model.addAttribute("article", article);
         }
 
         return "newArticle";
