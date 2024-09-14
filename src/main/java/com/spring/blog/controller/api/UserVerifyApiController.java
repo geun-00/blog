@@ -1,9 +1,9 @@
 package com.spring.blog.controller.api;
 
-import com.spring.blog.dto.request.EmailRequest;
-import com.spring.blog.dto.request.EmailVerifyCodeRequest;
-import com.spring.blog.dto.request.PhoneNumberRequest;
-import com.spring.blog.dto.request.SmsVerifyCodeRequest;
+import com.spring.blog.controller.dto.request.EmailRequest;
+import com.spring.blog.controller.dto.request.EmailVerifyCodeRequest;
+import com.spring.blog.controller.dto.request.PhoneNumberRequest;
+import com.spring.blog.controller.dto.request.SmsVerifyCodeRequest;
 import com.spring.blog.service.VerificationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
@@ -22,7 +22,7 @@ public class UserVerifyApiController {
     @PostMapping("/verify/phoneNumber")
     public ApiResponse<String> verifyPhoneNumber(@Validated @RequestBody PhoneNumberRequest request) {
 
-        verificationService.sendVerificationCodeBySms(request.getPhoneNumber());
+        verificationService.sendVerificationCodeBySms(request.phoneNumber());
 
         return ApiResponse.ok("인증번호 전송");
     }
@@ -31,8 +31,8 @@ public class UserVerifyApiController {
     public ApiResponse<String> verifyCodeBySms(@Validated @RequestBody SmsVerifyCodeRequest request) {
 
         String foundEmail = verificationService.verifyCodeBySms(
-                request.getVerificationCode(),
-                request.getPhoneNumber()
+                request.verificationCode(),
+                request.phoneNumber()
         );
 
         return ApiResponse.ok(foundEmail);
@@ -41,7 +41,7 @@ public class UserVerifyApiController {
     @PostMapping("/verify/email")
     public ApiResponse<String> verifyEmail(@Validated @RequestBody EmailRequest request) {
 
-        verificationService.sendVerificationCodeByEmail(request.getEmail());
+        verificationService.sendVerificationCodeByEmail(request.email());
 
         return ApiResponse.ok("인증번호 전송");
     }
@@ -50,8 +50,8 @@ public class UserVerifyApiController {
     public ApiResponse<Boolean> verifyCodeByEmail(@Validated @RequestBody EmailVerifyCodeRequest request) {
 
         boolean verification = verificationService.verifyCodeByEmail(
-                request.getVerificationCode(),
-                request.getEmail()
+                request.verificationCode(),
+                request.email()
         );
 
         return ApiResponse.ok(verification);
