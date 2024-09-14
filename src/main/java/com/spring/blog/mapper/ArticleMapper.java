@@ -8,6 +8,8 @@ import com.spring.blog.domain.ArticleLikes;
 import com.spring.blog.domain.User;
 import com.spring.blog.controller.dto.request.ArticleSearchRequest;
 import com.spring.blog.service.dto.response.AddArticleViewResponse;
+import com.spring.blog.service.dto.response.ArticleInfo;
+import com.spring.blog.service.dto.response.ArticleListViewResponse;
 import com.spring.blog.service.dto.response.ArticleResponse;
 import com.spring.blog.service.dto.request.ArticleSearchServiceRequest;
 import com.spring.blog.service.dto.request.ArticleServiceRequest;
@@ -33,6 +35,13 @@ public interface ArticleMapper {
     AddArticleViewResponse toAddArticleViewResponse(Article article);
     ArticleResponse toArticleResponse(Article article);
     LikeResponse toLikeResponse(Boolean liked, Integer likesCount);
+
+    @Mapping(target = "author", source = "article.user.nickname")
+    @Mapping(target = "id", source = "article.id")
+    @Mapping(target = "views", source = "article.views")
+    @Mapping(target = "createdAt", source = "article.createdAt")
+    @Mapping(target = "title", source = "article.title")
+    ArticleListViewResponse toArticleListViewResponse(ArticleInfo articleInfo);
 
     Article toEntity(ArticleServiceRequest request, User user);
     ArticleImages toEntity(Article article, String imageUrl);

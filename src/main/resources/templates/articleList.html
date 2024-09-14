@@ -47,7 +47,7 @@
                         <span th:text="${iter.count}"></span> <!-- 번호 -->
                         <div class="article-container">
                             <a th:href="@{/articles/{id}(id=${article.id})}" th:text="${article.title}"></a>
-                            <span th:text="|[${article.countComment}]|"></span>
+                            <span th:text="|[${article.commentCount}]|"></span>
                         </div>
                     </div>
                 </td>

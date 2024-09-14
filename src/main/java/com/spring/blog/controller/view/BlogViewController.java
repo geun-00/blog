@@ -2,10 +2,10 @@ package com.spring.blog.controller.view;
 
 import com.spring.blog.common.annotation.UserKey;
 import com.spring.blog.common.enums.SearchType;
-import com.spring.blog.dto.response.ArticleListViewResponse;
+import com.spring.blog.service.dto.response.ArticleListViewResponse;
 import com.spring.blog.service.dto.response.AddArticleViewResponse;
 import com.spring.blog.service.dto.response.ArticleViewResponse;
-import com.spring.blog.dto.response.PageResponse;
+import com.spring.blog.service.dto.response.PageResponse;
 import com.spring.blog.service.BlogService;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;

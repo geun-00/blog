@@ -1,4 +1,4 @@
-package com.spring.blog.dto.response;
+package com.spring.blog.service.dto.response;
 
 import lombok.Builder;
 import lombok.Data;

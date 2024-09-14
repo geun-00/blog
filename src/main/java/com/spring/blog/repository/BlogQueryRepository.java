@@ -5,9 +5,11 @@ import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.spring.blog.domain.User;
-import com.spring.blog.dto.response.ArticleListViewResponse;
-import com.spring.blog.dto.response.QArticleListViewResponse;
+import com.spring.blog.mapper.ArticleMapper;
 import com.spring.blog.service.dto.request.ArticleSearchServiceRequest;
+import com.spring.blog.service.dto.response.ArticleInfo;
+import com.spring.blog.service.dto.response.ArticleListViewResponse;
+import com.spring.blog.service.dto.response.QArticleInfo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -26,6 +28,7 @@ import static com.spring.blog.domain.QComment.comment;
 public class BlogQueryRepository {
 
     private final JPAQueryFactory query;
+    private final ArticleMapper articleMapper;
 
     /**
      * 사용자 제거할 때 좋아요 눌렀던 게시글들 좋아요 수 1 감소시키기
@@ -59,8 +62,8 @@ public class BlogQueryRepository {
 
     private Page<ArticleListViewResponse> findArticlesByCond(ArticleSearchServiceRequest request, Pageable pageable) {
 
-        List<ArticleListViewResponse> content = query
-                .select(new QArticleListViewResponse(
+        List<ArticleInfo> articleInfos = query
+                .select(new QArticleInfo(
                         article,
                         JPAExpressions  //서브 쿼리
                                 .select(comment.count())
@@ -74,6 +77,11 @@ public class BlogQueryRepository {
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .fetch();
+
+        List<ArticleListViewResponse> content = articleInfos
+                .stream()
+                .map(articleMapper::toArticleListViewResponse)
+                .toList();
 
         JPAQuery<Long> countQuery = query
                 .select(article.count())
