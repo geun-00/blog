@@ -1,4 +1,6 @@
 spring:
+  cache:
+    type: caffeine
   mail:
     host: smtp.naver.com
     port: 465
@@ -102,6 +104,13 @@ logging:
         orm:
           jdbc:
             bind: trace
+
+springdoc:
+  swagger-ui:
+    oauth2-redirect-url: http://localhost:8080/swagger-ui/oauth2-redirect.html
+    operations-sorter: alpha
+    tags-sorter: alpha
+  enable-spring-security: true
 
 coolsms:
   apiKey: ENC(v1jvmgKPcv63UJXsl+ybJ/DwBT09Cau9bi7n2KbkOoA=)

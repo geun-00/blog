@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
@@ -22,7 +23,7 @@ import java.util.List;
 public class WebMvcConfig implements WebMvcConfigurer {
 
     private static final String[] EXCLUDE_PATTERNS = {
-            "/images/**", "/style/**", "/js/**", "/style/**", "/*.ico", "/error"
+            "/images/**", "/style/**", "/js/**", "/style/**", "/*.ico", "/error", "/swagger-ui/**"
     };
 
     private final FileService fileService;

@@ -61,7 +61,8 @@ public class WebOAuthSecurityConfig {
                 .authenticationManager(setAuthenticationManager(http))
 
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/style/**", "/js/**", "/images/*", "/webjars/**", "/favicon.*", "/*/icon-*", "/h2-console/**").permitAll()
+                        .requestMatchers("/style/**", "/js/**", "/images/*", "/webjars/**", "/favicon.*",
+                                "/*/icon-*", "/h2-console/**", "/swagger-ui/**", "/v3/api-docs/**").permitAll()
 
                         .requestMatchers("/", "/login*", "/userPage*").permitAll() //사용자 관련 뷰 설정
                         .requestMatchers("/api/formUser").permitAll() //사용자 관련 API 설정
@@ -91,6 +92,7 @@ public class WebOAuthSecurityConfig {
                         .usernameParameter("email")
                         .defaultSuccessUrl("/articles")
                         .failureHandler(new LoginFailureHandler())
+                        .permitAll()
                 )
 
                 .oauth2Login(oauth2 -> oauth2
