@@ -10,6 +10,7 @@ import jakarta.persistence.EntityNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.authorization.AuthorizationDeniedException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -119,12 +120,26 @@ public class ApiControllerAdvice {
                 null);
     }
 
+    @ResponseStatus(HttpStatus.FORBIDDEN)
+    @ExceptionHandler(AuthorizationDeniedException.class)
+    public ApiResponse<Object> handleException(AuthorizationDeniedException ex) {
+
+        log.error("권한 오류, 내용 : {}", ex.getAuthorizationResult());
+        ex.printStackTrace(System.out);
+
+        return ApiResponse.of(
+                HttpStatus.FORBIDDEN,
+                "오류가 발생했습니다."
+        );
+    }
+
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     @ExceptionHandler(Exception.class)
     public ApiResponse<Object> handleException(Exception ex, HttpServletRequest request) {
 
         request.setAttribute("cleanup", true);
         log.error("예상하지 못한 오류가 발생했습니다. 내용 : {}", ex.getMessage());
+        ex.printStackTrace(System.out);
 
         return ApiResponse.of(
                 HttpStatus.INTERNAL_SERVER_ERROR,

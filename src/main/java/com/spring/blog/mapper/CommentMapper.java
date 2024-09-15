@@ -19,7 +19,7 @@ public interface CommentMapper {
     @Mapping(target = "article", source = "article")
     Comment toEntity(CommentServiceRequest request, User user, Article article);
 
-    @Mapping(target = "author", source = "comment.user.nickname")
+    @Mapping(target = "username", source = "comment.user.nickname")
     @Mapping(target = "comment", source = "comment.content")
     @Mapping(target = "profileImageUrl", source = "comment.user.profileImageUrl")
     CommentResponse toResponse(Comment comment, boolean isAuthor);

@@ -52,9 +52,11 @@ public class WebMvcConfig implements WebMvcConfigurer {
     @Override
     public void addViewControllers(ViewControllerRegistry registry) {
         registry.addViewController("/error/500").setViewName("error/500");
+        registry.addViewController("/error/403").setViewName("error/403");
+
         registry.addViewController("/findEmail").setViewName("phone-number-request");
         registry.addViewController("/findPassword").setViewName("email-request");
 
-        registry.addRedirectViewController("/", "/guest");
+        registry.addRedirectViewController("/", "/login");
     }
 }

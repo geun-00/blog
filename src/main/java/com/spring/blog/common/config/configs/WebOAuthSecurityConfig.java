@@ -1,9 +1,9 @@
 package com.spring.blog.common.config.configs;
 
 import com.spring.blog.common.config.authority.CustomAuthorityMapper;
-import com.spring.blog.common.config.oauth.logoutHandler.CustomLogoutSuccessHandler;
 import com.spring.blog.common.config.oauth.CustomOAuth2SuccessHandler;
 import com.spring.blog.common.config.oauth.LoginFailureHandler;
+import com.spring.blog.common.config.oauth.logoutHandler.CustomLogoutSuccessHandler;
 import com.spring.blog.common.config.oauth.logoutHandler.KakaoProperties;
 import com.spring.blog.common.converters.DelegatingOAuth2LogoutHandler;
 import com.spring.blog.service.CustomUserDetailsService;
@@ -11,6 +11,7 @@ import com.spring.blog.service.UserService;
 import com.spring.blog.service.oauth.CustomOAuth2UserService;
 import com.spring.blog.service.oauth.CustomOidcUserService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -26,9 +27,10 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.client.OAuth2AuthorizedClientService;
 import org.springframework.security.web.SecurityFilterChain;
 
+@Slf4j
 @Configuration
-@EnableWebSecurity
 @EnableMethodSecurity
+@EnableWebSecurity
 @RequiredArgsConstructor
 public class WebOAuthSecurityConfig {
 
@@ -59,17 +61,36 @@ public class WebOAuthSecurityConfig {
                 .authenticationManager(setAuthenticationManager(http))
 
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/css/**", "/js/**", "/images/*", "/webjars/**", "/favicon.*", "/*/icon-*", "/h2-console/**").permitAll()
-                        .requestMatchers("/", "/signup", "/login*").permitAll()
-//                        .requestMatchers("/api/**").authenticated()
-                        .anyRequest().permitAll())
+                        .requestMatchers("/style/**", "/js/**", "/images/*", "/webjars/**", "/favicon.*", "/*/icon-*", "/h2-console/**").permitAll()
+
+                        .requestMatchers("/", "/login*", "/userPage*").permitAll() //사용자 관련 뷰 설정
+                        .requestMatchers("/api/formUser").permitAll() //사용자 관련 API 설정
+
+                        .requestMatchers("/guest", "/articles/**").permitAll() //게시글 관련 뷰 설정
+                        .requestMatchers("/api/articles/search", "/api/articles/page",
+                                "/api/articles/{articleId}/liked").permitAll() //게시글 관련 API 설정
+
+                        .requestMatchers("/api/verify/**").permitAll() //이메일, 비밀번호 찾기 API
+
+                        .requestMatchers("/error/**").permitAll() //에러 화면
+
+                        .anyRequest().authenticated()
+                )
+
+                .exceptionHandling(exception -> exception
+                        .authenticationEntryPoint((request, response, authException) -> {
+                            log.error("{}, {}", request.getMethod(), request.getRequestURI());
+                            log.error(authException.getMessage());
+                            response.sendRedirect("/error/403");
+                        })
+                )
 
                 .formLogin(formLogin -> formLogin
-                                .loginPage("/login")
-                                .loginProcessingUrl("/loginProc")
-                                .usernameParameter("email")
-                                .defaultSuccessUrl("/articles")
-                                .failureHandler(new LoginFailureHandler())
+                        .loginPage("/login")
+                        .loginProcessingUrl("/loginProc")
+                        .usernameParameter("email")
+                        .defaultSuccessUrl("/articles")
+                        .failureHandler(new LoginFailureHandler())
                 )
 
                 .oauth2Login(oauth2 -> oauth2

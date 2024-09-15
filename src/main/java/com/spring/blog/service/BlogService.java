@@ -5,8 +5,6 @@ import com.spring.blog.domain.Article;
 import com.spring.blog.domain.ArticleImages;
 import com.spring.blog.domain.ArticleLikes;
 import com.spring.blog.domain.User;
-import com.spring.blog.service.dto.response.ArticleListViewResponse;
-import com.spring.blog.service.dto.response.PageResponse;
 import com.spring.blog.mapper.ArticleMapper;
 import com.spring.blog.repository.ArticleImagesRepository;
 import com.spring.blog.repository.ArticleLikesRepository;
@@ -18,9 +16,11 @@ import com.spring.blog.repository.UserRepository;
 import com.spring.blog.service.dto.request.ArticleSearchServiceRequest;
 import com.spring.blog.service.dto.request.ArticleServiceRequest;
 import com.spring.blog.service.dto.response.AddArticleViewResponse;
+import com.spring.blog.service.dto.response.ArticleListViewResponse;
 import com.spring.blog.service.dto.response.ArticleResponse;
 import com.spring.blog.service.dto.response.ArticleViewResponse;
 import com.spring.blog.service.dto.response.LikeResponse;
+import com.spring.blog.service.dto.response.PageResponse;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationEventPublisher;
@@ -28,8 +28,11 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.SetOperations;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
@@ -54,6 +57,7 @@ public class BlogService {
     private final RedisTemplate<String, Object> redisTemplate;
 
     @Transactional
+    @PreAuthorize("isAuthenticated()")
     public ArticleResponse save(ArticleServiceRequest request, String email, String sessionId) {
 
         User user = userRepository.findByEmail(email)
@@ -77,7 +81,8 @@ public class BlogService {
     }
 
     @Transactional
-    public ArticleResponse update(ArticleServiceRequest request, long articleId) {
+    @PreAuthorize("@articleSecurity.isOwner(#articleId, authentication.name)")
+    public ArticleResponse update(ArticleServiceRequest request, @P("articleId") long articleId) {
 
         Article article = blogRepository.findById(articleId)
                 .orElseThrow(() -> new EntityNotFoundException("not found article from : " + articleId));
@@ -88,7 +93,8 @@ public class BlogService {
     }
 
     @Transactional
-    public void delete(long articleId) {
+    @PreAuthorize("@articleSecurity.isOwner(#articleId, authentication.name)")
+    public void delete(@P("articleId") long articleId) {
         Article article = blogRepository.findById(articleId)
                 .orElseThrow(() -> new EntityNotFoundException("not found article from : " + articleId));
 
@@ -128,6 +134,7 @@ public class BlogService {
     }
 
     @Transactional
+    @PreAuthorize("isAuthenticated()")
     public int addLike(Long articleId, String email) {
         User user = userRepository.findByEmail(email).orElseThrow(
                 () -> new EntityNotFoundException("not found user from " + email));
@@ -146,6 +153,7 @@ public class BlogService {
     }
 
     @Transactional
+    @PreAuthorize("isAuthenticated()")
     public int deleteLike(Long articleId, String email) {
 
         User user = userRepository.findByEmail(email).orElseThrow(
@@ -188,11 +196,16 @@ public class BlogService {
     }
 
     public LikeResponse isLiked(Long articleId, String email) {
-        User user = userRepository.findByEmail(email).orElseThrow(
-                () -> new EntityNotFoundException("not found user from " + email));
 
         Article article = blogRepository.findById(articleId).orElseThrow(
                 () -> new EntityNotFoundException("not found article from " + articleId));
+
+        if (!StringUtils.hasText(email)) {
+            return articleMapper.toLikeResponse(false, article.getLikes());
+        }
+
+        User user = userRepository.findByEmail(email).orElseThrow(
+                () -> new EntityNotFoundException("not found user from " + email));
 
         boolean isLiked = articleLikesRepository.existsByUserAndArticle(user, article);
         int likes = article.getLikes();

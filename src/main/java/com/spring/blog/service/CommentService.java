@@ -11,6 +11,8 @@ import com.spring.blog.repository.UserRepository;
 import com.spring.blog.service.dto.request.CommentServiceRequest;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.thymeleaf.util.StringUtils;
@@ -26,6 +28,7 @@ public class CommentService {
     private final CommentRepository commentRepository;
 
     @Transactional
+    @PreAuthorize("isAuthenticated()")
     public CommentResponse addComment(Long articleId, CommentServiceRequest request, String email) {
 
         Article foundArticle = blogRepository.findByIdWithUser(articleId).orElseThrow(
@@ -42,7 +45,8 @@ public class CommentService {
     }
 
     @Transactional
-    public void editComment(Long commentId, CommentServiceRequest request) {
+    @PreAuthorize("@commentSecurity.isOwner(#commentId, authentication.name)")
+    public void editComment(@P("commentId") Long commentId, CommentServiceRequest request) {
         Comment foundComment = commentRepository.findById(commentId).orElseThrow(
                 () -> new EntityNotFoundException("not found comment from " + commentId));
 
@@ -50,7 +54,8 @@ public class CommentService {
     }
 
     @Transactional
-    public void deleteComment(Long commentId) {
+    @PreAuthorize("@commentSecurity.isOwner(#commentId, authentication.name)")
+    public void deleteComment(@P("commentId") Long commentId) {
         Comment foundComment = commentRepository.findById(commentId).orElseThrow(
                 () -> new EntityNotFoundException("not found comment : " + commentId));
 

@@ -56,8 +56,8 @@ function addCommentToList(data) {
             <div class="d-flex align-items-start flex-grow-1">
                 <img src="${data.profileImageUrl}" alt="Profile Image"
                      class="rounded-circle img-fluid">
-                <a class="author-name fw-bold">${data.author}</a>
-                ${isAuthor ? '<span class="badge bg-success text-white ms-2">작성자</span>' : ''}
+                <a class="author-name fw-bold">${data.username}</a>
+                ${data.isAuthor ? '<span class="badge bg-success text-white ms-2">작성자</span>' : ''}
             </div>
         </div>
         

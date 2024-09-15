@@ -3,13 +3,13 @@ package com.spring.blog.controller.api;
 import com.spring.blog.common.annotation.CurrentUser;
 import com.spring.blog.controller.dto.request.ArticleRequest;
 import com.spring.blog.controller.dto.request.ArticleSearchRequest;
+import com.spring.blog.mapper.ArticleMapper;
+import com.spring.blog.model.PrincipalUser;
+import com.spring.blog.service.BlogService;
 import com.spring.blog.service.dto.response.ArticleListViewResponse;
 import com.spring.blog.service.dto.response.ArticleResponse;
 import com.spring.blog.service.dto.response.LikeResponse;
 import com.spring.blog.service.dto.response.PageResponse;
-import com.spring.blog.mapper.ArticleMapper;
-import com.spring.blog.model.PrincipalUser;
-import com.spring.blog.service.BlogService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -111,7 +111,8 @@ public class BlogApiController {
     public ApiResponse<LikeResponse> isLiked(@PathVariable("articleId") Long articleId,
                                              @CurrentUser PrincipalUser principalUser) {
 
-        LikeResponse response = blogService.isLiked(articleId, principalUser.providerUser().getEmail());
+        LikeResponse response = blogService.isLiked(articleId,
+                principalUser != null ? principalUser.providerUser().getEmail() : null);
 
         return ApiResponse.ok(response);
     }

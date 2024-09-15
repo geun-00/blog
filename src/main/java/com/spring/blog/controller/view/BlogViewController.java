@@ -2,17 +2,19 @@ package com.spring.blog.controller.view;
 
 import com.spring.blog.common.annotation.UserKey;
 import com.spring.blog.common.enums.SearchType;
-import com.spring.blog.service.dto.response.ArticleListViewResponse;
+import com.spring.blog.service.BlogService;
 import com.spring.blog.service.dto.response.AddArticleViewResponse;
+import com.spring.blog.service.dto.response.ArticleListViewResponse;
 import com.spring.blog.service.dto.response.ArticleViewResponse;
 import com.spring.blog.service.dto.response.PageResponse;
-import com.spring.blog.service.BlogService;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -29,13 +31,13 @@ public class BlogViewController {
 
     private final BlogService blogService;
 
-    @GetMapping("/")
-    public String home() {
-        return "redirect:/guest";
-    }
-
     @GetMapping("/guest")
     public String guest(HttpServletRequest request, HttpServletResponse response) {
+
+        HttpSession session = request.getSession(false);
+        if (session != null) {
+            session.invalidate();
+        }
 
         if (request.getCookies() != null) {
             for (Cookie cookie : request.getCookies()) {
@@ -46,6 +48,8 @@ public class BlogViewController {
                 }
             }
         }
+
+        SecurityContextHolder.clearContext();
 
         return "redirect:/articles";
     }

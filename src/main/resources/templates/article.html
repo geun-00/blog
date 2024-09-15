@@ -80,9 +80,9 @@
                                 <div class="d-flex align-items-start flex-grow-1">
                                     <img th:src="${comment.profileImageUrl}" alt="Profile Image"
                                          class="rounded-circle img-fluid"
-                                         th:onclick="|location.href='@{/userPage(username=${comment.author})}'|">
-                                    <a class="author-name fw-bold" th:text="${comment.author}"
-                                       th:onclick="|location.href='@{/userPage(username=${comment.author})}'|"></a>
+                                         th:onclick="|location.href='@{/userPage(username=${comment.username})}'|">
+                                    <a class="author-name fw-bold" th:text="${comment.username}"
+                                       th:onclick="|location.href='@{/userPage(username=${comment.username})}'|"></a>
                                     <span th:if="${comment.isAuthor()}"
                                           class="badge bg-success ms-2">작성자</span>
                                 </div>
@@ -91,7 +91,7 @@
                             <div class="d-flex align-items-center position-relative">
                                 <div class="comment-content fs-5 flex-grow-1" th:text="${comment.comment}"></div>
                                 <input type="text" class="form-control d-none" style="flex-grow: 1;" />
-                                <button th:if="${#authentication.getName().equals(comment.author)}"
+                                <button th:if="${#authentication.getName().equals(comment.username)}"
                                         class="btn btn-link p-0 ms-3" style="margin-left: auto"
                                         type="button" onclick="toggleOptions(this)">
                                     <img src="/images/menu.png" alt="options" style="width: 20px; height: 20px;">

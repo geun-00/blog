@@ -9,6 +9,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface CommentRepository extends JpaRepository<Comment, Long> {
 
@@ -23,4 +24,7 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
     @Modifying
     @Query("DELETE FROM Comment c WHERE c.article IN :articles")
     void deleteByArticles(@Param("articles") List<Article> articles);
+
+    @Query("SELECT c FROM Comment c JOIN FETCH c.user WHERE c.id = :commentId")
+    Optional<Comment> findByIdWithUser(@Param("commentId") Long commentId);
 }
