@@ -1,6 +1,8 @@
 spring:
-  cache:
-    type: caffeine
+  profiles:
+    default: local
+
+  # 메일 설정
   mail:
     host: smtp.naver.com
     port: 465
@@ -14,11 +16,12 @@ spring:
             enable: true
           starttls:
             enable: true
+
+  # oauth 설정
   security:
     oauth2:
       client:
         registration:
-
           google:
             client-id: ENC(uTmUe3/W8In1+WmDVIAiQ/5+5Y7Oy6pRm43pytRe8p/8TfxHFP53G9EJHr9QXOvXF0nydbr56ahnvg+wShMFOMqSKtcMJ6eUzmrsBZSE9aSTRW7x7BXNnw==)
             client-secret: ENC(vKSRL4Hllw5KpnS5EmrgcRsGweaSIHVwLQUHEceCcq7wFMAW9GIjmKEL9tZ/3YUI)
@@ -67,6 +70,7 @@ spring:
   thymeleaf:
     cache: false
 
+  # 레디스 설정
   data:
     redis:
       host: localhost
@@ -100,17 +104,23 @@ jasypt:
 logging:
   level:
     org:
+      springframework.cache: trace
       hibernate:
         orm:
           jdbc:
             bind: trace
 
 springdoc:
+  api-docs:
+    enabled: true
   swagger-ui:
     oauth2-redirect-url: http://localhost:8080/swagger-ui/oauth2-redirect.html
     operations-sorter: alpha
     tags-sorter: alpha
+    enabled: true
   enable-spring-security: true
+  show-login-endpoint: true
+  default-support-form-data: true
 
 coolsms:
   apiKey: ENC(v1jvmgKPcv63UJXsl+ybJ/DwBT09Cau9bi7n2KbkOoA=)
@@ -122,3 +132,60 @@ kakao:
     uri: https://kauth.kakao.com/oauth/logout
     client-id: ENC(n4OSe67MumM65r8zdpky0BlZp3uX9rGq9DRVcW3P1DxGi341wC3bD0vgsikha15g)
     redirect-uri: http://localhost:8080/login
+
+# aws s3 설정
+cloud:
+  aws:
+    s3:
+      bucket: geunblog
+    stack:
+      auto: false
+    region:
+      static: ap-northeast-2
+    credentials:
+      access-key: ENC(Ygyco5iE1GZwrh4jbrYSBivHC8mYkfs7Su3CaKHkLik=)
+      secret-key: ENC(iA76vtakKr36GXZjbAgzilVxI7K2SBPuQt4//AjHlyz6Yau5V+R20s3DS6Pzb9o/JY/Pnv9+S4A=)
+
+---
+spring:
+  config:
+    activate:
+      on-profile: local
+
+  datasource:
+    url: jdbc:mysql://localhost:3306/blog?rewriteBatchedStatements=true
+    username: root
+    password: 1234
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+  jpa:
+    properties:
+      hibernate:
+        hbm2ddl:
+          auto: none
+        dialect: org.hibernate.dialect.MySQLDialect
+
+profile:
+  default:
+    image-url: https://geunblog.s3.ap-northeast-2.amazonaws.com/user/default-user-image.jpg
+
+---
+spring:
+  config:
+    activate:
+      on-profile: test
+
+  datasource:
+    url: jdbc:h2:tcp://localhost/~/blog
+    username: sa
+  jpa:
+    properties:
+      hibernate:
+        hbm2ddl:
+          auto: create
+  h2:
+    console:
+      enabled: true
+
+file:
+  dir: C:/Users/User/Desktop/blog/upload

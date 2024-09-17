@@ -78,7 +78,7 @@ function renderArticles(data, pageNumber, pageSize) {
                     <span>${count++}</span>
                         <div class="article-container">
                             <a href="/articles/${article.id}">${article.title}</a>
-                            <span>[${article.countComment}]</span> <!-- 댓글 수 표시 -->
+                            <span>[${article.commentCount}]</span> <!-- 댓글 수 표시 -->
                         </div>
                     </div>
                 </td>
