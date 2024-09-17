@@ -25,12 +25,9 @@ public class S3Controller {
     @PostMapping("/api/s3-upload-url")
     public ApiResponse<String> getPreSignedUrl(@RequestPart("file") MultipartFile file,
                                                @CookieValue("JSESSIONID") String sessionID) {
-
-
         fileService.validImageFile(file);
 
         String url = fileService.generatedPreSignedUrl(file.getOriginalFilename());
-
 
         SetOperations<String, Object> so = redisTemplate.opsForSet();
         Set<Object> members = so.members(sessionID);
