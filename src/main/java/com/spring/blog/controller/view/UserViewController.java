@@ -41,7 +41,7 @@ public class UserViewController {
 
         model.addAttribute("user", response);
 
-        return "myPage";
+        return "userInfo";
     }
 
     @GetMapping("/myPage")
@@ -54,6 +54,6 @@ public class UserViewController {
 
         model.addAttribute("user", response);
 
-        return "myPage";
+        return "userInfo";
     }
 }

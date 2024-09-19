@@ -2,12 +2,18 @@ package com.spring.blog;
 
 import com.spring.blog.domain.Article;
 import com.spring.blog.domain.User;
+import com.spring.blog.model.PrincipalUser;
+import com.spring.blog.model.ProviderUser;
 import com.spring.blog.service.dto.response.AddArticleViewResponse;
 import com.spring.blog.service.dto.response.ArticleListViewResponse;
 import com.spring.blog.service.dto.response.ArticleViewResponse;
 import com.spring.blog.service.dto.response.PageResponse;
+import com.spring.blog.service.dto.response.UserInfoResponse;
+import net.datafaker.Faker;
 import org.jeasy.random.EasyRandom;
 import org.jeasy.random.EasyRandomParameters;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
 import java.lang.reflect.Field;
 import java.util.List;
@@ -20,6 +26,8 @@ import static org.jeasy.random.FieldPredicates.named;
 import static org.jeasy.random.FieldPredicates.ofType;
 
 public class EasyRandomFactory {
+
+    private static final Faker FAKER = new Faker();
 
     public static PageResponse<ArticleListViewResponse> createPageResponse(int size, int currentPage, int pageSize) {
 
@@ -86,5 +94,76 @@ public class EasyRandomFactory {
         EasyRandom easyRandom = new EasyRandom(parameters);
 
         return easyRandom.nextObject(AddArticleViewResponse.class);
+    }
+
+    public static UserInfoResponse createUserInfoResponse() {
+
+        EasyRandomParameters parameters = new EasyRandomParameters()
+                .objectFactory(new RecordFactory());
+
+        EasyRandom easyRandom = new EasyRandom(parameters);
+
+        return easyRandom.nextObject(UserInfoResponse.class);
+    }
+
+    public static PrincipalUser createPrincipalUser() {
+
+        EasyRandomParameters parameters = new EasyRandomParameters()
+                .randomize(ProviderUser.class, FakeProviderUser::new)
+                .objectFactory(new RecordFactory());
+
+        EasyRandom easyRandom = new EasyRandom(parameters);
+
+        PrincipalUser principalUser = easyRandom.nextObject(PrincipalUser.class);
+        return principalUser.withUpdatedUser(null);
+    }
+
+    private static class FakeProviderUser implements ProviderUser {
+
+        private final String id;
+        private final String username;
+        private final String password;
+        private final String email;
+        private final String profileImageUrl;
+        private final List<? extends GrantedAuthority> authorities;
+
+        public FakeProviderUser() {
+            this.id = FAKER.idNumber().valid();
+            this.username = "nickname";
+            this.password = FAKER.internet().password();
+            this.email = FAKER.internet().emailAddress();
+            this.profileImageUrl = FAKER.image().base64GIF();
+            this.authorities = List.of(new SimpleGrantedAuthority("ROLE_USER"));
+        }
+
+        @Override
+        public String getId() {
+            return id;
+        }
+
+        @Override
+        public String getUsername() {
+            return username;
+        }
+
+        @Override
+        public String getPassword() {
+            return password;
+        }
+
+        @Override
+        public String getEmail() {
+            return email;
+        }
+
+        @Override
+        public String getProfileImageUrl() {
+            return profileImageUrl;
+        }
+
+        @Override
+        public List<? extends GrantedAuthority> getAuthorities() {
+            return authorities;
+        }
     }
 }
