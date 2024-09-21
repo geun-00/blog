@@ -11,7 +11,7 @@ public enum SearchType {
     TITLE("title", "제목"),
     CONTENT("content", "내용"),
     AUTHOR("author", "작성자"),
-    TITLE_CONTENT("title-content", "제목 + 내용"),
+    TITLE_CONTENT("title_content", "제목 + 내용"),
     PERIOD("period", "기간");
 
     private final String description_en;
@@ -20,7 +20,7 @@ public enum SearchType {
     @JsonCreator
     public static SearchType of(String value) {
         for (SearchType type : values()) {
-            if (type.getDescription_en().equals(value)) {
+            if (type.getDescription_en().equalsIgnoreCase(value)) {
                 return type;
             }
         }

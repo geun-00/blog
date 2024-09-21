@@ -28,13 +28,7 @@ function submitForm() {
                 return;
             }
             break;
-        case 'views':
-            if (!searchViews) {
-                sendAlert('조회수');
-                return;
-            }
-            break;
-        case 'title-content':
+        case 'title_content':
             if (!searchTitleWithContent) {
                 sendAlert('제목');
                 return;

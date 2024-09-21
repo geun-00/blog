@@ -5,6 +5,7 @@ import com.spring.blog.common.enums.SearchType;
 import com.spring.blog.controller.ViewControllerIntegrationTestSupport;
 import com.spring.blog.domain.Article;
 import com.spring.blog.domain.User;
+import com.spring.blog.parameterized.PageInfoData;
 import com.spring.blog.service.dto.response.AddArticleViewResponse;
 import com.spring.blog.service.dto.response.ArticleListViewResponse;
 import com.spring.blog.service.dto.response.ArticleViewResponse;
@@ -20,19 +21,18 @@ import org.junit.jupiter.api.DynamicTest;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestFactory;
 import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.Arguments;
-import org.junit.jupiter.params.provider.MethodSource;
+import org.junit.jupiter.params.provider.ArgumentsSource;
 import org.springframework.mock.web.MockHttpSession;
 import org.springframework.security.test.context.support.WithAnonymousUser;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.IntStream;
-import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -44,21 +44,12 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
 @DisplayName("블로그 뷰 통합 테스트")
+@Transactional
 class BlogViewControllerTest extends ViewControllerIntegrationTestSupport {
-
-    private static Stream<Arguments> pageInfo() {
-        return Stream.of(
-                //dataSize, currentPage, pageSize
-                Arguments.of(50, 1, 5),
-                Arguments.of(75, 3, 10),
-                Arguments.of(100, 5, 20),
-                Arguments.of(300, 7, 30),
-                Arguments.of(500, 9, 40)
-        );
-    }
 
     @BeforeEach
     void setUp() {
+        articleLikesRepository.deleteAllInBatch();
         blogRepository.deleteAllInBatch();
     }
 
@@ -89,15 +80,15 @@ class BlogViewControllerTest extends ViewControllerIntegrationTestSupport {
     }
 
     @DisplayName("/getArticles 테스트, 모델에 정확한 데이터와 페이지 정보가 담겨야 한다.")
-    @ParameterizedTest
-    @MethodSource("pageInfo")
+    @ParameterizedTest(name = "데이터 개수 : {0}, 페이지 번호 : {1}, 페이지 크기 : {2}")
+    @ArgumentsSource(PageInfoData.class)
     void getArticles(int dataSize, int currentPage, int pageSize) throws Exception {
 
         // given
         User user = userRepository.findByEmail("user@test.com").get();
 
         List<Article> articleList = EasyRandomFactory.createArticles(dataSize, user);
-        blogRepository.saveAll(articleList);
+        bulkInsertRepository.saveArticles(articleList);
 
         // when
         MvcResult result = mockMvc.perform(

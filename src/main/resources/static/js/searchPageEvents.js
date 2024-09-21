@@ -16,7 +16,7 @@ document.addEventListener('DOMContentLoaded', function () {
         title: document.getElementById('search-title'),
         author: document.getElementById('search-author'),
         content: document.getElementById('search-content'),
-        'title-content': document.getElementById('search-title-content')
+        'title_content': document.getElementById('search-title-content')
     };
 
     const searchInputs = {

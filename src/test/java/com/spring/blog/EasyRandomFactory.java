@@ -1,9 +1,12 @@
 package com.spring.blog;
 
+import com.spring.blog.common.enums.SearchType;
+import com.spring.blog.controller.dto.request.ArticleSearchRequest;
 import com.spring.blog.domain.Article;
 import com.spring.blog.domain.User;
 import com.spring.blog.model.PrincipalUser;
 import com.spring.blog.model.ProviderUser;
+import com.spring.blog.service.dto.request.ArticleSearchServiceRequest;
 import com.spring.blog.service.dto.response.AddArticleViewResponse;
 import com.spring.blog.service.dto.response.ArticleListViewResponse;
 import com.spring.blog.service.dto.response.ArticleViewResponse;
@@ -118,6 +121,28 @@ public class EasyRandomFactory {
         return principalUser.withUpdatedUser(null);
     }
 
+    public static ArticleSearchServiceRequest createArticleSearchServiceRequest(SearchType searchType) {
+
+        EasyRandomParameters parameters = new EasyRandomParameters()
+                .randomize(SearchType.class, () -> searchType)
+                .objectFactory(new RecordFactory());
+
+        EasyRandom easyRandom = new EasyRandom(parameters);
+
+        return easyRandom.nextObject(ArticleSearchServiceRequest.class);
+    }
+
+    public static ArticleSearchRequest createArticleSearchRequest(SearchType searchType) {
+
+        EasyRandomParameters parameters = new EasyRandomParameters()
+                .randomize(SearchType.class, () -> searchType)
+                .objectFactory(new RecordFactory());
+
+        EasyRandom easyRandom = new EasyRandom(parameters);
+
+        return easyRandom.nextObject(ArticleSearchRequest.class);
+    }
+
     private static class FakeProviderUser implements ProviderUser {
 
         private final String id;
@@ -129,9 +154,9 @@ public class EasyRandomFactory {
 
         public FakeProviderUser() {
             this.id = FAKER.idNumber().valid();
-            this.username = "nickname";
-            this.password = FAKER.internet().password();
-            this.email = FAKER.internet().emailAddress();
+            this.username = "nickname0";
+            this.password = "password12@";
+            this.email = "user@test.com";
             this.profileImageUrl = FAKER.image().base64GIF();
             this.authorities = List.of(new SimpleGrantedAuthority("ROLE_USER"));
         }
