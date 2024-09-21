@@ -80,9 +80,8 @@ public class EasyRandomFactory {
 
     public static ArticleViewResponse createArticleViewResponse(Long articleId) {
 
-        EasyRandomParameters parameters = new EasyRandomParameters()
-                .randomize(Long.class, () -> new Random().nextLong(1, 101))
-                .objectFactory(new RecordFactory());
+        EasyRandomParameters parameters = defaultParameters()
+                .randomize(Long.class, () -> new Random().nextLong(1, 101));
 
         EasyRandom easyRandom = new EasyRandom(parameters);
 
@@ -91,8 +90,7 @@ public class EasyRandomFactory {
 
     public static AddArticleViewResponse createAddArticleViewResponse() {
 
-        EasyRandomParameters parameters = new EasyRandomParameters()
-                .objectFactory(new RecordFactory());
+        EasyRandomParameters parameters = defaultParameters();
 
         EasyRandom easyRandom = new EasyRandom(parameters);
 
@@ -101,8 +99,7 @@ public class EasyRandomFactory {
 
     public static UserInfoResponse createUserInfoResponse() {
 
-        EasyRandomParameters parameters = new EasyRandomParameters()
-                .objectFactory(new RecordFactory());
+        EasyRandomParameters parameters = defaultParameters();
 
         EasyRandom easyRandom = new EasyRandom(parameters);
 
@@ -111,9 +108,8 @@ public class EasyRandomFactory {
 
     public static PrincipalUser createPrincipalUser() {
 
-        EasyRandomParameters parameters = new EasyRandomParameters()
-                .randomize(ProviderUser.class, FakeProviderUser::new)
-                .objectFactory(new RecordFactory());
+        EasyRandomParameters parameters = defaultParameters()
+                .randomize(ProviderUser.class, FakeProviderUser::new);
 
         EasyRandom easyRandom = new EasyRandom(parameters);
 
@@ -123,9 +119,8 @@ public class EasyRandomFactory {
 
     public static ArticleSearchServiceRequest createArticleSearchServiceRequest(SearchType searchType) {
 
-        EasyRandomParameters parameters = new EasyRandomParameters()
-                .randomize(SearchType.class, () -> searchType)
-                .objectFactory(new RecordFactory());
+        EasyRandomParameters parameters = defaultParameters()
+                .randomize(SearchType.class, () -> searchType);
 
         EasyRandom easyRandom = new EasyRandom(parameters);
 
@@ -134,13 +129,17 @@ public class EasyRandomFactory {
 
     public static ArticleSearchRequest createArticleSearchRequest(SearchType searchType) {
 
-        EasyRandomParameters parameters = new EasyRandomParameters()
-                .randomize(SearchType.class, () -> searchType)
-                .objectFactory(new RecordFactory());
+        EasyRandomParameters parameters = defaultParameters()
+                .randomize(SearchType.class, () -> searchType);
 
         EasyRandom easyRandom = new EasyRandom(parameters);
 
         return easyRandom.nextObject(ArticleSearchRequest.class);
+    }
+
+    private static EasyRandomParameters defaultParameters() {
+        return new EasyRandomParameters()
+                .objectFactory(new RecordFactory());
     }
 
     private static class FakeProviderUser implements ProviderUser {

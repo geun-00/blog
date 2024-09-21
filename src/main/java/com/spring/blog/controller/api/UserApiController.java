@@ -69,7 +69,7 @@ public class UserApiController {
     }
 
     @PostMapping("/user/newPassword")
-    public ApiResponse<?> setNewPassword(@RequestBody NewPasswordRequest request) {
+    public ApiResponse<?> setNewPassword(@Validated @RequestBody NewPasswordRequest request) {
         userService.setNewPassword(userMapper.toServiceRequest(request));
 
         return ApiResponse.ok(null);

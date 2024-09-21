@@ -9,10 +9,8 @@ import com.spring.blog.controller.advice.ApiControllerAdvice;
 import com.spring.blog.controller.api.BlogApiController;
 import com.spring.blog.controller.dto.request.ArticleRequest;
 import com.spring.blog.controller.dto.request.ArticleSearchRequest;
-import com.spring.blog.mapper.ArticleMapper;
 import com.spring.blog.parameterized.PageInfoData;
 import com.spring.blog.parameterized.SearchTypeWithPageInfo;
-import com.spring.blog.service.BlogService;
 import com.spring.blog.service.dto.request.ArticleSearchServiceRequest;
 import com.spring.blog.service.dto.request.ArticleServiceRequest;
 import com.spring.blog.service.dto.response.ArticleListViewResponse;
@@ -27,7 +25,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestFactory;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ArgumentsSource;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
 import org.springframework.http.MediaType;
@@ -60,12 +57,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @DisplayName("블로그 API 단위 테스트")
 public class BlogApiControllerUnitTest extends ApiControllerUnitTestSupport {
-
-    @MockBean
-    private BlogService blogService;
-
-    @MockBean
-    private ArticleMapper articleMapper;
 
     @BeforeEach
     void setUp() {
@@ -266,7 +257,7 @@ public class BlogApiControllerUnitTest extends ApiControllerUnitTestSupport {
     }
 
     @DisplayName("GET /api/articles/page 테스트")
-    @ParameterizedTest(name = "데이터 개수 : {1}, 페이지 번호 : {2}, 페이지 크기 : {3}")
+    @ParameterizedTest(name = "데이터 개수 : {0}, 페이지 번호 : {1}, 페이지 크기 : {2}")
     @ArgumentsSource(PageInfoData.class)
     void getPagingArticles(int dataSize, int currentPage, int pageSize) throws Exception {
 
