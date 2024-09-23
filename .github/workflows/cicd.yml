@@ -18,8 +18,11 @@ jobs:
       - name: Grant execute permession for gradlew
         run: chmod +x gradlew
 
+      - name: Set JASYPT encrypt key
+        run: echo "ENCRYPT_KEY=${{ secrets.ENCRYPT_KEY }}" >> $GITHUB_ENV
+
       - name: Build with Gradle
-        run: ./gradlew clean build
+        run: ./gradlew clean build -Djasypt.encryptor.password=${{ secrets.ENCRYPT_KEY }}
 
       - name: Get current time
         uses: josStorer/get-current-time@v2.0.2
