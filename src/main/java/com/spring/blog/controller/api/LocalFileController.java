@@ -21,7 +21,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 
-@Profile("test")
+@Profile({"test", "local"})
 @RestController
 @RequiredArgsConstructor
 public class LocalFileController {

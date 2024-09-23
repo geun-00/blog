@@ -1,0 +1,43 @@
+spring:
+  config:
+    activate:
+      on-profile: local
+
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/blog?rewriteBatchedStatements=true
+    username: root
+    password: 1234
+
+  thymeleaf:
+    cache: false
+
+  jpa:
+    show-sql: true
+    properties:
+      hibernate:
+        hbm2ddl:
+          auto: none
+        dialect: org.hibernate.dialect.MySQLDialect
+        format_sql: true
+        highlight_sql: true
+
+        order_updates: true
+        order_inserts: true
+        jdbc:
+          batch_size: 100
+
+logging:
+  level:
+    org.springframework.transaction.interceptor: debug
+    org.springframework.transaction: DEBUG
+    org.springframework.orm.jpa.JpaTransactionManager: DEBUG
+    org:
+      springframework.cache: trace
+      hibernate:
+        orm:
+          jdbc:
+            bind: trace
+
+file:
+  dir: C:/Users/User/Desktop/blog/upload
