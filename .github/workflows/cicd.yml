@@ -18,6 +18,9 @@ jobs:
       - name: Grant execute permession for gradlew
         run: chmod +x gradlew
 
+      - name: Set JASYPT encrypt key
+        run: echo "ENCRYPT_KEY=${{ secrets.ENCRYPT_KEY }}" >> $GITHUB_ENV
+
       - name: Build with Gradle
         run: ./gradlew clean build
 
