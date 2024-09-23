@@ -18,20 +18,8 @@ jobs:
       - name: Grant execute permession for gradlew
         run: chmod +x gradlew
 
-#      - name: Set JASYPT encrypt key
-#        run: echo "ENCRYPT_KEY=${{ secrets.ENCRYPT_KEY }}" >> $GITHUB_ENV
-
       - name: Set JASYPT encrypt key
-        run: echo "ENCRYPT_KEY is set"
-
-      - name: Debug environment variables
-        run: |
-          if [ -z "${{ secrets.ENCRYPT_KEY }}" ]; then
-            echo "ENCRYPT_KEY is not set!"
-            exit 1
-          else
-            echo "ENCRYPT_KEY is properly set."
-          fi
+        run: echo "ENCRYPT_KEY=${{ secrets.ENCRYPT_KEY }}" >> $GITHUB_ENV
 
       - name: Build with Gradle
         run: ./gradlew clean build -Djasypt.encryptor.password=${{ secrets.ENCRYPT_KEY }}
@@ -54,5 +42,5 @@ jobs:
           application_name: blog server
           environment_name: Blogserver-env
           version_label: github-action-${{steps.current-time.outputs.formattedTime}}
-          region: ap-northeast-2
+          aws-region: ap-northeast-2
           deployment_package: ./build/libs/${{env.artifact}}
