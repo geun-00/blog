@@ -18,8 +18,20 @@ jobs:
       - name: Grant execute permession for gradlew
         run: chmod +x gradlew
 
+#      - name: Set JASYPT encrypt key
+#        run: echo "ENCRYPT_KEY=${{ secrets.ENCRYPT_KEY }}" >> $GITHUB_ENV
+
       - name: Set JASYPT encrypt key
-        run: echo "ENCRYPT_KEY=${{ secrets.ENCRYPT_KEY }}" >> $GITHUB_ENV
+        run: echo "ENCRYPT_KEY is set"
+
+      - name: Debug environment variables
+        run: |
+          if [ -z "${{ secrets.ENCRYPT_KEY }}" ]; then
+            echo "ENCRYPT_KEY is not set!"
+            exit 1
+          else
+            echo "ENCRYPT_KEY is properly set."
+          fi
 
       - name: Build with Gradle
         run: ./gradlew clean build -Djasypt.encryptor.password=${{ secrets.ENCRYPT_KEY }}
