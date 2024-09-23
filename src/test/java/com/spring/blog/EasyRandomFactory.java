@@ -10,6 +10,7 @@ import com.spring.blog.service.dto.request.ArticleSearchServiceRequest;
 import com.spring.blog.service.dto.response.AddArticleViewResponse;
 import com.spring.blog.service.dto.response.ArticleListViewResponse;
 import com.spring.blog.service.dto.response.ArticleViewResponse;
+import com.spring.blog.service.dto.response.CommentResponse;
 import com.spring.blog.service.dto.response.PageResponse;
 import com.spring.blog.service.dto.response.UserInfoResponse;
 import net.datafaker.Faker;
@@ -140,6 +141,13 @@ public class EasyRandomFactory {
     private static EasyRandomParameters defaultParameters() {
         return new EasyRandomParameters()
                 .objectFactory(new RecordFactory());
+    }
+
+    public static CommentResponse createCommentResponse() {
+
+        EasyRandom easyRandom = new EasyRandom(defaultParameters());
+
+        return easyRandom.nextObject(CommentResponse.class);
     }
 
     private static class FakeProviderUser implements ProviderUser {
