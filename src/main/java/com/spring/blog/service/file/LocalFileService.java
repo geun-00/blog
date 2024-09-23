@@ -16,7 +16,7 @@ import java.util.Set;
 import java.util.UUID;
 
 @Service
-@Profile("test")
+@Profile({"local", "test"})
 @RequiredArgsConstructor
 public class LocalFileService implements FileService {
 

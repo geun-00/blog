@@ -1,0 +1,19 @@
+spring:
+  config:
+    activate:
+      on-profile: prod
+
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url:
+    username:
+    password:
+
+  security:
+    oauth2:
+      client:
+        registration:
+          kakao:
+            redirect-uri: http://blogserver-env.eba-9p9i32bm.ap-northeast-2.elasticbeanstalk.com/login/oauth2/code/kakao
+          naver:
+            redirect-uri: http://blogserver-env.eba-9p9i32bm.ap-northeast-2.elasticbeanstalk.com/login/oauth2/code/naver
