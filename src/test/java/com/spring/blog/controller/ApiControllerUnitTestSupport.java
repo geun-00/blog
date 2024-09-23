@@ -5,6 +5,7 @@ import com.spring.blog.TestSecurityConfig;
 import com.spring.blog.common.config.configs.WebMvcConfig;
 import com.spring.blog.controller.api.BlogApiController;
 import com.spring.blog.controller.api.CommentApiController;
+import com.spring.blog.controller.api.LocalFileController;
 import com.spring.blog.controller.api.UserApiController;
 import com.spring.blog.mapper.ArticleMapper;
 import com.spring.blog.mapper.CommentMapper;
@@ -25,7 +26,8 @@ import org.springframework.test.web.servlet.MockMvc;
         controllers = {
                 BlogApiController.class,
                 UserApiController.class,
-                CommentApiController.class
+                CommentApiController.class,
+                LocalFileController.class
         },
         excludeFilters = {
                 @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = WebMvcConfig.class),

@@ -7,6 +7,7 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -32,14 +33,18 @@ public class LocalFileController {
     public ResponseEntity<Resource> defaultUserImage() {
         Resource resource = new FileSystemResource(dir + "/user/default_user.png");
 
-        return ResponseEntity.ok().body(resource);
+        return ResponseEntity.ok()
+                .contentType(MediaType.IMAGE_PNG)
+                .body(resource);
     }
 
     @GetMapping("/{filename}")
     public ResponseEntity<Resource> uploadUserImage(@PathVariable("filename") String filename) {
         Resource resource = new FileSystemResource(dir + "/user/" + filename);
 
-        return ResponseEntity.ok().body(resource);
+        return ResponseEntity.ok()
+                .contentType(MediaType.IMAGE_PNG)
+                .body(resource);
     }
 
     @PutMapping("/article/{filename}")
@@ -63,6 +68,8 @@ public class LocalFileController {
     public ResponseEntity<Resource> uploadArticleImage(@PathVariable("filename") String filename) {
         Resource resource = new FileSystemResource(dir + "/article/" + filename);
 
-        return ResponseEntity.ok().body(resource);
+        return ResponseEntity.ok()
+                .contentType(MediaType.IMAGE_PNG)
+                .body(resource);
     }
 }
