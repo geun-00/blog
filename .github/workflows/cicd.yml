@@ -24,13 +24,13 @@ jobs:
         run: echo "ENCRYPT_KEY=${{ secrets.ENCRYPT_KEY }}" >> $GITHUB_ENV
 
       - name: Build with Gradle
-        run: ./gradlew clean build -Dspring.profiles.active=prod -x test
+        run: ./gradlew clean build -Dspring.profiles.active=prod
 
       - name: Get current time
         uses: josStorer/get-current-time@v2.0.2
         id: current-time
         with:
-          format: YYYY-MM-DDTHH-mm-ss
+          format: YYYY-MM-DDTHH:mm:ss
           utcOffset: "+09:00"
 
       - name: Set artifact
