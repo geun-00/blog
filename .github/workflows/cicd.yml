@@ -7,6 +7,9 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    env:
+      ENCRYPT_KEY: ${{ secrets.ENCRYPT_KEY }}
+
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -20,14 +23,10 @@ jobs:
       - name: Grant execute permession for gradlew
         run: chmod +x ./gradlew
 
-      - name: Set JASYPT encrypt key
-        run: echo "ENCRYPT_KEY=${{ secrets.ENCRYPT_KEY }}" >> $GITHUB_ENV
-
-#      - name: Run tests with Gradle
-#        run: ./gradlew test -Dspring.profiles.active=test -i
-
       - name: Build with Gradle
-        run: ./gradlew clean build -Dspring.profiles.active=prod -i -x test
+        run: |
+          echo "jasypt.encryptor.password=${{ env.ENCRYPT_KEY }}" >> $GITHUB_ENV
+          ./gradlew clean build -Dspring.profiles.active=prod -x test
 
       - name: Get current time
         uses: josStorer/get-current-time@v2.0.2
