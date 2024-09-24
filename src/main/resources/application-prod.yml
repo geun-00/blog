@@ -5,9 +5,9 @@ spring:
 
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url:
-    username:
-    password:
+    url: jdbc:mysql://awseb-e-gsdbyy4i5b-stack-awsebrdsdatabase-j2hsw3wzqbmj.cf6mysckokzk.ap-northeast-2.rds.amazonaws.com:3306/blog
+    username: ENC(mk/SbXryTG1tUM5B6Jg9tA==)
+    password: ENC(HZ65cASZt/cG3Ng7CA1Sk656LTUSJ3B1)
 
   security:
     oauth2:
