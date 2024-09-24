@@ -80,6 +80,7 @@ server:
   error:
     whitelabel:
       enabled: false
+  port: 5000
 
 jasypt:
   encryptor:
