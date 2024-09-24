@@ -23,8 +23,11 @@ jobs:
       - name: Set JASYPT encrypt key
         run: echo "ENCRYPT_KEY=${{ secrets.ENCRYPT_KEY }}" >> $GITHUB_ENV
 
+      - name: Run tests with Gradle
+        run: ./gradlew clean test -Dspring.profiles.active=prod -i
+
       - name: Build with Gradle
-        run: ./gradlew clean build -Dspring.profiles.active=prod
+        run: ./gradlew build -Dspring.profiles.active=prod
 
       - name: Get current time
         uses: josStorer/get-current-time@v2.0.2
