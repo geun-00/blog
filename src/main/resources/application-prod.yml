@@ -5,17 +5,20 @@ spring:
 
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://awseb-e-gsdbyy4i5b-stack-awsebrdsdatabase-j2hsw3wzqbmj.cf6mysckokzk.ap-northeast-2.rds.amazonaws.com:3306/blog
-    username: ENC(mk/SbXryTG1tUM5B6Jg9tA==)
-    password: ENC(HZ65cASZt/cG3Ng7CA1Sk656LTUSJ3B1)
+    url:
+    username:
+    password:
 
   security:
     oauth2:
       client:
         registration:
           kakao:
-#            redirect-uri: http://blogserver-env.eba-9p9i32bm.ap-northeast-2.elasticbeanstalk.com/login/oauth2/code/kakao
-            redirect-uri: http://geuns-blog.com/login/oauth2/code/kakao
+            redirect-uri: https://geuns-blog.com/login/oauth2/code/kakao
           naver:
-#            redirect-uri: http://blogserver-env.eba-9p9i32bm.ap-northeast-2.elasticbeanstalk.com/login/oauth2/code/naver
-            redirect-uri: http://geuns-blog.com/login/oauth2/code/naver
+            redirect-uri: https://geuns-blog.com/login/oauth2/code/naver
+
+  data:
+    redis:
+      host:
+      port:
