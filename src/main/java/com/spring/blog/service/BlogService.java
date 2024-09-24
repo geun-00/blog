@@ -52,6 +52,7 @@ public class BlogService {
     private final ArticleLikesRepository articleLikesRepository;
     private final ArticleImagesRepository articleImagesRepository;
 
+    private final CacheService cacheService;
     private final ArticleMapper articleMapper;
     private final ApplicationEventPublisher eventPublisher;
     private final RedisTemplate<String, Object> redisTemplate;
@@ -60,8 +61,7 @@ public class BlogService {
     @PreAuthorize("isAuthenticated()")
     public ArticleResponse save(ArticleServiceRequest request, String email, String sessionId) {
 
-        User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new EntityNotFoundException("not found user from : " + email));
+        User user = findUserByEmail(email);
 
         Article savedArticle = blogRepository.save(articleMapper.toEntity(request, user));
 
@@ -136,8 +136,8 @@ public class BlogService {
     @Transactional
     @PreAuthorize("isAuthenticated()")
     public int addLike(Long articleId, String email) {
-        User user = userRepository.findByEmail(email).orElseThrow(
-                () -> new EntityNotFoundException("not found user from " + email));
+
+        User user = findUserByEmail(email);
 
         Article article = blogRepository.findById(articleId).orElseThrow(
                 () -> new EntityNotFoundException("not found article from " + articleId));
@@ -156,8 +156,7 @@ public class BlogService {
     @PreAuthorize("isAuthenticated()")
     public int deleteLike(Long articleId, String email) {
 
-        User user = userRepository.findByEmail(email).orElseThrow(
-                () -> new EntityNotFoundException("not found user from " + email));
+        User user = findUserByEmail(email);
 
         Article article = blogRepository.findById(articleId).orElseThrow(
                 () -> new EntityNotFoundException("not found article from " + articleId));
@@ -204,8 +203,7 @@ public class BlogService {
             return articleMapper.toLikeResponse(false, article.getLikes());
         }
 
-        User user = userRepository.findByEmail(email).orElseThrow(
-                () -> new EntityNotFoundException("not found user from " + email));
+        User user = findUserByEmail(email);
 
         boolean isLiked = articleLikesRepository.existsByUserAndArticle(user, article);
         int likes = article.getLikes();
@@ -220,5 +218,10 @@ public class BlogService {
                 .pageSize(pageable.getPageSize())
                 .totalCount(articles.getTotalElements())
                 .build();
+    }
+
+    public User findUserByEmail(String email) {
+        return userRepository.findByEmail(email)
+                .orElseThrow(() -> new EntityNotFoundException("not found user from : " + email));
     }
 }
