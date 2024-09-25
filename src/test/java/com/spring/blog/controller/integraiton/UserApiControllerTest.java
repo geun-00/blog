@@ -147,7 +147,7 @@ public class UserApiControllerTest extends ApiControllerIntegrationTestSupport {
 
     @DisplayName("POST /api/oauthUser 테스트, 정상 흐름")
     @Test
-    @WithPrincipalUser
+    @WithPrincipalUser(roles = "OAUTH")
     void oauthSignup() throws Exception {
 
         // given
@@ -179,7 +179,7 @@ public class UserApiControllerTest extends ApiControllerIntegrationTestSupport {
             "agumon, '', phoneNumber null 체크",
             "agumon, 021342334, phoneNumber 유효성 체크",
     })
-    @WithPrincipalUser
+    @WithPrincipalUser(roles = "OAUTH")
     void oauthSignupWithValidation(String nickname, String phoneNumber, String message) throws Exception {
 
         // given
@@ -213,7 +213,7 @@ public class UserApiControllerTest extends ApiControllerIntegrationTestSupport {
             "nickname0, 01013572468, nickname 중복 체크",
             "agumon, 01012341234, phoneNumber 중복 체크"
     })
-    @WithPrincipalUser
+    @WithPrincipalUser(roles = "OAUTH")
     void oauthSignupWithDuplicateEx(String nickname, String phoneNumber, String message) throws Exception {
 
         OAuthAddUserRequest request = new OAuthAddUserRequest(

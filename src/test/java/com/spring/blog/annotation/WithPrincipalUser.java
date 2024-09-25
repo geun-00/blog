@@ -11,4 +11,6 @@ import java.lang.annotation.Target;
 @Target(ElementType.METHOD)
 @WithSecurityContext(factory = WithPrincipalUserSecurityContextFactory.class)
 public @interface WithPrincipalUser {
+
+    String[] roles() default { "USER" };
 }

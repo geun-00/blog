@@ -3,6 +3,7 @@ package com.spring.blog.common.config.authority;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.authority.mapping.GrantedAuthoritiesMapper;
+import org.springframework.security.oauth2.core.user.OAuth2UserAuthority;
 
 import java.util.Collection;
 import java.util.HashSet;
@@ -15,10 +16,18 @@ public class CustomAuthorityMapper implements GrantedAuthoritiesMapper {
     public Collection<? extends GrantedAuthority> mapAuthorities(Collection<? extends GrantedAuthority> authorities) {
         HashSet<GrantedAuthority> mapped = new HashSet<>(authorities.size());
 
-        for (GrantedAuthority authority : authorities) {
+        boolean isOAuth = false;
 
+        for (GrantedAuthority authority : authorities) {
+            if (authority instanceof OAuth2UserAuthority) {
+                isOAuth = true;
+            }
             mapped.add(mapAuthority(authority.getAuthority()));
 
+        }
+
+        if (isOAuth) {
+            mapped.add(new SimpleGrantedAuthority(ROLE_PREFIX + "OAUTH"));
         }
         return mapped;
     }

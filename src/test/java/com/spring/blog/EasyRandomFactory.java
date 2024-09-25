@@ -165,7 +165,7 @@ public class EasyRandomFactory {
             this.password = "password12@";
             this.email = "user@test.com";
             this.profileImageUrl = FAKER.image().base64GIF();
-            this.authorities = List.of(new SimpleGrantedAuthority("ROLE_USER"));
+            this.authorities = List.of();
         }
 
         @Override

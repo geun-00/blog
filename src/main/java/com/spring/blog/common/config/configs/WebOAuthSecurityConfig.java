@@ -66,6 +66,7 @@ public class WebOAuthSecurityConfig {
 
                         .requestMatchers("/", "/login*", "/userPage*").permitAll() //사용자 관련 뷰 설정
                         .requestMatchers("/api/formUser").permitAll() //사용자 관련 API 설정
+                        .requestMatchers("/api/oauthUser").hasRole("OAUTH")
 
                         .requestMatchers("/guest", "/articles/**").permitAll() //게시글 관련 뷰 설정
                         .requestMatchers("/api/articles/search", "/api/articles/page",

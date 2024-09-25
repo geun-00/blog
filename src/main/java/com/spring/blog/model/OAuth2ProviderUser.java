@@ -1,7 +1,6 @@
 package com.spring.blog.model;
 
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.oauth2.client.registration.ClientRegistration;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 
@@ -40,7 +39,6 @@ public abstract class OAuth2ProviderUser implements ProviderUser {
     public List<? extends GrantedAuthority> getAuthorities() {
         return oAuth2User.getAuthorities()
                 .stream()
-                .map(auth -> new SimpleGrantedAuthority(auth.getAuthority()))
                 .toList();
     }
 
