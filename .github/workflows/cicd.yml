@@ -7,8 +7,6 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    env:
-      ENCRYPT_KEY: ${{ secrets.ENCRYPT_KEY }}
 
     steps:
       - name: Checkout
@@ -24,9 +22,7 @@ jobs:
         run: chmod +x ./gradlew
 
       - name: Build with Gradle
-        run: |
-          echo "jasypt.encryptor.password=${{ env.ENCRYPT_KEY }}" >> $GITHUB_ENV
-          ./gradlew clean build -Dspring.profiles.active=prod -x test
+        run: ./gradlew clean build -Dspring.profiles.active=prod -x test
 
       - name: Get current time
         uses: josStorer/get-current-time@v2.0.2
