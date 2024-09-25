@@ -13,7 +13,6 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.DynamicInsert;
 import org.springframework.util.StringUtils;
 
@@ -43,7 +42,6 @@ public class User extends BaseEntity {
     private String nickname;
 
     @Column(name = "profile_image_url")
-    @ColumnDefault("https://geunblog.s3.ap-northeast-2.amazonaws.com/user/default-user-image.jpg")
     private String profileImageUrl;
 
     @Column(name = "phone_number", length = 11, unique = true)
@@ -60,7 +58,9 @@ public class User extends BaseEntity {
     }
 
     public void updateNickname(String nickname) {
-        this.nickname = nickname;
+        if (StringUtils.hasText(nickname)) {
+            this.nickname = nickname;
+        }
     }
 
     public void updateProfileImageUrl(String profileImageUrl) {
@@ -73,14 +73,5 @@ public class User extends BaseEntity {
 
     public void updatePassword(String password) {
         this.password = password;
-    }
-
-    public void edit(String email, String nickname) {
-        if (StringUtils.hasText(email)) {
-            this.email = email;
-        }
-        if (StringUtils.hasText(nickname)) {
-            this.nickname = nickname;
-        }
     }
 }

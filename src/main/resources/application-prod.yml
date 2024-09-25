@@ -22,3 +22,7 @@ spring:
     redis:
       host: ${REDIS_HOST}
       port: ${REDIS_PORT}
+
+profile:
+  default:
+    image-url: ${DEFAULT_IMAGE_URL}

@@ -6,7 +6,6 @@ import com.spring.blog.common.events.UserDeletedEvent;
 import com.spring.blog.domain.Article;
 import com.spring.blog.domain.ArticleImages;
 import com.spring.blog.domain.User;
-import com.spring.blog.service.dto.response.UserInfoResponse;
 import com.spring.blog.exception.ResponseStatusException;
 import com.spring.blog.exception.duplicate.NicknameDuplicateException;
 import com.spring.blog.mapper.UserMapper;
@@ -25,11 +24,13 @@ import com.spring.blog.service.dto.request.FormAddUserServiceRequest;
 import com.spring.blog.service.dto.request.NewPasswordServiceRequest;
 import com.spring.blog.service.dto.request.OAuthAddUserServiceRequest;
 import com.spring.blog.service.dto.response.UserInfo;
+import com.spring.blog.service.dto.response.UserInfoResponse;
 import com.spring.blog.service.file.FileService;
 import com.spring.blog.service.oauth.unlink.OAuth2UnlinkService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -51,6 +52,9 @@ import java.util.concurrent.ExecutionException;
 @RequiredArgsConstructor
 public class UserService {
 
+    @Value("${profile.default.image-url}")
+    private String defaultImageUrl;
+
     private final BlogRepository blogRepository;
     private final UserRepository userRepository;
     private final CommentRepository commentRepository;
@@ -69,7 +73,7 @@ public class UserService {
     @Transactional
     public String save(FormAddUserServiceRequest request) {
         User savedUser = userRepository.save(
-                userMapper.toEntity(request, SocialType.NONE)
+                userMapper.toEntity(request, SocialType.NONE, defaultImageUrl)
         );
 
         return savedUser.getNickname();
@@ -140,7 +144,9 @@ public class UserService {
             String newImageUrl = fileService.saveFile(imageFile, "user/");
             user.updateProfileImageUrl(newImageUrl);
 
-            fileService.deleteFile(oldImageUrl);
+            if (!oldImageUrl.equals(defaultImageUrl)) {
+                fileService.deleteFile(oldImageUrl);
+            }
         }
 
         updateContext(user);

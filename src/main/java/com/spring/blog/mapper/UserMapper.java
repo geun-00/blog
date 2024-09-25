@@ -29,7 +29,7 @@ public interface UserMapper {
     NewPasswordServiceRequest toServiceRequest(NewPasswordRequest request);
 
     @Mapping(target = "password", qualifiedBy = EncodeMapping.class)
-    User toEntity(FormAddUserServiceRequest request, SocialType registrationId);
+    User toEntity(FormAddUserServiceRequest request, SocialType registrationId, String profileImageUrl);
 
     @Mapping(target = "password", qualifiedBy = EncodeMapping.class)
     User toEntity(ProviderUser providerUser, SocialType registrationId);

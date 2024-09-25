@@ -45,6 +45,7 @@ public class LocalFileService implements FileService {
     @Override
     public void deleteFile(String fileName) {
         try {
+            fileName = fileName.substring(fileName.lastIndexOf("/") + 1);
             Path filePath = Paths.get(uploadDir, "/user/" + fileName);
             Files.deleteIfExists(filePath);
         } catch (IOException e) {
