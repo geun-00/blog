@@ -97,19 +97,6 @@ kakao:
     client-id: ENC(n4OSe67MumM65r8zdpky0BlZp3uX9rGq9DRVcW3P1DxGi341wC3bD0vgsikha15g)
     redirect-uri: http://localhost:8080/login
 
-# aws s3 설정
-cloud:
-  aws:
-    s3:
-      bucket: geunblog
-    stack:
-      auto: false
-    region:
-      static: ap-northeast-2
-    credentials:
-      access-key: ENC(Ygyco5iE1GZwrh4jbrYSBivHC8mYkfs7Su3CaKHkLik=)
-      secret-key: ENC(iA76vtakKr36GXZjbAgzilVxI7K2SBPuQt4//AjHlyz6Yau5V+R20s3DS6Pzb9o/JY/Pnv9+S4A=)
-
 profile:
   default:
     image-url: default_user.png
