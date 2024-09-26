@@ -36,8 +36,9 @@ public class ArticleSearchRequestValidator implements ConstraintValidator<ValidA
             }
             case TITLE_CONTENT -> {
                 if (request.titleContent() == null ||
-                   (!StringUtils.hasText(request.titleContent().title())) &&
-                    !StringUtils.hasText(request.titleContent().content()))
+                    !StringUtils.hasText(request.titleContent().title()) ||
+                    !StringUtils.hasText(request.titleContent().content())
+                )
                  {
                     addConstraint(context, "검색하는 제목 또는 내용이 비어있습니다.", "titleContent");
                     return false;
