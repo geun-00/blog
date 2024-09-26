@@ -22,7 +22,7 @@ public class BulkInsertRepository {
     public void saveArticleImages(List<ArticleImages> images) {
 
         jdbcTemplate.batchUpdate(
-                "INSERT INTO ARTICLE_IMAGES (ARTICLE_ID, IMAGE_URL) VALUES (?, ?)",
+                "INSERT INTO blog.article_images (ARTICLE_ID, IMAGE_URL) VALUES (?, ?)",
                 new BatchPreparedStatementSetter() {
                     @Override
                     public void setValues(PreparedStatement ps, int i) throws SQLException {
@@ -42,7 +42,7 @@ public class BulkInsertRepository {
     public void saveArticles(List<Article> articles) {
 
         jdbcTemplate.batchUpdate(
-                "INSERT INTO ARTICLES (USER_ID, TITLE, CONTENT, LIKES, VIEWS, CREATED_AT) VALUES ( ?, ?, ?, ?, ?, ? )",
+                "INSERT INTO blog.articles (USER_ID, TITLE, CONTENT, LIKES, VIEWS, CREATED_AT) VALUES ( ?, ?, ?, ?, ?, ? )",
                 new BatchPreparedStatementSetter() {
                     @Override
                     public void setValues(PreparedStatement ps, int i) throws SQLException {
