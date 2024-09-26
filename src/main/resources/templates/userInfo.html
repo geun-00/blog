@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" lang="ko">
 <head>
     <meta charset="UTF-8">
     <title>User Profile</title>
@@ -61,7 +61,7 @@
                              class="rounded-circle img-fluid" style="max-width: 250px; height: 200px;" id="user-profile-image">
                     </div>
                 </div>
-                <div class="text-center mt-3">
+                <div class="text-center mt-3" th:if="${#authentication.name.equals(user.username)}">
                     <a href="#" id="edit-btn" class="btn btn-secondary">수정하기</a>
                 </div>
 
