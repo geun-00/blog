@@ -39,7 +39,7 @@ public class LocalFileService implements FileService {
             throw new RuntimeException(e);
         }
 
-        return "/" + filename;
+        return "/user/" + filename;
     }
 
     @Override

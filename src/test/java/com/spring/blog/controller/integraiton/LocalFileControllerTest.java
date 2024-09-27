@@ -44,7 +44,7 @@ class LocalFileControllerTest extends ApiControllerIntegrationTestSupport {
     @Test
     @WithMockUser
     void uploadUserImage() throws Exception {
-        mockMvc.perform(get("/{filename}", "default_user.png"))
+        mockMvc.perform(get("/user/{filename}", "default_user.png"))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.IMAGE_PNG))

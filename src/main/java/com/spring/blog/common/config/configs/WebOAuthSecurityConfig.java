@@ -62,9 +62,9 @@ public class WebOAuthSecurityConfig {
 
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/style/**", "/js/**", "/images/*", "/webjars/**", "/favicon.*",
-                                "/*/icon-*", "/h2-console/**", "/swagger-ui/**", "/v3/api-docs/**").permitAll()
+                                "/*/icon-*", "/h2-console/**", "/swagger-ui/**", "/v3/api-docs/**", "/error/**").permitAll()
 
-                        .requestMatchers("/", "/login*", "/userPage*").permitAll() //사용자 관련 뷰 설정
+                        .requestMatchers("/", "/login*", "/userPage*", "/findEmail", "/findPassword").permitAll() //사용자 관련 뷰 설정
                         .requestMatchers("/api/formUser").permitAll() //사용자 관련 API 설정
                         .requestMatchers("/api/oauthUser").hasRole("OAUTH")
 

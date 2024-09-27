@@ -38,7 +38,7 @@ public class LocalFileController {
                 .body(resource);
     }
 
-    @GetMapping("/{filename}")
+    @GetMapping("/user/{filename}")
     public ResponseEntity<Resource> uploadUserImage(@PathVariable("filename") String filename) {
         Resource resource = new FileSystemResource(dir + "/user/" + filename);
 
