@@ -13,14 +13,18 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 
+import java.util.concurrent.CompletableFuture;
+
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.BDDMockito.anyString;
 import static org.mockito.BDDMockito.doNothing;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.times;
 import static org.mockito.BDDMockito.verify;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.asyncDispatch;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -34,12 +38,17 @@ public class UserVerifyApiControllerUnitTest extends ApiControllerUnitTestSuppor
         String phoneNumber = "01012341234";
         PhoneNumberRequest request = new PhoneNumberRequest(phoneNumber);
 
-        doNothing().when(verificationService).sendVerificationCodeBySms(phoneNumber);
+        CompletableFuture<Boolean> future = CompletableFuture.completedFuture(true);
+        given(verificationService.sendVerificationCodeBySms(phoneNumber)).willReturn(future);
 
         // when
-        mockMvc.perform(post("/api/verify/phoneNumber")
+        MvcResult mvcResult = mockMvc.perform(post("/api/verify/phoneNumber")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
+                .andExpect(request().asyncStarted())
+                .andReturn();
+
+        mockMvc.perform(asyncDispatch(mvcResult))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.code").value(200))

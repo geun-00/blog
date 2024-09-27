@@ -2,14 +2,12 @@ package com.spring.blog.service;
 
 import com.spring.blog.domain.User;
 import com.spring.blog.exception.EmailSendException;
-import com.spring.blog.exception.SmsException;
 import com.spring.blog.exception.VerificationException;
 import com.spring.blog.repository.UserRepository;
+import com.spring.blog.service.sms.MessageService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import net.nurigo.sdk.message.model.Message;
-import net.nurigo.sdk.message.service.DefaultMessageService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
@@ -21,6 +19,7 @@ import org.thymeleaf.util.StringUtils;
 
 import java.security.SecureRandom;
 import java.time.Duration;
+import java.util.concurrent.CompletableFuture;
 
 @Slf4j
 @Service
@@ -29,11 +28,9 @@ public class VerificationService {
 
     private final JavaMailSender mailSender;
     private final UserRepository userRepository;
-    private final DefaultMessageService messageService;
-    private final RedisTemplate<String, String> redisTemplate;
+    private final MessageService messageService;
 
-    @Value("${coolsms.from}")
-    private String messageFrom;
+    private final RedisTemplate<String, String> redisTemplate;
 
     @Value("${spring.mail.username}")
     private String emailFrom;
@@ -43,24 +40,21 @@ public class VerificationService {
      * @param to 전송할 번호
      */
     @Async
-    public void sendVerificationCodeBySms(String to) {
-
-        String verificationCode = generateCode();
-
-        saveVerificationCodeToRedis(to, verificationCode);
-
-        Message message = new Message();
-        message.setFrom(messageFrom);
-        message.setTo(to);
-        message.setText("[Blog] 인증번호 " + verificationCode + " 를 입력해 주세요.");
-
+    public CompletableFuture<Boolean> sendVerificationCodeBySms(String to) {
+        boolean result = true;
         try {
-            messageService.send(message);
+            log.info("SMS 인증번호 전송 시도");
+
+            String verificationCode = generateCode();
+            saveVerificationCodeToRedis(to, verificationCode);
+            messageService.sendMessage(to, verificationCode);
+
         } catch (Exception e) {
-            log.error("메시지 전송 실패");
+            result = false;
             log.error(e.getMessage());
-            throw new SmsException("인증번호 전송에 실패했습니다.", e);
         }
+
+        return CompletableFuture.completedFuture(result);
     }
 
     /**
@@ -129,7 +123,7 @@ public class VerificationService {
     //임의의 6자리 인증번호를 생성
     private String generateCode() {
         SecureRandom random = new SecureRandom();
-        return String.valueOf(random.nextInt(1_000_000));
+        return String.format("%06d", random.nextInt(1_000_000));
     }
 
     //인증시간(5분)동안 인증번호를 레디스에 저장
