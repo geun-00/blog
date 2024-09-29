@@ -17,7 +17,6 @@ import java.util.concurrent.CompletableFuture;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.BDDMockito.anyString;
-import static org.mockito.BDDMockito.doNothing;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.times;
 import static org.mockito.BDDMockito.verify;
@@ -155,12 +154,18 @@ public class UserVerifyApiControllerUnitTest extends ApiControllerUnitTestSuppor
         String email = "user@test.com";
         EmailRequest request = new EmailRequest(email);
 
-        doNothing().when(verificationService).sendVerificationCodeByEmail(email);
+        CompletableFuture<Boolean> future = CompletableFuture.completedFuture(true);
+        given(verificationService.sendVerificationCodeByEmail(email)).willReturn(future);
 
         // when
-        mockMvc.perform(post("/api/verify/email")
+
+        MvcResult mvcResult = mockMvc.perform(post("/api/verify/email")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
+                .andExpect(request().asyncStarted())
+                .andReturn();
+
+        mockMvc.perform(asyncDispatch(mvcResult))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.code").value(200))

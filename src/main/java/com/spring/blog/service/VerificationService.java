@@ -1,7 +1,6 @@
 package com.spring.blog.service;
 
 import com.spring.blog.domain.User;
-import com.spring.blog.exception.EmailSendException;
 import com.spring.blog.exception.VerificationException;
 import com.spring.blog.repository.UserRepository;
 import com.spring.blog.service.sms.MessageService;
@@ -82,11 +81,13 @@ public class VerificationService {
      * @param to 전송할 이메일
      */
     @Async
-    public void sendVerificationCodeByEmail(String to) {
+    public CompletableFuture<Boolean> sendVerificationCodeByEmail(String to) {
 
-        log.info(Thread.currentThread().toString());
+        boolean result = true;
+
+        log.info("Email 인증번호 전송 시도");
+
         String verificationCode = generateCode();
-
         saveVerificationCodeToRedis(to, verificationCode);
 
         SimpleMailMessage message = new SimpleMailMessage();
@@ -98,9 +99,11 @@ public class VerificationService {
         try {
             mailSender.send(message);
         } catch (Exception ex) {
-            log.error("이메일 전송 중 알 수 없는 오류 발생");
-            throw new EmailSendException("이메일 전송 중 오류 발생", ex);
+            log.error(ex.getMessage());
+            result = false;
         }
+
+        return CompletableFuture.completedFuture(result);
     }
 
     /**

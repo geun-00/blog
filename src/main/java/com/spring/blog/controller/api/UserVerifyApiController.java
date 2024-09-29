@@ -4,6 +4,7 @@ import com.spring.blog.controller.dto.request.EmailRequest;
 import com.spring.blog.controller.dto.request.EmailVerifyCodeRequest;
 import com.spring.blog.controller.dto.request.PhoneNumberRequest;
 import com.spring.blog.controller.dto.request.SmsVerifyCodeRequest;
+import com.spring.blog.exception.EmailSendException;
 import com.spring.blog.exception.SmsException;
 import com.spring.blog.service.VerificationService;
 import lombok.RequiredArgsConstructor;
@@ -54,11 +55,21 @@ public class UserVerifyApiController {
     }
 
     @PostMapping("/verify/email")
-    public ApiResponse<String> verifyEmail(@Validated @RequestBody EmailRequest request) {
+    public CompletableFuture<ApiResponse<String>> verifyEmail(@Validated @RequestBody EmailRequest request) {
 
-        verificationService.sendVerificationCodeByEmail(request.email());
+        CompletableFuture<Boolean> future = verificationService.sendVerificationCodeByEmail(request.email());
 
-        return ApiResponse.ok("인증번호 전송");
+        return future
+                .thenApply(result -> {
+                    if (result) {
+                        return ApiResponse.ok("인증번호 전송");
+                    } else {
+                        throw new EmailSendException("인증번호 전송 실패");
+                    }
+                })
+                .exceptionally(ex -> {
+                    throw new EmailSendException("비동기 작업 중 오류 발생", ex);
+                });
     }
 
     @PostMapping("/verify/code/email")
