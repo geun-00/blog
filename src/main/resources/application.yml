@@ -99,4 +99,4 @@ kakao:
 
 profile:
   default:
-    image-url: default_user.png
+    image-url: /user/default_user.png
