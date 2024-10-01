@@ -77,8 +77,10 @@
 
 ## 디렉토리 구조
 
-### Backend
-```
+<details>
+  <summary>Backend</summary>
+  <pre>
+    <code>
 📦java
  ┗ 📂com
  ┃ ┗ 📂spring
@@ -277,10 +279,14 @@
  ┃ ┃ ┃ ┃ ┣ 📜ValidationService.java
  ┃ ┃ ┃ ┃ ┗ 📜VerificationService.java
  ┃ ┃ ┃ ┗ 📜BlogApplication.java
-```
+    </code>
+  </pre>
+</details>
 
-### Frontend
-```
+<details>
+  <summary>Frontend</summary>
+  <pre>
+    <code>
 📦resources
  ┣ 📂static
  ┃ ┣ 📂images
@@ -330,18 +336,25 @@
  ┃ ┣ 📜phone-number-request.html
  ┃ ┗ 📜userInfo.html
  ┗ 📜messages.properties
-```
+    </code>
+  </pre>
+</details>  
 
-### 설정 파일
-```
+<details>
+  <summary>설정 파일</summary>
+  <pre>
+    <code>
 📦resources
  ┣ 📜application-dev.yml
  ┣ 📜application-local.yml
  ┣ 📜application-prod.yml
  ┣ 📜application-test.yml
  ┗ 📜application.yml
-```
+    </code>
+  </pre>
+</details>
 
 ## 아키텍쳐
 
-<img width="427" alt="image" src="https://github.com/user-attachments/assets/2fd719ac-3cfe-42ed-9dfe-4b23f3d5fc0a">
+<img width="935" alt="image" src="https://github.com/user-attachments/assets/eac73fa6-43d7-423b-a1e0-846ea9340c42">
+
