@@ -75,6 +75,8 @@
 
 # 4. 프로젝트 구조
 
+## 디렉토리 구조
+
 ### Backend
 ```
 📦java
@@ -339,3 +341,7 @@
  ┣ 📜application-test.yml
  ┗ 📜application.yml
 ```
+
+## 아키텍쳐
+
+<img width="427" alt="image" src="https://github.com/user-attachments/assets/2fd719ac-3cfe-42ed-9dfe-4b23f3d5fc0a">
