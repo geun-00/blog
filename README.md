@@ -358,3 +358,6 @@
 
 <img width="935" alt="image" src="https://github.com/user-attachments/assets/eac73fa6-43d7-423b-a1e0-846ea9340c42">
 
+# 5. API 명세서
+
+[API 명세서](https://documenter.getpostman.com/view/29486061/2sAXqwYKR3)
