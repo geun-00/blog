@@ -73,3 +73,269 @@
 ![Junit](https://img.shields.io/badge/junit5-%2325A162?style=for-the-badge&logo=junit5&logoColor=white)
 ![Jasypt](https://img.shields.io/badge/jasypt-%2341454A?style=for-the-badge&logoColor=white)
 
+# 4. 프로젝트 구조
+
+### Backend
+```
+📦java
+ ┗ 📂com
+ ┃ ┗ 📂spring
+ ┃ ┃ ┗ 📂blog
+ ┃ ┃ ┃ ┣ 📂common
+ ┃ ┃ ┃ ┃ ┣ 📂annotation
+ ┃ ┃ ┃ ┃ ┃ ┣ 📜CommentResponseMapping.java
+ ┃ ┃ ┃ ┃ ┃ ┣ 📜ConditionalValidation.java
+ ┃ ┃ ┃ ┃ ┃ ┣ 📜CurrentUser.java
+ ┃ ┃ ┃ ┃ ┃ ┣ 📜DuplicateCheck.java
+ ┃ ┃ ┃ ┃ ┃ ┣ 📜EncodeMapping.java
+ ┃ ┃ ┃ ┃ ┃ ┣ 📜NotBlankContent.java
+ ┃ ┃ ┃ ┃ ┃ ┣ 📜UserKey.java
+ ┃ ┃ ┃ ┃ ┃ ┗ 📜ValidArticleSearchRequest.java
+ ┃ ┃ ┃ ┃ ┣ 📂aop
+ ┃ ┃ ┃ ┃ ┃ ┣ 📜DuplicateCheckAspect.java
+ ┃ ┃ ┃ ┃ ┃ ┣ 📜Pointcuts.java
+ ┃ ┃ ┃ ┃ ┃ ┗ 📜TransactionalLoggingAspect.java
+ ┃ ┃ ┃ ┃ ┣ 📂argumentResolver
+ ┃ ┃ ┃ ┃ ┃ ┣ 📜CurrentUserArgumentResolver.java
+ ┃ ┃ ┃ ┃ ┃ ┗ 📜UserKeyArgumentResolver.java
+ ┃ ┃ ┃ ┃ ┣ 📂config
+ ┃ ┃ ┃ ┃ ┃ ┣ 📂authority
+ ┃ ┃ ┃ ┃ ┃ ┃ ┗ 📜CustomAuthorityMapper.java
+ ┃ ┃ ┃ ┃ ┃ ┣ 📂configs
+ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📜AppConfig.java
+ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📜AsyncConfig.java
+ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📜CacheConfig.java
+ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📜JasyptConfig.java
+ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📜RedisConfig.java
+ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📜S3Config.java
+ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📜WebMvcConfig.java
+ ┃ ┃ ┃ ┃ ┃ ┃ ┗ 📜WebOAuthSecurityConfig.java
+ ┃ ┃ ┃ ┃ ┃ ┗ 📂oauth
+ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📂logoutHandler
+ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📜AbstractOAuth2LogoutHandler.java
+ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📜CustomLogoutSuccessHandler.java
+ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📜GoogleLogoutHandler.java
+ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📜KakaoLogoutHandler.java
+ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📜KakaoProperties.java
+ ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┗ 📜NaverLogoutHandler.java
+ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📜CustomOAuth2SuccessHandler.java
+ ┃ ┃ ┃ ┃ ┃ ┃ ┗ 📜LoginFailureHandler.java
+ ┃ ┃ ┃ ┃ ┣ 📂converters
+ ┃ ┃ ┃ ┃ ┃ ┣ 📂utils
+ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📜CookieUtil.java
+ ┃ ┃ ┃ ┃ ┃ ┃ ┗ 📜OAuthAttributesUtils.java
+ ┃ ┃ ┃ ┃ ┃ ┣ 📜DelegatingOAuth2LogoutHandler.java
+ ┃ ┃ ┃ ┃ ┃ ┣ 📜DelegatingProviderUserConverter.java
+ ┃ ┃ ┃ ┃ ┃ ┣ 📜OAuth2GoogleProviderUserConverter.java
+ ┃ ┃ ┃ ┃ ┃ ┣ 📜OAuth2KakaoOidcProviderUserConverter.java
+ ┃ ┃ ┃ ┃ ┃ ┣ 📜OAuth2KakaoProviderUserConverter.java
+ ┃ ┃ ┃ ┃ ┃ ┣ 📜OAuth2NaverProviderUserConverter.java
+ ┃ ┃ ┃ ┃ ┃ ┗ 📜ProviderUserRequest.java
+ ┃ ┃ ┃ ┃ ┣ 📂enums
+ ┃ ┃ ┃ ┃ ┃ ┣ 📜CacheType.java
+ ┃ ┃ ┃ ┃ ┃ ┣ 📜SearchType.java
+ ┃ ┃ ┃ ┃ ┃ ┗ 📜SocialType.java
+ ┃ ┃ ┃ ┃ ┣ 📂events
+ ┃ ┃ ┃ ┃ ┃ ┣ 📜ApplicationEventListener.java
+ ┃ ┃ ┃ ┃ ┃ ┣ 📜ArticleDeletedEvent.java
+ ┃ ┃ ┃ ┃ ┃ ┗ 📜UserDeletedEvent.java
+ ┃ ┃ ┃ ┃ ┣ 📂Interceptors
+ ┃ ┃ ┃ ┃ ┃ ┣ 📂queryCounter
+ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📜ConProxyHandler.java
+ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📜QueryCounter.java
+ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📜QueryCounterAop.java
+ ┃ ┃ ┃ ┃ ┃ ┃ ┗ 📜QueryCounterInterceptor.java
+ ┃ ┃ ┃ ┃ ┃ ┣ 📜ExecutionTimeInterceptor.java
+ ┃ ┃ ┃ ┃ ┃ ┗ 📜FileCleanUpInterceptor.java
+ ┃ ┃ ┃ ┃ ┗ 📜SetupData.java
+ ┃ ┃ ┃ ┣ 📂controller
+ ┃ ┃ ┃ ┃ ┣ 📂advice
+ ┃ ┃ ┃ ┃ ┃ ┣ 📜ApiControllerAdvice.java
+ ┃ ┃ ┃ ┃ ┃ ┗ 📜ViewControllerAdvice.java
+ ┃ ┃ ┃ ┃ ┣ 📂api
+ ┃ ┃ ┃ ┃ ┃ ┣ 📜ApiResponse.java
+ ┃ ┃ ┃ ┃ ┃ ┣ 📜BlogApiController.java
+ ┃ ┃ ┃ ┃ ┃ ┣ 📜CommentApiController.java
+ ┃ ┃ ┃ ┃ ┃ ┣ 📜LocalFileController.java
+ ┃ ┃ ┃ ┃ ┃ ┣ 📜S3Controller.java
+ ┃ ┃ ┃ ┃ ┃ ┣ 📜UserApiController.java
+ ┃ ┃ ┃ ┃ ┃ ┗ 📜UserVerifyApiController.java
+ ┃ ┃ ┃ ┃ ┣ 📂dto
+ ┃ ┃ ┃ ┃ ┃ ┗ 📂request
+ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📜ArticleRequest.java
+ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📜ArticleSearchRequest.java
+ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📜CommentRequest.java
+ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📜EditUserRequest.java
+ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📜EmailRequest.java
+ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📜EmailVerifyCodeRequest.java
+ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📜FormAddUserRequest.java
+ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📜NewPasswordRequest.java
+ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📜OAuthAddUserRequest.java
+ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📜PhoneNumberRequest.java
+ ┃ ┃ ┃ ┃ ┃ ┃ ┗ 📜SmsVerifyCodeRequest.java
+ ┃ ┃ ┃ ┃ ┣ 📂validator
+ ┃ ┃ ┃ ┃ ┃ ┣ 📜ArticleSearchRequestValidator.java
+ ┃ ┃ ┃ ┃ ┃ ┣ 📜ConditionalValidator.java
+ ┃ ┃ ┃ ┃ ┃ ┗ 📜NotBlankContentValidator.java
+ ┃ ┃ ┃ ┃ ┗ 📂view
+ ┃ ┃ ┃ ┃ ┃ ┣ 📜BlogViewController.java
+ ┃ ┃ ┃ ┃ ┃ ┗ 📜UserViewController.java
+ ┃ ┃ ┃ ┣ 📂domain
+ ┃ ┃ ┃ ┃ ┣ 📜Article.java
+ ┃ ┃ ┃ ┃ ┣ 📜ArticleImages.java
+ ┃ ┃ ┃ ┃ ┣ 📜ArticleLikes.java
+ ┃ ┃ ┃ ┃ ┣ 📜BaseEntity.java
+ ┃ ┃ ┃ ┃ ┣ 📜Comment.java
+ ┃ ┃ ┃ ┃ ┗ 📜User.java
+ ┃ ┃ ┃ ┣ 📂exception
+ ┃ ┃ ┃ ┃ ┣ 📂duplicate
+ ┃ ┃ ┃ ┃ ┃ ┣ 📜DuplicateException.java
+ ┃ ┃ ┃ ┃ ┃ ┣ 📜EmailDuplicateException.java
+ ┃ ┃ ┃ ┃ ┃ ┣ 📜NicknameDuplicateException.java
+ ┃ ┃ ┃ ┃ ┃ ┗ 📜PhoneNumberDuplicateException.java
+ ┃ ┃ ┃ ┃ ┣ 📜EmailSendException.java
+ ┃ ┃ ┃ ┃ ┣ 📜ResponseStatusException.java
+ ┃ ┃ ┃ ┃ ┣ 📜SmsException.java
+ ┃ ┃ ┃ ┃ ┗ 📜VerificationException.java
+ ┃ ┃ ┃ ┣ 📂mapper
+ ┃ ┃ ┃ ┃ ┣ 📜ArticleMapper.java
+ ┃ ┃ ┃ ┃ ┣ 📜CommentMapper.java
+ ┃ ┃ ┃ ┃ ┣ 📜CommentResponseMapper.java
+ ┃ ┃ ┃ ┃ ┣ 📜PasswordEncoderMapper.java
+ ┃ ┃ ┃ ┃ ┗ 📜UserMapper.java
+ ┃ ┃ ┃ ┣ 📂model
+ ┃ ┃ ┃ ┃ ┣ 📂social
+ ┃ ┃ ┃ ┃ ┃ ┣ 📜GoogleUser.java
+ ┃ ┃ ┃ ┃ ┃ ┣ 📜KakaoOidcUser.java
+ ┃ ┃ ┃ ┃ ┃ ┣ 📜KakaoUser.java
+ ┃ ┃ ┃ ┃ ┃ ┗ 📜NaverUser.java
+ ┃ ┃ ┃ ┃ ┣ 📜Attributes.java
+ ┃ ┃ ┃ ┃ ┣ 📜FormUser.java
+ ┃ ┃ ┃ ┃ ┣ 📜OAuth2ProviderUser.java
+ ┃ ┃ ┃ ┃ ┣ 📜PrincipalUser.java
+ ┃ ┃ ┃ ┃ ┗ 📜ProviderUser.java
+ ┃ ┃ ┃ ┣ 📂repository
+ ┃ ┃ ┃ ┃ ┣ 📜ArticleImagesRepository.java
+ ┃ ┃ ┃ ┃ ┣ 📜ArticleLikesRepository.java
+ ┃ ┃ ┃ ┃ ┣ 📜BlogQueryRepository.java
+ ┃ ┃ ┃ ┃ ┣ 📜BlogRepository.java
+ ┃ ┃ ┃ ┃ ┣ 📜BulkInsertRepository.java
+ ┃ ┃ ┃ ┃ ┣ 📜CommentRepository.java
+ ┃ ┃ ┃ ┃ ┣ 📜UserQueryRepository.java
+ ┃ ┃ ┃ ┃ ┗ 📜UserRepository.java
+ ┃ ┃ ┃ ┣ 📂service
+ ┃ ┃ ┃ ┃ ┣ 📂dto
+ ┃ ┃ ┃ ┃ ┃ ┣ 📂request
+ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📜ArticleSearchServiceRequest.java
+ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📜ArticleServiceRequest.java
+ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📜CommentServiceRequest.java
+ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📜EditUserServiceRequest.java
+ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📜FormAddUserServiceRequest.java
+ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📜NewPasswordServiceRequest.java
+ ┃ ┃ ┃ ┃ ┃ ┃ ┗ 📜OAuthAddUserServiceRequest.java
+ ┃ ┃ ┃ ┃ ┃ ┗ 📂response
+ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📜AddArticleViewResponse.java
+ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📜ArticleInfo.java
+ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📜ArticleListViewResponse.java
+ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📜ArticleResponse.java
+ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📜ArticleViewResponse.java
+ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📜CommentResponse.java
+ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📜LikeResponse.java
+ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📜PageResponse.java
+ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📜UserInfo.java
+ ┃ ┃ ┃ ┃ ┃ ┃ ┗ 📜UserInfoResponse.java
+ ┃ ┃ ┃ ┃ ┣ 📂file
+ ┃ ┃ ┃ ┃ ┃ ┣ 📜FileService.java
+ ┃ ┃ ┃ ┃ ┃ ┣ 📜LocalFileService.java
+ ┃ ┃ ┃ ┃ ┃ ┗ 📜S3FileService.java
+ ┃ ┃ ┃ ┃ ┣ 📂oauth
+ ┃ ┃ ┃ ┃ ┃ ┣ 📂unlink
+ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📜AbstractOAuthUnlinkService.java
+ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📜DelegatingOAuth2UnlinkHandler.java
+ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📜GoogleUnlinkService.java
+ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📜KakaoUnlinkService.java
+ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📜NaverUnlinkService.java
+ ┃ ┃ ┃ ┃ ┃ ┃ ┗ 📜OAuth2UnlinkService.java
+ ┃ ┃ ┃ ┃ ┃ ┣ 📜AbstractOAuth2UserService.java
+ ┃ ┃ ┃ ┃ ┃ ┣ 📜CustomOAuth2UserService.java
+ ┃ ┃ ┃ ┃ ┃ ┗ 📜CustomOidcUserService.java
+ ┃ ┃ ┃ ┃ ┣ 📂security
+ ┃ ┃ ┃ ┃ ┃ ┣ 📜ArticleSecurity.java
+ ┃ ┃ ┃ ┃ ┃ ┗ 📜CommentSecurity.java
+ ┃ ┃ ┃ ┃ ┣ 📂sms
+ ┃ ┃ ┃ ┃ ┃ ┣ 📜DevMessageService.java
+ ┃ ┃ ┃ ┃ ┃ ┣ 📜MessageService.java
+ ┃ ┃ ┃ ┃ ┃ ┗ 📜ProdMessageService.java
+ ┃ ┃ ┃ ┃ ┣ 📜BlogService.java
+ ┃ ┃ ┃ ┃ ┣ 📜CacheService.java
+ ┃ ┃ ┃ ┃ ┣ 📜CommentService.java
+ ┃ ┃ ┃ ┃ ┣ 📜CustomUserDetailsService.java
+ ┃ ┃ ┃ ┃ ┣ 📜DuplicateCheckService.java
+ ┃ ┃ ┃ ┃ ┣ 📜UserService.java
+ ┃ ┃ ┃ ┃ ┣ 📜ValidationService.java
+ ┃ ┃ ┃ ┃ ┗ 📜VerificationService.java
+ ┃ ┃ ┃ ┗ 📜BlogApplication.java
+```
+
+### Frontend
+```
+📦resources
+ ┣ 📂static
+ ┃ ┣ 📂images
+ ┃ ┃ ┣ 📜comment.png
+ ┃ ┃ ┣ 📜google.png
+ ┃ ┃ ┣ 📜icon_like_off.png
+ ┃ ┃ ┣ 📜icon_like_on.png
+ ┃ ┃ ┣ 📜kakao.png
+ ┃ ┃ ┣ 📜menu.png
+ ┃ ┃ ┣ 📜naver.png
+ ┃ ┃ ┗ 📜views.png
+ ┃ ┣ 📂js
+ ┃ ┃ ┣ 📂article
+ ┃ ┃ ┃ ┣ 📜article.js
+ ┃ ┃ ┃ ┣ 📜articleMain.js
+ ┃ ┃ ┃ ┣ 📜comment.js
+ ┃ ┃ ┃ ┗ 📜like.js
+ ┃ ┃ ┣ 📂login
+ ┃ ┃ ┃ ┣ 📜screenToggle.js
+ ┃ ┃ ┃ ┗ 📜validation.js
+ ┃ ┃ ┣ 📜editComment.js
+ ┃ ┃ ┣ 📜loadPage.js
+ ┃ ┃ ┣ 📜search.js
+ ┃ ┃ ┣ 📜searchPageEvents.js
+ ┃ ┃ ┗ 📜utils.js
+ ┃ ┣ 📂style
+ ┃ ┃ ┣ 📜500.css
+ ┃ ┃ ┣ 📜article.css
+ ┃ ┃ ┣ 📜articleList.css
+ ┃ ┃ ┣ 📜loginPage.css
+ ┃ ┃ ┣ 📜phone-number.css
+ ┃ ┃ ┗ 📜signup.css
+ ┃ ┗ 📜favicon.ico
+ ┣ 📂templates
+ ┃ ┣ 📂error
+ ┃ ┃ ┣ 📜403.html
+ ┃ ┃ ┣ 📜404.html
+ ┃ ┃ ┗ 📜500.html
+ ┃ ┣ 📂fragments
+ ┃ ┃ ┗ 📜header.html
+ ┃ ┣ 📜article.html
+ ┃ ┣ 📜articleList.html
+ ┃ ┣ 📜email-request.html
+ ┃ ┣ 📜login.html
+ ┃ ┣ 📜newArticle.html
+ ┃ ┣ 📜oauthSignup.html
+ ┃ ┣ 📜phone-number-request.html
+ ┃ ┗ 📜userInfo.html
+ ┗ 📜messages.properties
+```
+
+### 설정 파일
+```
+📦resources
+ ┣ 📜application-dev.yml
+ ┣ 📜application-local.yml
+ ┣ 📜application-prod.yml
+ ┣ 📜application-test.yml
+ ┗ 📜application.yml
+```
