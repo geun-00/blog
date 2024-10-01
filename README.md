@@ -356,7 +356,8 @@
 
 ## 아키텍쳐
 
-<img width="935" alt="image" src="https://github.com/user-attachments/assets/eac73fa6-43d7-423b-a1e0-846ea9340c42">
+![blog](https://github.com/user-attachments/assets/283fd49e-e568-4789-bd8e-a3e96174212b)
+
 
 # 5. API 명세서
 
