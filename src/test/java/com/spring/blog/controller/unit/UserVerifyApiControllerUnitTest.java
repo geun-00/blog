@@ -1,5 +1,6 @@
 package com.spring.blog.controller.unit;
 
+import com.spring.blog.common.enums.SocialType;
 import com.spring.blog.controller.ApiControllerUnitTestSupport;
 import com.spring.blog.controller.dto.request.EmailRequest;
 import com.spring.blog.controller.dto.request.EmailVerifyCodeRequest;
@@ -212,7 +213,7 @@ public class UserVerifyApiControllerUnitTest extends ApiControllerUnitTestSuppor
         String email = "user@test.com";
         EmailVerifyCodeRequest request = new EmailVerifyCodeRequest(email, verificationCode);
 
-        given(verificationService.verifyCodeByEmail(anyString(), anyString())).willReturn(true);
+        given(verificationService.verifyCodeByEmail(anyString(), anyString())).willReturn(SocialType.NONE);
 
         // when
         mockMvc.perform(post("/api/verify/code/email")
@@ -223,7 +224,7 @@ public class UserVerifyApiControllerUnitTest extends ApiControllerUnitTestSuppor
                 .andExpect(jsonPath("$.code").value(200))
                 .andExpect(jsonPath("$.status").value("OK"))
                 .andExpect(jsonPath("$.message").value("OK"))
-                .andExpect(jsonPath("$.data").value(true));
+                .andExpect(jsonPath("$.data").value("none"));
 
         // then
         verify(verificationService, times(1)).verifyCodeByEmail(anyString(), anyString());

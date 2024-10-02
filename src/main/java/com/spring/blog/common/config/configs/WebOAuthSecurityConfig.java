@@ -65,7 +65,7 @@ public class WebOAuthSecurityConfig {
                                 "/*/icon-*", "/h2-console/**", "/swagger-ui/**", "/v3/api-docs/**", "/error/**").permitAll()
 
                         .requestMatchers("/", "/login*", "/userPage*", "/findEmail", "/findPassword").permitAll() //사용자 관련 뷰 설정
-                        .requestMatchers("/api/formUser").permitAll() //사용자 관련 API 설정
+                        .requestMatchers("/api/formUser", "/api/user/newPassword").permitAll() //사용자 관련 API 설정
                         .requestMatchers("/api/oauthUser").hasRole("OAUTH")
 
                         .requestMatchers("/guest", "/articles/**").permitAll() //게시글 관련 뷰 설정
@@ -73,8 +73,6 @@ public class WebOAuthSecurityConfig {
                                 "/api/articles/{articleId}/liked").permitAll() //게시글 관련 API 설정
 
                         .requestMatchers("/api/verify/**").permitAll() //이메일, 비밀번호 찾기 API
-
-                        .requestMatchers("/error/**").permitAll() //에러 화면
 
                         .anyRequest().authenticated()
                 )
