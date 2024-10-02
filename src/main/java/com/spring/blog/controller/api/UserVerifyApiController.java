@@ -1,5 +1,6 @@
 package com.spring.blog.controller.api;
 
+import com.spring.blog.common.enums.SocialType;
 import com.spring.blog.controller.dto.request.EmailRequest;
 import com.spring.blog.controller.dto.request.EmailVerifyCodeRequest;
 import com.spring.blog.controller.dto.request.PhoneNumberRequest;
@@ -73,13 +74,13 @@ public class UserVerifyApiController {
     }
 
     @PostMapping("/verify/code/email")
-    public ApiResponse<Boolean> verifyCodeByEmail(@Validated @RequestBody EmailVerifyCodeRequest request) {
+    public ApiResponse<String> verifyCodeByEmail(@Validated @RequestBody EmailVerifyCodeRequest request) {
 
-        boolean verification = verificationService.verifyCodeByEmail(
+        SocialType socialType = verificationService.verifyCodeByEmail(
                 request.verificationCode(),
                 request.email()
         );
 
-        return ApiResponse.ok(verification);
+        return ApiResponse.ok(socialType.getSocialName());
     }
 }

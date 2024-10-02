@@ -1,5 +1,6 @@
 package com.spring.blog.service;
 
+import com.spring.blog.common.enums.SocialType;
 import com.spring.blog.domain.User;
 import com.spring.blog.exception.VerificationException;
 import com.spring.blog.repository.UserRepository;
@@ -110,7 +111,7 @@ public class VerificationService {
      * 이메일로 받은 인증번호로 인증이 되면 프론트에서 새로운 비밀번호 입력 받는 화면으로 이동
      * @return 인증 여부
      */
-    public boolean verifyCodeByEmail(String requestCode, String email) {
+    public SocialType verifyCodeByEmail(String requestCode, String email) {
 
         String verificationCode = getAndDelVerificationCodeFromRedis(email);
 
@@ -120,7 +121,10 @@ public class VerificationService {
             throw new VerificationException("인증 코드가 일치하지 않습니다.");
         }
 
-        return true;
+        User user = userRepository.findByEmail(email).orElseThrow(
+                () -> new EntityNotFoundException("not found user from " + email));
+
+        return user.getRegistrationId();
     }
 
     //임의의 6자리 인증번호를 생성
