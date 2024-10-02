@@ -393,6 +393,11 @@
 
 <details>
   <summary>게시글 관련 기능</summary>
+
+  <h3>게시글 등록 및 수정</h3>
+  <img src="https://github.com/user-attachments/assets/9961ff3f-2d70-427e-8725-8a92d955894d">
+  <li>로그인된 사용자는 글을 등록할 수 있습니다.</li>
+  <li>사진을 포함한 여러 가지 형태의 글을 등록할 수 있습니다.</li>
 </details>
 
 <details>
