@@ -1,9 +1,9 @@
 # 게시판 프로젝트
 - **Spring Boot**로 개발한 기본적인 웹 CRUD 게시판 프로젝트입니다.
 - 배포 주소 : https://www.geuns-blog.com
+- 최근 업데이트 : 24.10.02
 
 <img width="956" alt="image" src="https://github.com/user-attachments/assets/75a4408d-11b3-4715-a4fa-37aad18b8c42">
-
 
 # 1. 프로젝트 소개
 - **프로젝트 명** : 웹 게시판 프로젝트
@@ -362,3 +362,44 @@
 # 5. API 명세서
 
 [API 명세서](https://documenter.getpostman.com/view/29486061/2sAXqwYKR3)
+
+# 6. 기능소개
+
+<details>
+  <summary>사용자 관련 기능</summary>
+  <h3>폼 회원가입</h3>
+  <img src="https://github.com/user-attachments/assets/a3f66f32-68bb-4ac7-817b-2c1c82e1feac">
+  <li>사용자 정보를 입력받아 기본적인 폼 회원가입을 시도합니다.</li>
+  <li>중복된 정보나 유효성 검사에 실패할 경우 회원가입에 실패합니다.</li>
+
+  <h3>소셜 회원가입</h3>
+  <img src="https://github.com/user-attachments/assets/9d533cd5-d6c5-4e6d-b8a0-5e324cfad18a">
+  <li>OAuth로 사용자의 기본 정보와 추가 정보를 받아 회원가입을 시도합니다.</li>
+  <li>중복된 정보나 유효성 검사에 실패할 경우 회원가입에 실패합니다.</li>
+
+  <h3>정보 수정</h3>
+  <img src="https://github.com/user-attachments/assets/5059f7d8-5b16-49a0-8a21-a56d038d9401">
+  <li>사용자의 닉네임과 프로필 이미지 정보를 수정합니다.</li>
+
+  <h3>이메일 찾기</h3>
+  <img src="https://github.com/user-attachments/assets/7d7e1b51-ba37-471d-ac1a-9012e158ad81">
+  <li>전화번호를 입력받아 SMS 인증 서비스로 가입했던 이메일을 찾습니다.</li>
+
+  <h3>비밀번호 재설정</h3>
+  <img src="https://github.com/user-attachments/assets/5d63996d-9f9e-4d55-bfb8-13a2d247aad8">
+  <li>이메일을 입력받아 이메일 인증 서비스로 비밀번호 재설정을 시도합니다.</li>
+  <li>소셜 회원가입이 아닌 폼 회원가입 사용자만 비밀번호 재설정이 가능합니다.</li>
+</details>
+
+<details>
+  <summary>게시글 관련 기능</summary>
+
+  <h3>게시글 등록 및 수정</h3>
+  <img src="https://github.com/user-attachments/assets/9961ff3f-2d70-427e-8725-8a92d955894d">
+  <li>로그인된 사용자는 글을 등록할 수 있습니다.</li>
+  <li>사진을 포함한 여러 가지 형태의 글을 등록할 수 있습니다.</li>
+</details>
+
+<details>
+  <summary>댓글 관련 기능</summary>
+</details>
