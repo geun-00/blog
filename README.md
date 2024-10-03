@@ -75,7 +75,7 @@
 
 # 4. 프로젝트 구조
 
-## 디렉토리 구조
+## 디렉토리
 
 <details>
   <summary>Backend</summary>
@@ -357,6 +357,10 @@
 ## 아키텍쳐
 
 ![blog](https://github.com/user-attachments/assets/283fd49e-e568-4789-bd8e-a3e96174212b)
+
+## DB
+
+<img width="400" alt="image" src="https://github.com/user-attachments/assets/3be44916-80c5-4a0e-bf09-3a34a3b41515">
 
 
 # 5. API 명세서
