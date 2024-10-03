@@ -360,7 +360,7 @@
 
 ## DB
 
-<img width="400" alt="image" src="https://github.com/user-attachments/assets/3be44916-80c5-4a0e-bf09-3a34a3b41515">
+<img width="800" alt="image" src="https://github.com/user-attachments/assets/9cd21615-2430-410a-9d40-26fed2ce00ac">
 
 
 # 5. API 명세서
