@@ -1,7 +1,7 @@
 # 게시판 프로젝트
 - **Spring Boot**로 개발한 기본적인 웹 CRUD 게시판 프로젝트입니다.
 - 배포 주소 : https://www.geuns-blog.com
-- 최근 업데이트 : 24.10.02
+- 최근 업데이트 : 24.10.03
 
 <img width="956" alt="image" src="https://github.com/user-attachments/assets/75a4408d-11b3-4715-a4fa-37aad18b8c42">
 
@@ -398,8 +398,30 @@
   <img src="https://github.com/user-attachments/assets/9961ff3f-2d70-427e-8725-8a92d955894d">
   <li>로그인된 사용자는 글을 등록할 수 있습니다.</li>
   <li>사진을 포함한 여러 가지 형태의 글을 등록할 수 있습니다.</li>
+
+  <h3>게시글 특정 개수 조회</h3>
+  <img src="https://github.com/user-attachments/assets/6bdb0c80-d038-40da-a238-85ec55a758ef">
+  <li>한 페이지에 원하는 분량만큼 조회할 수 있습니다.</li>
+
+  <h3>게시글 검색 조회</h3>
+  <img src="https://github.com/user-attachments/assets/532cd630-3e67-492f-8aad-af1fee6a5945">
+  <li>제목, 내용, 작성자, 제목 + 내용, 작성일로 특정 게시글을 검색할 수 있습니다.</li>
+
+  <h3>좋아요 등록 및 취소</h3>
+  <img src="https://github.com/user-attachments/assets/49d736b3-1646-467b-a312-8b2c9939b2a6">
+  <li>특정 게시글에 좋아요를 누르고 취소할 수 있습니다.</li>
+
 </details>
 
 <details>
   <summary>댓글 관련 기능</summary>
+
+  <h3>댓글 등록</h3>
+  <img src="https://github.com/user-attachments/assets/901043ed-dcf3-4212-8973-6958c4f9068d">
+  <li>로그인된 사용자는 게시글에 댓글을 등록할 수 있습니다.</li>
+  <li>자신의 게시글이면 "작성자" 라는 표시가 보입니다.</li>
+
+  <h3>댓글 수정 및 삭제</h3>
+  <img src="https://github.com/user-attachments/assets/8ce03fc2-09b6-459c-9603-4b054de7026d">
+  <li>등록했던 댓글을 수정하거나 삭제합니다.</li>
 </details>
