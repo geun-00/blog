@@ -9,6 +9,7 @@ import com.spring.blog.exception.duplicate.DuplicateException;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
+import org.json.JSONException;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authorization.AuthorizationDeniedException;
 import org.springframework.validation.FieldError;
@@ -129,6 +130,18 @@ public class ApiControllerAdvice {
 
         return ApiResponse.of(
                 HttpStatus.FORBIDDEN,
+                "오류가 발생했습니다."
+        );
+    }
+
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    @ExceptionHandler(JSONException.class)
+    public ApiResponse<Object> handleException(JSONException ex) {
+
+        log.error("JSON 데이터 파싱 중 오류가 발생했습니다. 내용 : {}", ex.getMessage());
+
+        return ApiResponse.of(
+                HttpStatus.INTERNAL_SERVER_ERROR,
                 "오류가 발생했습니다."
         );
     }

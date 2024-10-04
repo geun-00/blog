@@ -73,6 +73,7 @@ public class WebOAuthSecurityConfig {
                                 "/api/articles/{articleId}/liked").permitAll() //게시글 관련 API 설정
 
                         .requestMatchers("/api/verify/**").permitAll() //이메일, 비밀번호 찾기 API
+                        .requestMatchers("/api/weather**").permitAll() //날씨 API
 
                         .anyRequest().authenticated()
                 )

@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="ko" th:fragment="common_footer">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/style/footer.css">
+</head>
+<body>
+
+<div id="container">
+    <div style="margin-bottom: 1rem; text-align: center">
+        <div id="weather-title">
+            오늘의 날씨
+        </div>
+        <strong>
+            <span id="cur-date"></span>
+        </strong>
+        <div>
+            <p id="tmx_tmn"></p>
+        </div>
+    </div>
+    <div id="loading-message">날씨 정보를 불러오는 중...</div>
+    <div id="error-message" style="display: none; text-align: center;">
+        <p>날씨 데이터를 불러오는 데 문제가 발생했습니다. 새로고침을 시도해 주세요.</p>
+        <p>문제가 지속될 경우 문의 주세요.</p>
+    </div>
+
+    <div id="weather-container" style="display: none;"></div>
+    <div id="pagination-container" style="display: none;">
+        <button class="prev-button">
+            <img src="/images/prev.png" alt="Previous">
+        </button>
+        <button class="next-button">
+            <img src="/images/next.png" alt="Next">
+        </button>
+    </div>
+</div>
+<script src="/js/weather/app.js"></script>
+<script src="/js/weather/weather.js"></script>
+<script src="/js/weather/pagination.js"></script>
+</body>
+</html>

@@ -2,6 +2,7 @@ package com.spring.blog.common.config.configs;
 
 import com.spring.blog.common.Interceptors.ExecutionTimeInterceptor;
 import com.spring.blog.common.Interceptors.FileCleanUpInterceptor;
+import com.spring.blog.common.Interceptors.WeatherInterceptor;
 import com.spring.blog.common.Interceptors.queryCounter.QueryCounter;
 import com.spring.blog.common.Interceptors.queryCounter.QueryCounterInterceptor;
 import com.spring.blog.common.argumentResolver.CurrentUserArgumentResolver;
@@ -48,6 +49,9 @@ public class WebMvcConfig implements WebMvcConfigurer {
                 .addPathPatterns("/api/articles/**")
                 .excludePathPatterns("/api/articles/like/**", "/api/articles/search")
                 .excludePathPatterns(EXCLUDE_PATTERNS);
+
+        registry.addInterceptor(new WeatherInterceptor())
+                .addPathPatterns("/api/weather");
     }
 
     @Override

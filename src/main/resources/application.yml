@@ -100,3 +100,6 @@ kakao:
 profile:
   default:
     image-url: /user/default_user.png
+
+weather:
+  serviceKey: ENC(LzlDEp+ks8YfY6Y3BC7sgL1Y/iAbFV5xo2WrM/BOjFAKeZZ6+s2y+ij8s2mDzr/lwccZ29WccmWWmadZD4prfC6enP6wtxgL2mbl8aEu2uTYI2UqpjChKGPqPo31NxQHRtHypK8nNZMalRGZaT6EBA==)
