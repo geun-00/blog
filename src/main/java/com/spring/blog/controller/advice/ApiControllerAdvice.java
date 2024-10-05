@@ -1,6 +1,7 @@
 package com.spring.blog.controller.advice;
 
 import com.spring.blog.controller.api.ApiResponse;
+import com.spring.blog.exception.CoordinateConvertException;
 import com.spring.blog.exception.EmailSendException;
 import com.spring.blog.exception.ResponseStatusException;
 import com.spring.blog.exception.SmsException;
@@ -40,6 +41,18 @@ public class ApiControllerAdvice {
                 .toList();
 
         log.error("errors = {}", errors);
+
+        return ApiResponse.of(
+                HttpStatus.BAD_REQUEST,
+                "잘못된 입력을 받았습니다.",
+                null);
+    }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(CoordinateConvertException.class)
+    public ApiResponse<Object> handleBindException(CoordinateConvertException ex) {
+
+        log.error("위경도 입력 오류 발생, {}", ex.getMessage());
 
         return ApiResponse.of(
                 HttpStatus.BAD_REQUEST,

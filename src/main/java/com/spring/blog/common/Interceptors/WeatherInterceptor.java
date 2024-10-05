@@ -1,5 +1,6 @@
 package com.spring.blog.common.Interceptors;
 
+import com.spring.blog.exception.CoordinateConvertException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.util.StringUtils;
@@ -16,6 +17,12 @@ public class WeatherInterceptor implements HandlerInterceptor {
     static final double XO = 43;         // 기준점 X 좌표 (격자 기준)
     static final double YO = 136;        // 기준점 Y 좌표 (격자 기준)
 
+    static final double LATITUDE_MIN = 33.2235722222222;
+    static final double LATITUDE_MAX = 38.4916444444444;
+
+    static final double LONGITUDE_MIN = 124.7141;
+    static final double LONGITUDE_MAX = 131.8648471;
+
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
 
@@ -24,18 +31,33 @@ public class WeatherInterceptor implements HandlerInterceptor {
 
         if (StringUtils.hasText(latitudeStr) && StringUtils.hasText(longitudeStr)) {
 
-            double latitude = Double.parseDouble(latitudeStr);
-            double longitude = Double.parseDouble(longitudeStr);
+            try {
+                double latitude = Double.parseDouble(latitudeStr);
+                double longitude = Double.parseDouble(longitudeStr);
 
-            int[] coordinate = convert(latitude, longitude);
+                checkRange(latitude, longitude);
 
-            request.setAttribute("nx", coordinate[0]);
-            request.setAttribute("ny", coordinate[1]);
+                int[] coordinate = convert(latitude, longitude);
 
-            return true;
+                request.setAttribute("nx", coordinate[0]);
+                request.setAttribute("ny", coordinate[1]);
+
+                return true;
+            } catch (NumberFormatException ex) {
+                throw new CoordinateConvertException("문자 입력으로 위경도 -> 좌표 변환 실패", ex);
+            }
+        } else {
+            throw new CoordinateConvertException("위도와 경도를 입력해주세요.");
         }
+    }
 
-        return false;
+    private void checkRange(double latitude, double longitude) {
+        if (latitude < LATITUDE_MIN || latitude > LATITUDE_MAX) {
+            throw new CoordinateConvertException("유효 범위를 벗어난 위도");
+        }
+        if (longitude < LONGITUDE_MIN || longitude > LONGITUDE_MAX) {
+            throw new CoordinateConvertException("유효 범위를 벗어난 경도");
+        }
     }
 
     private int[] convert(double latitude, double longitude) {
