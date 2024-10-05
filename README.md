@@ -1,9 +1,9 @@
 # 게시판 프로젝트
 - **Spring Boot**로 개발한 기본적인 웹 CRUD 게시판 프로젝트입니다.
 - 배포 주소 : https://www.geuns-blog.com
-- 최근 업데이트 : 24.10.03
+- 최근 업데이트 : 24.10.05
 
-<img width="956" alt="image" src="https://github.com/user-attachments/assets/75a4408d-11b3-4715-a4fa-37aad18b8c42">
+<img width="940" alt="image" src="https://github.com/user-attachments/assets/59a2e41b-f39a-4323-8697-a31a22d6bc23">
 
 # 1. 프로젝트 소개
 - **프로젝트 명** : 웹 게시판 프로젝트
@@ -150,7 +150,8 @@
  ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📜QueryCounterAop.java
  ┃ ┃ ┃ ┃ ┃ ┃ ┗ 📜QueryCounterInterceptor.java
  ┃ ┃ ┃ ┃ ┃ ┣ 📜ExecutionTimeInterceptor.java
- ┃ ┃ ┃ ┃ ┃ ┗ 📜FileCleanUpInterceptor.java
+ ┃ ┃ ┃ ┃ ┃ ┣ 📜FileCleanUpInterceptor.java
+ ┃ ┃ ┃ ┃ ┃ ┗ 📜WeatherInterceptor.java      
  ┃ ┃ ┃ ┃ ┗ 📜SetupData.java
  ┃ ┃ ┃ ┣ 📂controller
  ┃ ┃ ┃ ┃ ┣ 📂advice
@@ -163,7 +164,8 @@
  ┃ ┃ ┃ ┃ ┃ ┣ 📜LocalFileController.java
  ┃ ┃ ┃ ┃ ┃ ┣ 📜S3Controller.java
  ┃ ┃ ┃ ┃ ┃ ┣ 📜UserApiController.java
- ┃ ┃ ┃ ┃ ┃ ┗ 📜UserVerifyApiController.java
+ ┃ ┃ ┃ ┃ ┃ ┣ 📜UserVerifyApiController.java
+ ┃ ┃ ┃ ┃ ┃ ┗ 📜WeatherApiController.java      
  ┃ ┃ ┃ ┃ ┣ 📂dto
  ┃ ┃ ┃ ┃ ┃ ┗ 📂request
  ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📜ArticleRequest.java
@@ -197,6 +199,7 @@
  ┃ ┃ ┃ ┃ ┃ ┣ 📜EmailDuplicateException.java
  ┃ ┃ ┃ ┃ ┃ ┣ 📜NicknameDuplicateException.java
  ┃ ┃ ┃ ┃ ┃ ┗ 📜PhoneNumberDuplicateException.java
+ ┃ ┃ ┃ ┃ ┣ 📜CoordinateConvertException.java      
  ┃ ┃ ┃ ┃ ┣ 📜EmailSendException.java
  ┃ ┃ ┃ ┃ ┣ 📜ResponseStatusException.java
  ┃ ┃ ┃ ┃ ┣ 📜SmsException.java
@@ -244,6 +247,7 @@
  ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📜ArticleResponse.java
  ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📜ArticleViewResponse.java
  ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📜CommentResponse.java
+ ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📜Item.java      
  ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📜LikeResponse.java
  ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📜PageResponse.java
  ┃ ┃ ┃ ┃ ┃ ┃ ┣ 📜UserInfo.java
@@ -277,7 +281,8 @@
  ┃ ┃ ┃ ┃ ┣ 📜DuplicateCheckService.java
  ┃ ┃ ┃ ┃ ┣ 📜UserService.java
  ┃ ┃ ┃ ┃ ┣ 📜ValidationService.java
- ┃ ┃ ┃ ┃ ┗ 📜VerificationService.java
+ ┃ ┃ ┃ ┃ ┣ 📜VerificationService.java
+ ┃ ┃ ┃ ┃ ┗ 📜WeatherService.java      
  ┃ ┃ ┃ ┗ 📜BlogApplication.java
     </code>
   </pre>
@@ -297,6 +302,10 @@
  ┃ ┃ ┣ 📜kakao.png
  ┃ ┃ ┣ 📜menu.png
  ┃ ┃ ┣ 📜naver.png
+ ┃ ┃ ┣ 📜next.png
+ ┃ ┃ ┣ 📜prev.png
+ ┃ ┃ ┣ 📜rain.png
+ ┃ ┃ ┣ 📜tmp.png      
  ┃ ┃ ┗ 📜views.png
  ┃ ┣ 📂js
  ┃ ┃ ┣ 📂article
@@ -307,6 +316,10 @@
  ┃ ┃ ┣ 📂login
  ┃ ┃ ┃ ┣ 📜screenToggle.js
  ┃ ┃ ┃ ┗ 📜validation.js
+ ┃ ┃ ┣ 📂weather
+ ┃ ┃ ┃ ┣ 📜app.js
+ ┃ ┃ ┃ ┣ 📜pagination.js
+ ┃ ┃ ┃ ┗ 📜weather.js      
  ┃ ┃ ┣ 📜editComment.js
  ┃ ┃ ┣ 📜loadPage.js
  ┃ ┃ ┣ 📜search.js
@@ -316,6 +329,7 @@
  ┃ ┃ ┣ 📜500.css
  ┃ ┃ ┣ 📜article.css
  ┃ ┃ ┣ 📜articleList.css
+ ┃ ┃ ┣ 📜footer.css      
  ┃ ┃ ┣ 📜loginPage.css
  ┃ ┃ ┣ 📜phone-number.css
  ┃ ┃ ┗ 📜signup.css
@@ -326,6 +340,7 @@
  ┃ ┃ ┣ 📜404.html
  ┃ ┃ ┗ 📜500.html
  ┃ ┣ 📂fragments
+ ┃ ┃ ┣ 📜footer.html      
  ┃ ┃ ┗ 📜header.html
  ┃ ┣ 📜article.html
  ┃ ┣ 📜articleList.html
