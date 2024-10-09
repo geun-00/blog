@@ -1,4 +1,4 @@
-package com.spring.blog.controller.integraiton;
+package com.spring.blog.controller.integration;
 
 import com.spring.blog.EasyRandomFactory;
 import com.spring.blog.annotation.WithPrincipalUser;

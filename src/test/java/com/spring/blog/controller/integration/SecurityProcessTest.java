@@ -1,4 +1,4 @@
-package com.spring.blog.controller.integraiton;
+package com.spring.blog.controller.integration;
 
 import com.spring.blog.common.enums.SocialType;
 import com.spring.blog.controller.ViewControllerIntegrationTestSupport;
