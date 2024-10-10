@@ -23,6 +23,8 @@ import com.spring.blog.service.dto.response.LikeResponse;
 import com.spring.blog.service.dto.response.PageResponse;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -58,6 +60,7 @@ public class BlogService {
 
     @Transactional
     @PreAuthorize("isAuthenticated()")
+    @CacheEvict(value = "articles", allEntries = true)
     public ArticleResponse save(ArticleServiceRequest request, String email, String sessionId) {
 
         User user = findUserByEmail(email);
@@ -81,6 +84,7 @@ public class BlogService {
 
     @Transactional
     @PreAuthorize("@articleSecurity.isOwner(#articleId, authentication.name)")
+    @CacheEvict(value = "articles", allEntries = true)
     public ArticleResponse update(ArticleServiceRequest request, @P("articleId") long articleId) {
 
         Article article = blogRepository.findById(articleId)
@@ -93,6 +97,7 @@ public class BlogService {
 
     @Transactional
     @PreAuthorize("@articleSecurity.isOwner(#articleId, authentication.name)")
+    @CacheEvict(value = "articles", allEntries = true)
     public void delete(@P("articleId") long articleId) {
         Article article = blogRepository.findById(articleId)
                 .orElseThrow(() -> new EntityNotFoundException("not found article from : " + articleId));
@@ -179,6 +184,7 @@ public class BlogService {
         return getPageResponse(pageable, articles);
     }
 
+    @Cacheable(value = "articles", key = "#pageable.pageNumber + '_' + #pageable.pageSize")
     public PageResponse<ArticleListViewResponse> findAll(Pageable pageable) {
 
         Page<ArticleListViewResponse> articles = blogQueryRepository.findAll(pageable);
