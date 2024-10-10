@@ -14,11 +14,6 @@ public interface FileService {
             "image/webp"
     );
 
-    /**
-     * @param file 저장할 파일
-     * @param dir 파일이 저장될 디렉터리
-     * @return 저장된 파일의 경로
-     */
     String saveFile(MultipartFile file, String dir);
 
     void deleteFile(String fileName);

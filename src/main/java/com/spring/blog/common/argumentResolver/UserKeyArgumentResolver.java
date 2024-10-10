@@ -1,7 +1,6 @@
 package com.spring.blog.common.argumentResolver;
 
 import com.spring.blog.common.annotation.UserKey;
-import com.spring.blog.common.converters.utils.CookieUtil;
 import com.spring.blog.model.PrincipalUser;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
@@ -54,7 +53,11 @@ public class UserKeyArgumentResolver implements HandlerMethodArgumentResolver {
 
         if (!StringUtils.hasText(userKey)) {
             userKey = UUID.randomUUID().toString();
-            CookieUtil.addCookie(response, "USER_KEY", userKey, 60 * 60 * 24);
+            Cookie cookie = new Cookie("USER_KEY", userKey);
+            cookie.setPath("/");
+            cookie.setMaxAge(60 * 60 * 24);
+
+            response.addCookie(cookie);
         }
 
         return userKey;
