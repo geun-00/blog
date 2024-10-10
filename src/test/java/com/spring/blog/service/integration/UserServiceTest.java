@@ -6,6 +6,7 @@ import com.spring.blog.exception.duplicate.DuplicateException;
 import com.spring.blog.repository.UserRepository;
 import com.spring.blog.service.UserService;
 import com.spring.blog.service.dto.request.FormAddUserServiceRequest;
+import com.spring.blog.service.dto.request.OAuthAddUserServiceRequest;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -67,6 +68,46 @@ public class UserServiceTest extends IntegrationTestSupport {
         // when
         // then
         assertThatThrownBy(() -> userService.save(request))
+                .isInstanceOf(DuplicateException.class)
+                .hasMessage(errorMessage);
+    }
+
+    @DisplayName("updateOAuthUser() 테스트, 정상 흐름")
+    @Test
+    void updateOAuthUser() {
+        // given
+        String email = "user@test.com";
+
+        String updateNickname = "updateNickname";
+        String updatePhoneNumber = "01013572468";
+
+        OAuthAddUserServiceRequest request = new OAuthAddUserServiceRequest(updatePhoneNumber, updateNickname);
+
+        // when
+        String result = userService.updateOAuthUser(request, email);
+
+        // then
+        assertThat(result).isEqualTo(updateNickname);
+
+        User user = userRepository.findByEmail(email).get();
+        assertThat(user.getPhoneNumber()).isEqualTo(updatePhoneNumber);
+        assertThat(user.getNickname()).isEqualTo(updateNickname);
+    }
+
+    @DisplayName("updateOAuthUser() 테스트, 예외 흐름")
+    @ParameterizedTest(name = "{2}")
+    @CsvSource({
+            "nickname0, 01011223344, 닉네임이 이미 등록되어 있습니다.",
+            "updateNickname, 01012341234, 전화번호가 이미 등록되어 있습니다.",
+    })
+    void updateOAuthUserWithEx(String updateNickname, String updatePhoneNumber, String errorMessage) {
+        // given
+        String email = "user@test.com";
+        OAuthAddUserServiceRequest request = new OAuthAddUserServiceRequest(updatePhoneNumber, updateNickname);
+
+        // when
+        // then
+        assertThatThrownBy(() -> userService.updateOAuthUser(request, email))
                 .isInstanceOf(DuplicateException.class)
                 .hasMessage(errorMessage);
     }
