@@ -7,7 +7,7 @@ import lombok.Getter;
 @AllArgsConstructor
 public enum CacheType {
 
-    USER("user", 5 * 60, 10000),
+    ARTICLE_LIKE("liked", 60, 10000),
     ARTICLES("articles", 5 * 60, 10000),
     WEATHER_DATA("weatherData", 60 * 60, 10000);
 

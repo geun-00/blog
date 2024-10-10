@@ -139,6 +139,7 @@ public class BlogService {
 
     @Transactional
     @PreAuthorize("isAuthenticated()")
+    @CacheEvict(value = "liked", key = "#articleId + '-' + #email")
     public int addLike(Long articleId, String email) {
 
         User user = findUserByEmail(email);
@@ -158,6 +159,7 @@ public class BlogService {
 
     @Transactional
     @PreAuthorize("isAuthenticated()")
+    @CacheEvict(value = "liked", key = "#articleId + '-' + #email")
     public int deleteLike(Long articleId, String email) {
 
         User user = findUserByEmail(email);
@@ -199,6 +201,7 @@ public class BlogService {
         return articleMapper.toAddArticleViewResponse(article);
     }
 
+    @Cacheable(value = "liked", key = "#articleId + '-' + #email")
     public LikeResponse isLiked(Long articleId, String email) {
 
         Article article = blogRepository.findById(articleId).orElseThrow(
