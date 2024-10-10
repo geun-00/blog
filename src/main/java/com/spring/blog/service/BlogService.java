@@ -52,7 +52,6 @@ public class BlogService {
     private final ArticleLikesRepository articleLikesRepository;
     private final ArticleImagesRepository articleImagesRepository;
 
-    private final CacheService cacheService;
     private final ArticleMapper articleMapper;
     private final ApplicationEventPublisher eventPublisher;
     private final RedisTemplate<String, Object> redisTemplate;
@@ -139,7 +138,7 @@ public class BlogService {
 
         User user = findUserByEmail(email);
 
-        Article article = blogRepository.findById(articleId).orElseThrow(
+        Article article = blogRepository.findByIdWithLock(articleId).orElseThrow(
                 () -> new EntityNotFoundException("not found article from " + articleId));
 
         if (!articleLikesRepository.existsByUserAndArticle(user, article)) {
