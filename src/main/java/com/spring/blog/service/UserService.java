@@ -7,6 +7,7 @@ import com.spring.blog.domain.Article;
 import com.spring.blog.domain.ArticleImages;
 import com.spring.blog.domain.User;
 import com.spring.blog.exception.ResponseStatusException;
+import com.spring.blog.exception.duplicate.DuplicateException;
 import com.spring.blog.exception.duplicate.NicknameDuplicateException;
 import com.spring.blog.mapper.UserMapper;
 import com.spring.blog.model.OAuth2ProviderUser;
@@ -32,6 +33,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -72,11 +74,15 @@ public class UserService {
     @DuplicateCheck
     @Transactional
     public String save(FormAddUserServiceRequest request) {
-        User savedUser = userRepository.save(
-                userMapper.toEntity(request, SocialType.NONE, defaultImageUrl)
-        );
+        try {
+            User savedUser = userRepository.save(
+                    userMapper.toEntity(request, SocialType.NONE, defaultImageUrl)
+            );
 
-        return savedUser.getNickname();
+            return savedUser.getNickname();
+        } catch (DataIntegrityViolationException ex) {
+            throw new DuplicateException("중복된 정보가 있어 가입할 수 없습니다.", ex);
+        }
     }
 
     @Transactional
