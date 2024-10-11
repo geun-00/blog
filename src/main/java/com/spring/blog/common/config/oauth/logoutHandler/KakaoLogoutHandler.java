@@ -7,13 +7,14 @@ import org.springframework.web.util.UriComponentsBuilder;
 public class KakaoLogoutHandler extends AbstractOAuth2LogoutHandler {
 
     private static final String LOGOUT_PATH = "https://kauth.kakao.com/oauth/logout";
-    private static final String LOGOUT_REDIRECT_URI = "http://localhost:8080/login";
 
     private final String clientId;
+    private final String logoutUri;
 
-    public KakaoLogoutHandler(RestTemplate restTemplate, String kakaoClientId) {
+    public KakaoLogoutHandler(RestTemplate restTemplate, String kakaoClientId, String logoutUri) {
         super(restTemplate);
         this.clientId = kakaoClientId;
+        this.logoutUri = logoutUri;
     }
 
     @Override
@@ -21,7 +22,7 @@ public class KakaoLogoutHandler extends AbstractOAuth2LogoutHandler {
 
         return UriComponentsBuilder.fromHttpUrl(LOGOUT_PATH)
                 .queryParam("client_id", clientId)
-                .queryParam("logout_redirect_uri", LOGOUT_REDIRECT_URI)
+                .queryParam("logout_redirect_uri", logoutUri)
                 .toUriString();
     }
 

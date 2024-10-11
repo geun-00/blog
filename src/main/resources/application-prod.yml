@@ -39,3 +39,7 @@ cloud:
 profile:
   default:
     image-url: ${DEFAULT_IMAGE_URL}
+
+kakao:
+  logout:
+    redirect-uri: ${KAKAO_LOGOUT_REDIRECT_URI}

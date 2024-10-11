@@ -22,6 +22,9 @@ public class DelegatingOAuth2LogoutHandler {
     @Value("${spring.security.oauth2.client.registration.kakao.client-id}")
     private String kakaoClientId;
 
+    @Value("${kakao.logout.redirect-uri}")
+    private String kakaoLogoutUri;
+
     @Value("${spring.security.oauth2.client.registration.naver.client-id}")
     private String naverClientId;
 
@@ -32,7 +35,7 @@ public class DelegatingOAuth2LogoutHandler {
 
         this.logoutHandlers = List.of(
                 registrationId -> StringUtils.equals(KAKAO.getSocialName(), registrationId) ?
-                        new KakaoLogoutHandler(restTemplate, kakaoClientId) : null,
+                        new KakaoLogoutHandler(restTemplate, kakaoClientId, kakaoLogoutUri) : null,
 
                 registrationId -> StringUtils.equals(NAVER.getSocialName(), registrationId) ?
                         new NaverLogoutHandler(restTemplate, naverClientId, naverClientSecret) : null,
