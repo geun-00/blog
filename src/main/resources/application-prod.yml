@@ -42,4 +42,4 @@ profile:
 
 kakao:
   logout:
-    redirect-uri: ${KAKAO_LOGOUT_REDIRECT_URI}
+    redirect-uri: https://www.geuns-blog.com/login
