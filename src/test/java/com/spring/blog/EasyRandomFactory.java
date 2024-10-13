@@ -17,7 +17,6 @@ import net.datafaker.Faker;
 import org.jeasy.random.EasyRandom;
 import org.jeasy.random.EasyRandomParameters;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
 import java.lang.reflect.Field;
 import java.util.List;
@@ -148,6 +147,10 @@ public class EasyRandomFactory {
         EasyRandom easyRandom = new EasyRandom(defaultParameters());
 
         return easyRandom.nextObject(CommentResponse.class);
+    }
+
+    public static User createUser() {
+        return new EasyRandom().nextObject(User.class);
     }
 
     private static class FakeProviderUser implements ProviderUser {
