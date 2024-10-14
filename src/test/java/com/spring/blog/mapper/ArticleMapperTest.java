@@ -9,6 +9,7 @@ import com.spring.blog.domain.Comment;
 import com.spring.blog.domain.User;
 import com.spring.blog.service.dto.request.ArticleSearchServiceRequest;
 import com.spring.blog.service.dto.request.ArticleServiceRequest;
+import com.spring.blog.service.dto.response.AddArticleViewResponse;
 import com.spring.blog.service.dto.response.ArticleViewResponse;
 import com.spring.blog.service.dto.response.CommentResponse;
 import org.junit.jupiter.api.BeforeEach;
@@ -135,7 +136,25 @@ class ArticleMapperTest {
         assertThat(commentResponse.isAuthor()).isEqualTo(target.isAuthor());
         assertThat(commentResponse.createdAt()).isEqualTo(target.createdAt());
         assertThat(commentResponse.profileImageUrl()).isEqualTo(target.profileImageUrl());
-
     }
 
+    @DisplayName("AddArticleViewResponse 매핑 테스트")
+    @Test
+    void addArticleViewResponse() {
+        // given
+        Article article = Article.builder()
+                .title("dOplgHNCkO")
+                .content("MichelMia")
+                .build();
+
+        ReflectionTestUtils.setField(article, "id", 1L);
+
+        // when
+        AddArticleViewResponse response = articleMapper.toAddArticleViewResponse(article);
+
+        // then
+        assertThat(response.id()).isEqualTo(article.getId());
+        assertThat(response.title()).isEqualTo(article.getTitle());
+        assertThat(response.content()).isEqualTo(article.getContent());
+    }
 }
