@@ -10,6 +10,7 @@ import com.spring.blog.domain.User;
 import com.spring.blog.service.dto.request.ArticleSearchServiceRequest;
 import com.spring.blog.service.dto.request.ArticleServiceRequest;
 import com.spring.blog.service.dto.response.AddArticleViewResponse;
+import com.spring.blog.service.dto.response.ArticleResponse;
 import com.spring.blog.service.dto.response.ArticleViewResponse;
 import com.spring.blog.service.dto.response.CommentResponse;
 import org.junit.jupiter.api.BeforeEach;
@@ -154,6 +155,23 @@ class ArticleMapperTest {
 
         // then
         assertThat(response.id()).isEqualTo(article.getId());
+        assertThat(response.title()).isEqualTo(article.getTitle());
+        assertThat(response.content()).isEqualTo(article.getContent());
+    }
+
+    @DisplayName("ArticleResponse 매핑 테스트")
+    @Test
+    void articleResponse() {
+        // given
+        Article article = Article.builder()
+                .title("dOplgHNCkO")
+                .content("MichelMia")
+                .build();
+
+        // when
+        ArticleResponse response = articleMapper.toArticleResponse(article);
+
+        // then
         assertThat(response.title()).isEqualTo(article.getTitle());
         assertThat(response.content()).isEqualTo(article.getContent());
     }
