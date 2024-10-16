@@ -13,6 +13,7 @@ import com.spring.blog.service.dto.response.AddArticleViewResponse;
 import com.spring.blog.service.dto.response.ArticleResponse;
 import com.spring.blog.service.dto.response.ArticleViewResponse;
 import com.spring.blog.service.dto.response.CommentResponse;
+import com.spring.blog.service.dto.response.LikeResponse;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -174,5 +175,20 @@ class ArticleMapperTest {
         // then
         assertThat(response.title()).isEqualTo(article.getTitle());
         assertThat(response.content()).isEqualTo(article.getContent());
+    }
+
+    @DisplayName("LikeResponse 매핑 테스트")
+    @Test
+    void likeResponse() {
+        // given
+        Boolean liked = true;
+        Integer likesCount = 566;
+
+        // when
+        LikeResponse response = articleMapper.toLikeResponse(liked, likesCount);
+
+        // then
+        assertThat(response.liked()).isEqualTo(liked);
+        assertThat(response.likesCount()).isEqualTo(likesCount);
     }
 }
