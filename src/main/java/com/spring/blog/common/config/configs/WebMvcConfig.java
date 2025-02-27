@@ -61,6 +61,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
 
         registry.addViewController("/findEmail").setViewName("phone-number-request");
         registry.addViewController("/findPassword").setViewName("email-request");
+        registry.addViewController("/stomp").setViewName("stomp");
 
         registry.addRedirectViewController("/", "/login");
     }

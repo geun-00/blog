@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WebSocket STOMP 테스트</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
+</head>
+<body>
+<h2>WebSocket STOMP 테스트</h2>
+<button onclick="connect()">연결</button>
+<button onclick="disconnect()">연결 해제</button>
+<br><br>
+
+<label for="message"></label><input type="text" id="message" placeholder="보낼 메시지">
+<button onclick="sendMessage()">전송</button>
+<br><br>
+
+<h3>메시지 로그</h3>
+<ul id="messages"></ul>
+<script>
+    let socket = null;
+    let stompClient = null;
+
+    function connect() {
+        socket = new WebSocket('ws://localhost:8080/ws-stomp'); // 웹소켓 서버 주소
+        stompClient = Stomp.over(socket);
+
+        stompClient.connect({}, function (frame) {
+            console.log("STOMP 연결됨: " + frame);
+            showMessage("STOMP 연결됨!");
+
+            // 특정 채팅방 구독 (예: "/sub/chat")
+            stompClient.subscribe('/sub/chat/1', function (message) {
+                console.log("구독 메시지 수신: " + message.body);
+                showMessage("받음: " + message.body);
+            });
+        }, function (error) {
+            console.error("STOMP 오류:", error);
+            showMessage("STOMP 오류 발생!");
+        });
+    }
+
+    function disconnect() {
+        if (stompClient !== null) {
+            stompClient.disconnect();
+            console.log("STOMP 연결 해제됨");
+            showMessage("STOMP 연결 해제됨!");
+        }
+    }
+
+    function sendMessage() {
+        let message = document.getElementById("message").value;
+        if (message.trim() === "") return;
+
+        if (stompClient && stompClient.connected) {
+            let payload = JSON.stringify({content: message});
+
+            // 서버의 "/pub/chat/1" 경로로 메시지 전송
+            stompClient.send("/pub/chat/1", {}, payload);
+            showMessage("보냄: " + message);
+        } else {
+            console.error("STOMP에 연결되지 않음");
+            showMessage("STOMP에 연결되지 않음!");
+        }
+    }
+
+    function showMessage(message) {
+        let li = document.createElement("li");
+        li.textContent = message;
+        document.getElementById("messages").appendChild(li);
+    }
+</script>
+</body>
+</html>
