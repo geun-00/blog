@@ -61,7 +61,7 @@ public class WebOAuthSecurityConfig {
                 .authenticationManager(setAuthenticationManager(http))
 
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/style/**", "/js/**", "/images/*", "/webjars/**", "/favicon.*",
+                        .requestMatchers("/style/**", "/js/**", "/images/*", "/webjars/**", "/favicon.*", "/healthCheck",
                                 "/*/icon-*", "/h2-console/**", "/swagger-ui/**", "/v3/api-docs/**", "/error/**").permitAll()
 
                         .requestMatchers("/", "/login*", "/userPage*", "/findEmail", "/findPassword").permitAll() //사용자 관련 뷰 설정
@@ -74,6 +74,9 @@ public class WebOAuthSecurityConfig {
 
                         .requestMatchers("/api/verify/**").permitAll() //이메일, 비밀번호 찾기 API
                         .requestMatchers("/api/weather**").permitAll() //날씨 API
+
+                        .requestMatchers("/sub/**", "/pub/**", "/stomp").permitAll()
+                        .requestMatchers("/ws-stomp").permitAll()
 
                         .anyRequest().authenticated()
                 )
